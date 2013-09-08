@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+       http://www.springframework.org/schema/tx 
+     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<bean id="dbUrl" class="x.mvmn.patienceajdbc.mysql.MySqlHelper"
+		factory-method="createMySqlDbUrl" scope="singleton">
+		<constructor-arg>
+			<bean factory-bean="dbConnectionDialog" factory-method="getDbHost" />
+		</constructor-arg>
+		<constructor-arg>
+			<bean factory-bean="dbConnectionDialog" factory-method="getDbName" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="dbDataSource" class="x.mvmn.patienceajdbc.mysql.MySqlHelper"
+		factory-method="createDataSource" scope="singleton">
+		<constructor-arg>
+			<bean factory-bean="dbConnectionDialog" factory-method="getDbHost" />
+		</constructor-arg>
+		<constructor-arg>
+			<value type="int">3306</value>
+		</constructor-arg>
+		<constructor-arg>
+			<bean factory-bean="dbConnectionDialog" factory-method="getDbName" />
+		</constructor-arg>
+		<constructor-arg>
+			<bean factory-bean="dbConnectionDialog" factory-method="getDbUser" />
+		</constructor-arg>
+		<constructor-arg>
+			<bean class="java.lang.String">
+				<constructor-arg>
+					<bean factory-bean="dbConnectionDialog" factory-method="getDbPassword" />
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean factory-bean="dbConnectionDialog" factory-method="getProfileSql" />
+		</constructor-arg>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="txManager" />
+
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dbDataSource" />
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+		scope="singleton">
+		<property name="dataSource" ref="dbDataSource" />
+	</bean>
+
+	<bean id="examinationDao" class="x.mvmn.patienceajdbc.dao.impl.ExaminationDaoImpl"
+		scope="singleton">
+		<constructor-arg ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="patientDao" class="x.mvmn.patienceajdbc.dao.impl.PatientDaoImpl"
+		scope="singleton">
+		<constructor-arg ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="medicationDao" class="x.mvmn.patienceajdbc.dao.impl.MedicationDaoImpl"
+		scope="singleton">
+		<constructor-arg ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="illnessDao" class="x.mvmn.patienceajdbc.dao.impl.IllnessDaoImpl"
+		scope="singleton">
+		<constructor-arg ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="tagDao" class="x.mvmn.patienceajdbc.dao.impl.TagDaoImpl"
+		scope="singleton">
+		<constructor-arg ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="illnessesService" class="x.mvmn.patienceajdbc.service.impl.IllnessesServiceImpl"
+		scope="singleton">
+		<constructor-arg ref="illnessDao" />
+	</bean>
+
+	<bean id="patientsService" class="x.mvmn.patienceajdbc.service.impl.PatientsServiceImpl"
+		scope="singleton">
+		<constructor-arg ref="patientDao" />
+	</bean>
+
+	<bean id="medicationService" class="x.mvmn.patienceajdbc.service.impl.MedicationServiceImpl"
+		scope="singleton">
+		<constructor-arg ref="medicationDao" />
+	</bean>
+</beans>

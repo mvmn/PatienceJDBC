@@ -1,0 +1,3 @@
+Main-Class: x.mvmn.patienceajdbc.PatienceA
+Classpath: mysql-connector-java-5.1.19.jar
+

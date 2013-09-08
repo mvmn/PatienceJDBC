@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+		scope="singleton">
+		<property name="basename" value="classpath:messages" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<bean id="dbConnectionDialog"
+		class="x.mvmn.patienceajdbc.gui.startup.ConnectionPropertiesDialog"
+		scope="singleton">
+		<constructor-arg ref="localeSelectionComboBox" />
+		<constructor-arg ref="messageSource" />
+		<property name="selfAsLocaleChangeListener" ref="localeChangeNotifier" />
+		<property name="defaultCloseOperation">
+			<util:constant static-field="javax.swing.JDialog.DISPOSE_ON_CLOSE" />
+		</property>
+	</bean>
+
+	<bean id="localeChangeNotifier"
+		class="x.mvmn.patienceajdbc.gui.l10n.impl.LocaleChangeNotifierImpl"
+		scope="singleton">
+		<property name="locale" value="US" />
+	</bean>
+
+	<bean id="localeWithNameEnglish"
+		class="x.mvmn.patienceajdbc.gui.l10n.impl.LocaleSelectionComboBoxImpl$LocaleNamePair"
+		scope="singleton">
+		<constructor-arg value="en_US" type="java.util.Locale" />
+		<constructor-arg value="English" />
+	</bean>
+	<bean id="localeWithNameUkrainian"
+		class="x.mvmn.patienceajdbc.gui.l10n.impl.LocaleSelectionComboBoxImpl$LocaleNamePair"
+		scope="singleton">
+		<constructor-arg value="ua_UA" type="java.util.Locale" />
+		<constructor-arg value="Українська" />
+	</bean>
+	<bean id="localeSelectionComboBox"
+		class="x.mvmn.patienceajdbc.gui.l10n.impl.LocaleSelectionComboBoxImpl"
+		scope="singleton">
+		<constructor-arg>
+			<list>
+				<ref bean="localeWithNameEnglish" />
+				<ref bean="localeWithNameUkrainian" />
+			</list>
+		</constructor-arg>
+		<constructor-arg ref="localeChangeNotifier" />
+	</bean>
+</beans>
