@@ -75,6 +75,9 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 
 	private static final String LOCALIZATION_KEY_ILLNESSES_ADDED_MESSAGE = "patients_list_window.addillnessaction.message.success";
 
+	private static final String LOCALIZATION_KEY_DELETE_PATIENTS_DIALOG_TITLE = "delete_patients_dialog.title";
+	private static final String LOCALIZATION_KEY_DELETE_PATIENTS_DIALOG_MESSAGE = "delete_patients_dialog.message";
+
 	private final MessageSource messageSource;
 	private final IllnessesService illnessesService;
 
@@ -300,12 +303,19 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 				PatientsListPerIllness listOfPatientsPerIllness = PatientsListWindow.this.illnessTabs.getSelectedComponent();
 				int[] selectedRows = listOfPatientsPerIllness.getTblPatientsList().getSelectedRows();
 				if (selectedRows != null && selectedRows.length > 0) {
-					long[] patientsToDelete = new long[selectedRows.length];
-					for (int i = 0; i < selectedRows.length; i++) {
-						patientsToDelete[i] = listOfPatientsPerIllness.getPatientStatsData(selectedRows[i]).getPatientId();
+					String deletePatientsMessage = PatientsListWindow.this.messageSource.getMessage(LOCALIZATION_KEY_DELETE_PATIENTS_DIALOG_MESSAGE,
+							new Object[] { selectedRows.length }, PatientsListWindow.this.getLocale());
+					String deletePatientsDialogTitle = PatientsListWindow.this.messageSource.getMessage(LOCALIZATION_KEY_DELETE_PATIENTS_DIALOG_TITLE, null,
+							PatientsListWindow.this.getLocale());
+					if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(PatientsListWindow.this, deletePatientsMessage, deletePatientsDialogTitle,
+							JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+						long[] patientsToDelete = new long[selectedRows.length];
+						for (int i = 0; i < selectedRows.length; i++) {
+							patientsToDelete[i] = listOfPatientsPerIllness.getPatientStatsData(selectedRows[i]).getPatientId();
+						}
+						patientsService.delete(patientsToDelete);
+						PatientsListWindow.this.recreatePerIllnessListsTabs();
 					}
-					patientsService.delete(patientsToDelete);
-					PatientsListWindow.this.recreatePerIllnessListsTabs();
 				}
 			}
 		});
