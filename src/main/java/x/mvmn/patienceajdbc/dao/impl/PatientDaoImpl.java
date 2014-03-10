@@ -87,8 +87,7 @@ public class PatientDaoImpl implements PatientDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#create(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String, java.util.Date,
+	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date,
 	 * java.util.Date, java.util.Date, boolean, java.lang.String)
 	 */
 	public PatientDataImpl create(final String lastName, final String firstName, final String patronymicName, final String address, final Date birthDate,
@@ -136,8 +135,7 @@ public class PatientDaoImpl implements PatientDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#findCount(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String, java.util.Date,
+	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#findCount(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date,
 	 * java.util.Date, java.util.Date, java.lang.Boolean, java.lang.String)
 	 */
 	public long findCount(final String lastName, final String firstName, final String patronymicName, final String address, final Date birthDate,
@@ -162,10 +160,8 @@ public class PatientDaoImpl implements PatientDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#find(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String, java.util.Date,
-	 * java.util.Date, java.util.Date, java.lang.Boolean, java.lang.String,
-	 * boolean)
+	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#find(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date,
+	 * java.util.Date, java.util.Date, java.lang.Boolean, java.lang.String, boolean)
 	 */
 	public List<PatientDataImpl> find(final String lastName, final String firstName, final String patronymicName, final String address, final Date birthDate,
 			final Date diagnoseDate, final Date deathDate, final Boolean dead, final String anamnesis, final boolean fetchMedications) {
@@ -276,8 +272,7 @@ public class PatientDaoImpl implements PatientDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#list(java.lang.String, int,
-	 * int, boolean)
+	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#list(java.lang.String, int, int, boolean)
 	 */
 	public List<PatientDataImpl> list(final String orderBy, final int start, final int count, final boolean fetchMedications) {
 
@@ -316,9 +311,7 @@ public class PatientDaoImpl implements PatientDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * x.mvmn.patienceajdbc.dao.impl.PatientDao#update(x.mvmn.patienceajdbc.
-	 * model.PatientData, boolean)
+	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#update(x.mvmn.patienceajdbc. model.PatientData, boolean)
 	 */
 	@Transactional
 	public boolean update(final PatientData patientData, final boolean updateMedications) {
@@ -342,9 +335,7 @@ public class PatientDaoImpl implements PatientDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * x.mvmn.patienceajdbc.dao.impl.PatientDao#delete(x.mvmn.patienceajdbc.
-	 * model.PatientData)
+	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#delete(x.mvmn.patienceajdbc. model.PatientData)
 	 */
 	public boolean delete(final PatientData patientData) {
 		return delete(patientData.getId());
@@ -427,8 +418,7 @@ public class PatientDaoImpl implements PatientDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#listStats(long,
-	 * java.util.Date, java.util.Date, int)
+	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#listStats(long, java.util.Date, java.util.Date, int)
 	 */
 	public List<PatientStatsData> listStats(final long illnessId, final Date visitDateFrom, final Date visitDateTo, int sortColumn) {
 		String query = "select PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, PatientData.birthDate, max(ExaminationResults.examinationDate) as lastVisitDate, count(ExaminationResults.id) as visitsCount from PatientData left join ExaminationResults on ExaminationResults.patientId = PatientData.id where (1=1) ";

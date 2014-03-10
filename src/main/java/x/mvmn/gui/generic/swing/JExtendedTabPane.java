@@ -12,8 +12,7 @@ import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeNotifier;
 import x.mvmn.patienceajdbc.gui.l10n.Localizable;
 
 /**
- * This class completely delegates all JComponent methods to underlying instance
- * of JTabbedPane
+ * This class completely delegates all JComponent methods to underlying instance of JTabbedPane
  * 
  * @param <P>
  *            tabs type

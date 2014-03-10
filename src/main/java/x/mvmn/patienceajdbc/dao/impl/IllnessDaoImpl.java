@@ -94,8 +94,7 @@ public class IllnessDaoImpl implements IllnessDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * x.mvmn.patienceajdbc.dao.impl.IllnessDao#findByName(java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.IllnessDao#findByName(java.lang.String)
 	 */
 	public IllnessImpl findByName(final String illnessName) {
 		IllnessImpl result = null;
@@ -109,9 +108,7 @@ public class IllnessDaoImpl implements IllnessDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * x.mvmn.patienceajdbc.dao.impl.IllnessDao#delete(x.mvmn.patienceajdbc.
-	 * model.Illness)
+	 * @see x.mvmn.patienceajdbc.dao.impl.IllnessDao#delete(x.mvmn.patienceajdbc. model.Illness)
 	 */
 	public boolean delete(final Illness illness) {
 		return delete(illness.getId());
@@ -144,8 +141,7 @@ public class IllnessDaoImpl implements IllnessDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * x.mvmn.patienceajdbc.dao.impl.IllnessDao#deleteByName(java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.IllnessDao#deleteByName(java.lang.String)
 	 */
 	@Transactional
 	public boolean deleteByName(final String illnessName) {
@@ -180,8 +176,7 @@ public class IllnessDaoImpl implements IllnessDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * x.mvmn.patienceajdbc.dao.impl.IllnessDao#getIdByName(java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.IllnessDao#getIdByName(java.lang.String)
 	 */
 	public long getIdByName(final String illnessName) {
 		return jdbcTemplate.queryForLong("select id from Illness where name = ?", illnessName);
@@ -190,8 +185,7 @@ public class IllnessDaoImpl implements IllnessDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.IllnessDao#updateName(long,
-	 * java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.IllnessDao#updateName(long, java.lang.String)
 	 */
 	public boolean updateName(final long illnessId, final String newName) {
 		return jdbcTemplate.update("update illness set name = ? where id = ?", newName, illnessId) > 0;

@@ -107,9 +107,7 @@ public class TagDaoImpl implements TagDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * x.mvmn.patienceajdbc.dao.impl.TagDao#delete(x.mvmn.patienceajdbc.model
-	 * .Tag)
+	 * @see x.mvmn.patienceajdbc.dao.impl.TagDao#delete(x.mvmn.patienceajdbc.model .Tag)
 	 */
 	public boolean delete(final Tag tag) {
 		return delete(tag.getId());
@@ -182,8 +180,7 @@ public class TagDaoImpl implements TagDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.TagDao#updateName(long,
-	 * java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.TagDao#updateName(long, java.lang.String)
 	 */
 	public boolean updateName(final long tagId, final String newName) {
 		return jdbcTemplate.update("update tag set name = ? where id = ?", newName, tagId) > 0;

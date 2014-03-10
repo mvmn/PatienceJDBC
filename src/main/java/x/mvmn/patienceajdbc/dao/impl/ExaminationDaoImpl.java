@@ -133,10 +133,8 @@ public class ExaminationDaoImpl implements ExaminationDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.IExaminationDao#create(long, long, int,
-	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-	 * java.lang.String, java.util.Date, java.lang.String, java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.IExaminationDao#create(long, long, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+	 * java.lang.String, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public ExaminationDataImpl create(final long patientId, final long illnessId, final int number, final String matherial, final String blood,
 			final String mielogramm, final String treatmentDescription, final String comments, final Date examinationDate, final String illnessPhase,

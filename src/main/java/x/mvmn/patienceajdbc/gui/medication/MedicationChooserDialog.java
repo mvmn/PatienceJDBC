@@ -105,7 +105,7 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 			accepted = false;
 			this.setVisible(false);
 		} else if (e.getActionCommand().equals(ACT_COMMAND_BTN_CREATE)) {
-			
+
 		}
 	}
 }

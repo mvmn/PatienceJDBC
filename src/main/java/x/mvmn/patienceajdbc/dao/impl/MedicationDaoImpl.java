@@ -40,8 +40,7 @@ public class MedicationDaoImpl implements MedicationDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#create(long,
-	 * java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#create(long, java.lang.String)
 	 */
 	public MedicationImpl create(final long illnessId, final String medicationName) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -108,8 +107,7 @@ public class MedicationDaoImpl implements MedicationDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#findByName(long,
-	 * java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#findByName(long, java.lang.String)
 	 */
 	public Medication findByName(final long illnessId, final String medicationName) {
 		Medication result = null;
@@ -124,9 +122,7 @@ public class MedicationDaoImpl implements MedicationDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * x.mvmn.patienceajdbc.dao.impl.MedicationDao#delete(x.mvmn.patienceajdbc
-	 * .model.Medication)
+	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#delete(x.mvmn.patienceajdbc .model.Medication)
 	 */
 	public boolean delete(final Medication medication) {
 		return delete(medication.getId());
@@ -158,8 +154,7 @@ public class MedicationDaoImpl implements MedicationDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#deleteByName(long,
-	 * java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#deleteByName(long, java.lang.String)
 	 */
 	@Transactional
 	public boolean deleteByName(final long illnessId, final String medicationName) {
@@ -215,8 +210,7 @@ public class MedicationDaoImpl implements MedicationDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#getIdByName(long,
-	 * java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#getIdByName(long, java.lang.String)
 	 */
 	public long getIdByName(final long illnessId, final String medicationName) {
 		return jdbcTemplate.queryForLong("select id from Medication WHERE illnessId = ? AND name = ?", illnessId, medicationName);
@@ -225,8 +219,7 @@ public class MedicationDaoImpl implements MedicationDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#updateName(long,
-	 * java.lang.String)
+	 * @see x.mvmn.patienceajdbc.dao.impl.MedicationDao#updateName(long, java.lang.String)
 	 */
 	public boolean updateName(final long medicationId, final String newName) {
 		return jdbcTemplate.update("update medication set name = ? WHERE id = ?", newName, medicationId) > 0;
