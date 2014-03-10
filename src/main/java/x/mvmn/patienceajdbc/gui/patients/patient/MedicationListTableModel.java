@@ -1,6 +1,7 @@
 package x.mvmn.patienceajdbc.gui.patients.patient;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -10,10 +11,27 @@ public class MedicationListTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = -1290919351447104824L;
 
-	protected final List<Medication> medications;
+	protected final CopyOnWriteArrayList<Medication> medications;
 
 	public MedicationListTableModel(final List<Medication> medications) {
-		this.medications = medications;
+		this.medications = new CopyOnWriteArrayList<Medication>(medications);
+	}
+
+	public Medication removeMedication(int index) {
+		Medication result = null;
+		if (index < medications.size()) {
+			result = medications.remove(index);
+			fireTableRowsDeleted(index, index);
+		}
+		return result;
+	}
+
+	public void addMedication(Medication medication) {
+		if (!medications.contains(medication)) {
+			medications.add(medication);
+			int lastIndex = medications.size() - 1;
+			fireTableRowsInserted(lastIndex, lastIndex);
+		}
 	}
 
 	@Override

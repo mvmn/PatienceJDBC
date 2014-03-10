@@ -4,11 +4,11 @@ import x.mvmn.patienceajdbc.model.Illness;
 import x.mvmn.patienceajdbc.model.Medication;
 import x.mvmn.util.collections.CollectionsHelper.Checker;
 
-public class MedicationIllnessChecker implements Checker<Medication> {
+public class MedicationIllnessFilter implements Checker<Medication> {
 
 	protected final Illness illness;
 
-	public MedicationIllnessChecker(Illness illness) {
+	public MedicationIllnessFilter(Illness illness) {
 		this.illness = illness;
 	}
 

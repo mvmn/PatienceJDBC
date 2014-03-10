@@ -9,7 +9,7 @@ public class CollectionsHelper {
 		public boolean check(T val);
 	}
 
-	public static <T> List<T> getMatchingItems(List<T> list, Checker<T> checker) {
+	public static <T> List<T> createFilteredList(List<T> list, Checker<T> checker) {
 		List<T> result = null;
 
 		if (list != null) {

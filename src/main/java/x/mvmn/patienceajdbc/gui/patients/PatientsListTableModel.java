@@ -38,18 +38,21 @@ public class PatientsListTableModel extends AbstractTableModel {
 		// FIXME: Localize
 		switch (columnIndex) {
 			case 0:
-				result = "Name";
+				result = "ID";
 			break;
 			case 1:
-				result = "Date of Birth";
+				result = "Name";
 			break;
 			case 2:
-				result = "Address";
+				result = "Date of Birth";
 			break;
 			case 3:
-				result = "First Examination";
+				result = "Address";
 			break;
 			case 4:
+				result = "First Examination";
+			break;
+			case 5:
 				result = "Visits";
 			break;
 		}
@@ -66,23 +69,26 @@ public class PatientsListTableModel extends AbstractTableModel {
 
 	public Object getValueAt(int row, int column) {
 		Object result = null;
-		if (row < patientsStatData.size() && column < 5) {
+		if (row < patientsStatData.size() && column < 6) {
 			PatientStatsData rowModel = patientsStatData.get(row);
 
 			switch (column) {
 				case 0:
-					result = rowModel.getFullName();
+					result = rowModel.getPatientId();
 				break;
 				case 1:
-					result = rowModel.getDateOfBirth();
+					result = rowModel.getFullName();
 				break;
 				case 2:
-					result = rowModel.getAddress();
+					result = rowModel.getDateOfBirth();
 				break;
 				case 3:
-					result = rowModel.getDateOfFirstExamination();
+					result = rowModel.getAddress();
 				break;
 				case 4:
+					result = rowModel.getDateOfFirstExamination();
+				break;
+				case 5:
 					result = rowModel.getVisitsCount();
 				break;
 			}
