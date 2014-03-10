@@ -32,7 +32,8 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 	protected final JButton createButton = new JButton();
 
 	private volatile boolean accepted = false;
-	private volatile long currentIllnessId = -1;
+
+	// private volatile long currentIllnessId = -1;
 
 	public MedicationChooserDialog(final MedicationService medicationService) {
 		this.medicationService = medicationService;
@@ -58,7 +59,7 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 	public Medication chooseMedications(final long illnessId) {
 		Medication result = null;
 		accepted = false;
-		currentIllnessId = illnessId;
+		// currentIllnessId = illnessId;
 		cbxModelMedications.removeAllElements();
 
 		List<Medication> medicationsForIllness = medicationService.list(illnessId);
