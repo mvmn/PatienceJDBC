@@ -4,12 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+
+import org.springframework.context.MessageSource;
 
 import x.mvmn.patienceajdbc.gui.SwingHelper;
 import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeAware;
@@ -24,6 +27,10 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 	private static final String ACT_COMMAND_BTN_CANCEL = "btnActionCancel";
 	private static final String ACT_COMMAND_BTN_CREATE = "btnCreateMedication";
 
+	private static final String LOCALIZATION_KEY_BUTTON_OK = "meidcation_chooser_dialog.button.ok";
+	private static final String LOCALIZATION_KEY_BUTTON_CANCEL = "meidcation_chooser_dialog.button.cancel";
+
+	protected final MessageSource messageSource;
 	protected final MedicationService medicationService;
 	protected final DefaultComboBoxModel<MedicationDisplay> cbxModelMedications;
 	protected final JComboBox<MedicationDisplay> cbxMedications;
@@ -35,7 +42,8 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 
 	// private volatile long currentIllnessId = -1;
 
-	public MedicationChooserDialog(final MedicationService medicationService) {
+	public MedicationChooserDialog(final MedicationService medicationService, final MessageSource messageSource) {
+		this.messageSource = messageSource;
 		this.medicationService = medicationService;
 
 		this.cbxModelMedications = new DefaultComboBoxModel<MedicationDisplay>();
@@ -95,6 +103,15 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 	@Override
 	public void setSelfAsLocaleChangeListener(LocaleChangeNotifier notifier) {
 		notifier.registerLocaleChangeListener(this);
+		setLocale(notifier.getLastSetLocale());
+	}
+
+	public void setLocale(final Locale locale) {
+		super.setLocale(locale);
+		if (messageSource != null && locale != null) {
+			this.okButton.setText(messageSource.getMessage(LOCALIZATION_KEY_BUTTON_OK, null, locale));
+			this.cancelButton.setText(messageSource.getMessage(LOCALIZATION_KEY_BUTTON_CANCEL, null, locale));
+		}
 	}
 
 	@Override

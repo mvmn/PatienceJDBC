@@ -1,4 +1,4 @@
-package x.mvmn.patienceajdbc.gui.patients.patient;
+package x.mvmn.patienceajdbc.gui.medication;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

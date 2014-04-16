@@ -37,6 +37,7 @@ import x.mvmn.patienceajdbc.gui.Titled;
 import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeAware;
 import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeNotifier;
 import x.mvmn.patienceajdbc.gui.medication.MedicationChooserDialog;
+import x.mvmn.patienceajdbc.gui.medication.MedicationListTableModel;
 import x.mvmn.patienceajdbc.gui.patients.PatientsListWindow;
 import x.mvmn.patienceajdbc.model.Illness;
 import x.mvmn.patienceajdbc.model.Medication;
@@ -124,7 +125,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		setData(null);
 		this.setModal(false);
 
-		medChooserDialog = new MedicationChooserDialog(medicationService);
+		medChooserDialog = new MedicationChooserDialog(medicationService, messageSource);
 
 		JPanel fieldsPanel = new JPanel(new GridLayout(1, 4));
 		// fieldsPanel.setLayout(new BorderLayout());
@@ -337,6 +338,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	@Override
 	public void setSelfAsLocaleChangeListener(LocaleChangeNotifier localeChangeNotifier) {
 		localeChangeNotifier.registerLocaleChangeListener(this);
+		medChooserDialog.setSelfAsLocaleChangeListener(localeChangeNotifier);
 		setLocale(localeChangeNotifier.getLastSetLocale());
 	}
 
