@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -271,7 +272,10 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 						patientsListWindow.recreatePerIllnessListsTabs();
 						resetDataAndClose();
 					} catch (Exception saveError) {
-						// TODO: Signalize error and return
+						// TODO: localize
+						saveError.printStackTrace();
+						JOptionPane.showMessageDialog(PatientDataDialog.this, saveError.getClass().getSimpleName() + ": " + saveError.getMessage(),
+								"Error occurred", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			});
