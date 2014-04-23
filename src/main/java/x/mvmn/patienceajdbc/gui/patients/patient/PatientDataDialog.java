@@ -24,9 +24,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.AbstractTableModel;
 
 import org.springframework.context.MessageSource;
 
@@ -40,9 +42,11 @@ import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeNotifier;
 import x.mvmn.patienceajdbc.gui.medication.MedicationChooserDialog;
 import x.mvmn.patienceajdbc.gui.medication.MedicationListTableModel;
 import x.mvmn.patienceajdbc.gui.patients.PatientsListWindow;
+import x.mvmn.patienceajdbc.model.ExaminationData;
 import x.mvmn.patienceajdbc.model.Illness;
 import x.mvmn.patienceajdbc.model.Medication;
 import x.mvmn.patienceajdbc.model.PatientData;
+import x.mvmn.patienceajdbc.service.ExaminationsService;
 import x.mvmn.patienceajdbc.service.IllnessesService;
 import x.mvmn.patienceajdbc.service.MedicationService;
 import x.mvmn.patienceajdbc.service.PatientsService;
@@ -107,19 +111,21 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 
 	protected final PatientsService patientsService;
 	protected final IllnessesService illnessesService;
-	protected final PatientsListWindow patientsListWindow;
+	protected final ExaminationsService examinationsService;
 
 	protected final JExtendedTabPane<JPanel> illnessTabs;
 
 	protected final Map<Illness, JExtendedTable<MedicationListTableModel>> medicationsTables = new ConcurrentHashMap<Illness, JExtendedTable<MedicationListTableModel>>();
 	protected final MedicationChooserDialog medChooserDialog;
+	protected final PatientsListWindow patientsListWindow;
 
 	public PatientDataDialog(final PatientsService patientsService, final IllnessesService illnessesService, final MedicationService medicationService,
-			final PatientsListWindow patientsListWindow, final MessageSource messageSource) {
+			final ExaminationsService examinationsService, final PatientsListWindow patientsListWindow, final MessageSource messageSource) {
 		this.patientsService = patientsService;
 		this.illnessesService = illnessesService;
 		this.patientsListWindow = patientsListWindow;
 		this.messageSource = messageSource;
+		this.examinationsService = examinationsService;
 
 		illnessTabs = new JExtendedTabPane<JPanel>();
 
@@ -300,7 +306,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		illnessTabs.removeAll();
 		Collection<Illness> illnessess = illnessesService.getAllIllnesses();
 		for (final Illness illness : illnessess) {
-			JPanel tabContent = new JPanel(new GridLayout(2, 1));
+
 			JPanel medicationsPanel = new JPanel(new BorderLayout());
 			final JExtendedTable<MedicationListTableModel> table = medicationsTables.get(illness);
 			medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
@@ -341,9 +347,48 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 			buttonsPanel.add(removeMedication, BorderLayout.WEST);
 			buttonsPanel.add(addMedication, BorderLayout.EAST);
 			medicationsPanel.add(buttonsPanel, BorderLayout.SOUTH);
+
+			JPanel tabContent = new JPanel(new GridLayout(2, 1));
 			tabContent.add(medicationsPanel);
 
-			tabContent.add(new JPanel());
+			// examinationsService.create(this.currentPatientId, illness.getId(), (int) examinationsService.countAll() + 1, "Matherial", "blood", "mielogramm",
+			// "treatmentDescription", "comments", new Date(), IllnessPhase.CHRONIC, "typeName", "nomenclaturalDescription", "examinationComments");
+			final List<ExaminationData> examinations = examinationsService.getByPatientAndIllness(this.currentPatientId, illness.getId());
+			JTable examinationsTable = new JTable(new AbstractTableModel() {
+
+				private static final long serialVersionUID = -824123649739620125L;
+
+				@Override
+				public Object getValueAt(int rowIndex, int columnIndex) {
+					ExaminationData examData = examinations.get(rowIndex);
+					String value = "";
+					switch (columnIndex) {
+						case 0:
+							value = examData.getExaminationDate() != null ? dateFormat.format(examData.getExaminationDate()) : "--";
+						break;
+						case 1:
+							value = String.valueOf(examData.getNumber());
+						break;
+						case 2:
+							value = examData.getComments() != null ? examData.getComments() : "";
+						break;
+					}
+
+					return value;
+				}
+
+				@Override
+				public int getRowCount() {
+					return examinations.size();
+				}
+
+				@Override
+				public int getColumnCount() {
+					return 3;
+				}
+			});
+
+			tabContent.add(new JScrollPane(examinationsTable));
 			illnessTabs.addTab(illness.getName(), tabContent);
 		}
 	}

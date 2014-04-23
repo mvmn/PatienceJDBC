@@ -98,4 +98,10 @@
 		scope="singleton">
 		<constructor-arg ref="medicationDao" />
 	</bean>
+
+	<bean id="examinationService"
+		class="x.mvmn.patienceajdbc.service.impl.ExaminationsServiceImpl"
+		scope="singleton">
+		<constructor-arg ref="examinationDao" />
+	</bean>
 </beans>

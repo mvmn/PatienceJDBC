@@ -130,6 +130,25 @@ public class ExaminationDaoImpl implements ExaminationDao {
 		return result;
 	}
 
+	public List<ExaminationDataImpl> getByPatient(final long patientId) {
+		List<ExaminationDataImpl> results = jdbcTemplate.query(SELECT_STATEMENT + " WHERE ExaminationResults.patientId = ?", new Object[] { patientId },
+				EXAMINATION_DATA_ROW_MAPPER);
+		return results;
+	}
+
+	public List<ExaminationDataImpl> getByIllness(final long illnessId) {
+		List<ExaminationDataImpl> results = jdbcTemplate.query(SELECT_STATEMENT + " WHERE ExaminationResults.illnessId = ?", new Object[] { illnessId },
+				EXAMINATION_DATA_ROW_MAPPER);
+		return results;
+	}
+
+	public List<ExaminationDataImpl> getByPatientAndIllness(final long patientId, final long illnessId) {
+		List<ExaminationDataImpl> results = jdbcTemplate.query(SELECT_STATEMENT
+				+ " WHERE ExaminationResults.patientId = ? AND ExaminationResults.illnessId = ?", new Object[] { patientId, illnessId },
+				EXAMINATION_DATA_ROW_MAPPER);
+		return results;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -137,7 +156,7 @@ public class ExaminationDaoImpl implements ExaminationDao {
 	 * java.lang.String, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public ExaminationDataImpl create(final long patientId, final long illnessId, final int number, final String matherial, final String blood,
-			final String mielogramm, final String treatmentDescription, final String comments, final Date examinationDate, final String illnessPhase,
+			final String mielogramm, final String treatmentDescription, final String comments, final Date examinationDate, final IllnessPhase illnessPhase,
 			final String typeName, final String nomenclaturalDescription, final String examinationComments) {
 		final ExaminationDataImpl result;
 
@@ -175,7 +194,7 @@ public class ExaminationDaoImpl implements ExaminationDao {
 				prepStatement.setString(7, treatmentDescription);
 				prepStatement.setString(8, comments);
 				prepStatement.setDate(9, examinationDate == null ? null : new java.sql.Date(examinationDate.getTime()));
-				prepStatement.setString(10, illnessPhase);
+				prepStatement.setString(10, illnessPhase.name());
 				prepStatement.setString(11, typeName);
 				return prepStatement;
 			}
@@ -218,7 +237,7 @@ public class ExaminationDaoImpl implements ExaminationDao {
 		result.setMielogramm(mielogramm);
 		result.setNumber(number);
 		result.setPatientId(patientId);
-		result.setPhase(IllnessPhase.valueOf(illnessPhase));
+		result.setPhase(illnessPhase);
 		result.setTreatmentDescription(treatmentDescription);
 
 		result.setTreatment(new ArrayList<MedicationImpl>());
@@ -232,8 +251,8 @@ public class ExaminationDaoImpl implements ExaminationDao {
 	 * 
 	 * @see x.mvmn.patienceajdbc.dao.IExaminationDao#countAll()
 	 */
-	public long countAll() {
-		return jdbcTemplate.queryForLong("select count(id) from ExaminationResults");
+	public int countAll() {
+		return jdbcTemplate.queryForInt("select count(id) from ExaminationResults");
 	}
 
 	/*

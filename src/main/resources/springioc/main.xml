@@ -18,7 +18,9 @@
 		<constructor-arg ref="illnessesService" />
 		<constructor-arg ref="patientsService" />
 		<constructor-arg ref="medicationService" />
+		<constructor-arg ref="examinationService" />
 		<constructor-arg ref="messageSource" />
+
 		<property name="selfAsLocaleChangeListener" ref="localeChangeNotifier" />
 		<property name="defaultCloseOperation">
 			<util:constant static-field="javax.swing.JFrame.DO_NOTHING_ON_CLOSE" />

@@ -40,6 +40,7 @@ import x.mvmn.patienceajdbc.gui.patients.patient.PatientDataDialog;
 import x.mvmn.patienceajdbc.model.Illness;
 import x.mvmn.patienceajdbc.model.PatientData;
 import x.mvmn.patienceajdbc.model.PatientStatsData;
+import x.mvmn.patienceajdbc.service.ExaminationsService;
 import x.mvmn.patienceajdbc.service.IllnessesService;
 import x.mvmn.patienceajdbc.service.MedicationService;
 import x.mvmn.patienceajdbc.service.PatientsService;
@@ -80,6 +81,7 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 
 	private final MessageSource messageSource;
 	private final IllnessesService illnessesService;
+	private final ExaminationsService examinationsService;
 
 	private final JExtendedTabPane<PatientsListPerIllness> illnessTabs;
 	private final JLabel lblFilterDateFrom;
@@ -119,12 +121,13 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 	private final PatientDataDialog patientDataDialog;
 
 	public PatientsListWindow(final IllnessesService illnessesService, final PatientsService patientsService, final MedicationService medicationService,
-			final MessageSource messageSource) {
+			final ExaminationsService examinationsService, final MessageSource messageSource) {
 		this.messageSource = messageSource;
 		this.illnessesService = illnessesService;
 		this.patientsService = patientsService;
+		this.examinationsService = examinationsService;
 
-		patientDataDialog = new PatientDataDialog(patientsService, illnessesService, medicationService, this, messageSource);
+		patientDataDialog = new PatientDataDialog(patientsService, illnessesService, medicationService, this.examinationsService, this, messageSource);
 
 		Container contentPane = this.getContentPane();
 		contentPane.setLayout(new BorderLayout());
