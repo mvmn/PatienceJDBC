@@ -84,4 +84,9 @@ public class IllnessesServiceImpl implements IllnessesService {
 		}
 	}
 
+	@Override
+	public Illness getIllness(long illnessId) {
+		return illnessDao.get(illnessId);
+	}
+
 }

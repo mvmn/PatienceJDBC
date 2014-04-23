@@ -19,8 +19,9 @@ public interface IllnessesService {
 
 	public Illness getIllness(String name);
 
+	public Illness getIllness(long illnessId);
+
 	public Illness createNewIllness(String name);
 
 	public Illness renameIllness(Illness illness, String newName);
-
 }

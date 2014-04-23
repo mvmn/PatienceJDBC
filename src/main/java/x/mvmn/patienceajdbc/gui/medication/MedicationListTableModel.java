@@ -65,7 +65,7 @@ public class MedicationListTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		String result = "";
-		if (rowIndex >= medications.size()) {
+		if (rowIndex < medications.size()) {
 			Medication medication = medications.get(rowIndex);
 			switch (columnIndex) {
 				case 0:

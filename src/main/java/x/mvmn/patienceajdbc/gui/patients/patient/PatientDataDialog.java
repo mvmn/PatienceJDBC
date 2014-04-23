@@ -125,7 +125,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		setData(null);
 		this.setModal(false);
 
-		medChooserDialog = new MedicationChooserDialog(medicationService, messageSource);
+		medChooserDialog = new MedicationChooserDialog(medicationService, illnessesService, messageSource);
 
 		JPanel fieldsPanel = new JPanel(new GridLayout(1, 4));
 		// fieldsPanel.setLayout(new BorderLayout());
@@ -305,8 +305,16 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 			addMedication.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// medChooserDialog.initMedicationsCheckbox(illness.getId());
-					medChooserDialog.setVisible(true);
+					Medication med = medChooserDialog.chooseMedications(illness.getId());
+					if (med != null) {
+						PatientData patientData = patientsService.get(currentPatientId, true);
+						List<Medication> medications = patientData.getPreviousTreatments();
+						if (!medications.contains(med)) {
+							medications.add(med);
+							patientsService.update(patientData, true);
+							table.getTableModel().addMedication(med);
+						}
+					}
 				}
 			});
 			JButton removeMedication = new JButton("-"); // FIXME: localize
@@ -314,8 +322,14 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (table.getSelectedColumns() != null) {
-						for (int selectedIndex : table.getSelectedColumns()) {
-							table.getTableModel().removeMedication(selectedIndex);
+						int[] selectedIndicies = table.getSelectedRows();
+						for (int i = selectedIndicies.length - 1; i >= 0; i--) {
+							int selectedIndex = selectedIndicies[i];
+							Medication med = table.getTableModel().removeMedication(selectedIndex);
+							PatientData patientData = patientsService.get(currentPatientId, true);
+							List<Medication> medications = patientData.getPreviousTreatments();
+							medications.remove(med);
+							patientsService.update(patientData, true);
 						}
 					}
 				}

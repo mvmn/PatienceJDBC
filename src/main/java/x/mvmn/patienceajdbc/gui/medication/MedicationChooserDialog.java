@@ -10,6 +10,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.springframework.context.MessageSource;
@@ -18,6 +19,7 @@ import x.mvmn.patienceajdbc.gui.SwingHelper;
 import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeAware;
 import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeNotifier;
 import x.mvmn.patienceajdbc.model.Medication;
+import x.mvmn.patienceajdbc.service.IllnessesService;
 import x.mvmn.patienceajdbc.service.MedicationService;
 
 public class MedicationChooserDialog extends JDialog implements LocaleChangeAware, ActionListener {
@@ -32,19 +34,22 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 
 	protected final MessageSource messageSource;
 	protected final MedicationService medicationService;
+	protected final IllnessesService illnessesService;
+
 	protected final DefaultComboBoxModel<MedicationDisplay> cbxModelMedications;
 	protected final JComboBox<MedicationDisplay> cbxMedications;
 	protected final JButton okButton = new JButton();
 	protected final JButton cancelButton = new JButton();
-	protected final JButton createButton = new JButton();
+	protected final JButton createButton = new JButton("+");
 
 	private volatile boolean accepted = false;
 
-	// private volatile long currentIllnessId = -1;
+	private volatile long currentIllnessId = -1;
 
-	public MedicationChooserDialog(final MedicationService medicationService, final MessageSource messageSource) {
+	public MedicationChooserDialog(final MedicationService medicationService, final IllnessesService illnessesService, final MessageSource messageSource) {
 		this.messageSource = messageSource;
 		this.medicationService = medicationService;
+		this.illnessesService = illnessesService;
 
 		this.cbxModelMedications = new DefaultComboBoxModel<MedicationDisplay>();
 		this.cbxMedications = new JComboBox<MedicationDisplay>(cbxModelMedications);
@@ -54,8 +59,12 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 		this.cancelButton.addActionListener(this);
 		this.cancelButton.setActionCommand(ACT_COMMAND_BTN_CANCEL);
 
+		this.createButton.addActionListener(this);
+		this.createButton.setActionCommand(ACT_COMMAND_BTN_CREATE);
+
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(this.cbxMedications, BorderLayout.CENTER);
+		this.getContentPane().add(this.createButton, BorderLayout.EAST);
 		JPanel btnPanel = new JPanel(new BorderLayout());
 		btnPanel.add(okButton, BorderLayout.EAST);
 		btnPanel.add(cancelButton, BorderLayout.WEST);
@@ -66,8 +75,24 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 
 	public Medication chooseMedications(final long illnessId) {
 		Medication result = null;
+
+		this.currentIllnessId = illnessId;
+
 		accepted = false;
-		// currentIllnessId = illnessId;
+		resetMedicationsComboBox(illnessId);
+
+		this.setModal(true);
+		this.pack();
+		SwingHelper.moveToScreenCenter(this);
+		this.setVisible(true);
+		if (accepted && this.cbxMedications.getSelectedItem() != null) {
+			result = ((MedicationDisplay) this.cbxMedications.getSelectedItem()).getWrappedMedication();
+		}
+
+		return result;
+	}
+
+	protected void resetMedicationsComboBox(final long illnessId) {
 		cbxModelMedications.removeAllElements();
 
 		List<Medication> medicationsForIllness = medicationService.list(illnessId);
@@ -76,12 +101,6 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 				cbxModelMedications.addElement(new MedicationDisplay(medication));
 			}
 		}
-		this.setVisible(true);
-		if (accepted) {
-			result = ((MedicationDisplay) this.cbxMedications.getSelectedItem()).getWrappedMedication();
-		}
-
-		return result;
 	}
 
 	private class MedicationDisplay {
@@ -123,7 +142,18 @@ public class MedicationChooserDialog extends JDialog implements LocaleChangeAwar
 			accepted = false;
 			this.setVisible(false);
 		} else if (e.getActionCommand().equals(ACT_COMMAND_BTN_CREATE)) {
-
+			// TODO: localize
+			String medicationName = JOptionPane.showInputDialog(this, "Enter name of new medication", "Create medication for for illness "
+					+ illnessesService.getIllness(this.currentIllnessId).getName(), JOptionPane.QUESTION_MESSAGE);
+			if (medicationName != null && medicationName.trim().length() > 0) {
+				if (medicationService.findByName(currentIllnessId, medicationName.trim()) == null) {
+					medicationService.create(this.currentIllnessId, medicationName.trim());
+					resetMedicationsComboBox(currentIllnessId);
+				} else {
+					// TODO: localize
+					JOptionPane.showMessageDialog(this, "Name already taken", "Medication not created", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		}
 	}
 }
