@@ -125,7 +125,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		setData(null);
 		this.setModal(false);
 
-		medChooserDialog = new MedicationChooserDialog(medicationService, illnessesService, messageSource);
+		medChooserDialog = new MedicationChooserDialog(medicationService, messageSource);
 
 		JPanel fieldsPanel = new JPanel(new GridLayout(1, 4));
 		// fieldsPanel.setLayout(new BorderLayout());
@@ -305,7 +305,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 			addMedication.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Medication med = medChooserDialog.chooseMedications(illness.getId());
+					Medication med = medChooserDialog.chooseMedications(illness);
 					if (med != null) {
 						PatientData patientData = patientsService.get(currentPatientId, true);
 						List<Medication> medications = patientData.getPreviousTreatments();
