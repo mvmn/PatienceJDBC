@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -354,7 +356,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 			// examinationsService.create(this.currentPatientId, illness.getId(), (int) examinationsService.countAll() + 1, "Matherial", "blood", "mielogramm",
 			// "treatmentDescription", "comments", new Date(), IllnessPhase.CHRONIC, "typeName", "nomenclaturalDescription", "examinationComments");
 			final List<ExaminationData> examinations = examinationsService.getByPatientAndIllness(this.currentPatientId, illness.getId());
-			JTable examinationsTable = new JTable(new AbstractTableModel() {
+			final JTable examinationsTable = new JTable(new AbstractTableModel() {
 
 				private static final long serialVersionUID = -824123649739620125L;
 
@@ -386,11 +388,37 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 				public int getColumnCount() {
 					return 3;
 				}
+
+				// TODO: localize
+				private final String[] COLUMN_NAMES = { "Date", "Number", "Comment" };
+
+				public String getColumnName(int col) {
+					return COLUMN_NAMES[col];
+				}
+			});
+			examinationsTable.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent mouseEvent) {
+					if (mouseEvent.getClickCount() == 2) {
+						int selectedRow = examinationsTable.getSelectedRow();
+						if (selectedRow >= 0 && selectedRow < examinations.size()) {
+							ExaminationData examinationData = examinations.get(examinationsTable.getSelectedRow());
+							if (examinationsTable != null) {
+								PatientDataDialog.this.openExaminationDataDetails(examinationData);
+							}
+						}
+					}
+				}
 			});
 
 			tabContent.add(new JScrollPane(examinationsTable));
 			illnessTabs.addTab(illness.getName(), tabContent);
 		}
+	}
+
+	protected void openExaminationDataDetails(ExaminationData examinationData) {
+		JOptionPane.showMessageDialog(this,
+				"Examination " + examinationData.getNumber() + ", " + examinationData.getExaminationDate() + ": " + examinationData.getComments(),
+				"Examination clicked", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	protected void resetDataAndClose() {
