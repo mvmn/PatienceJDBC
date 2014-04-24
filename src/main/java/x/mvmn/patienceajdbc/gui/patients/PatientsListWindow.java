@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,6 +28,7 @@ import javax.swing.KeyStroke;
 
 import org.springframework.context.MessageSource;
 
+import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.JExtendedTabPane;
 import x.mvmn.patienceajdbc.PatienceA;
 import x.mvmn.patienceajdbc.gui.Menued;
@@ -241,28 +241,9 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 
 		this.setJMenuBar(mainMenuBar);
 
-		this.addWindowListener(new WindowListener() {
-
-			public void windowOpened(WindowEvent actEvent) {
-			}
-
-			public void windowIconified(WindowEvent actEvent) {
-			}
-
-			public void windowDeiconified(WindowEvent actEvent) {
-			}
-
-			public void windowDeactivated(WindowEvent actEvent) {
-			}
-
+		this.addWindowListener(new DefaultWindowListener() {
 			public void windowClosing(WindowEvent actEvent) {
 				PatientsListWindow.this.confirmAndPerformClose();
-			}
-
-			public void windowClosed(WindowEvent actEvent) {
-			}
-
-			public void windowActivated(WindowEvent actEvent) {
 			}
 		});
 

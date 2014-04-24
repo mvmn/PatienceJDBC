@@ -1,0 +1,98 @@
+package x.mvmn.patienceajdbc.service.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import x.mvmn.patienceajdbc.dao.ExaminationDao;
+import x.mvmn.patienceajdbc.model.ExaminationData;
+import x.mvmn.patienceajdbc.model.IllnessPhase;
+import x.mvmn.patienceajdbc.model.impl.ExaminationDataImpl;
+import x.mvmn.patienceajdbc.service.ExaminationsService;
+
+public class ExaminationsServiceImpl implements ExaminationsService {
+
+	protected final ExaminationDao examinationDao;
+
+	public ExaminationsServiceImpl(final ExaminationDao examinationDao) {
+		this.examinationDao = examinationDao;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#get(long)
+	 */
+	public ExaminationDataImpl get(long id) {
+		return examinationDao.get(id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#getByNumber(int)
+	 */
+	public ExaminationDataImpl getByNumber(int number) {
+		return examinationDao.getByNumber(number);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#create(long, long, int, java.lang.String, java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public ExaminationDataImpl create(long patientId, long illnessId, int number, String matherial, String blood, String mielogramm,
+			String treatmentDescription, String comments, Date examinationDate, IllnessPhase illnessPhase, String typeName, String nomenclaturalDescription,
+			String examinationComments) {
+		return examinationDao.create(patientId, illnessId, number, matherial, blood, mielogramm, treatmentDescription, comments, examinationDate, illnessPhase,
+				typeName, nomenclaturalDescription, examinationComments);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#countAll()
+	 */
+	public int countAll() {
+		return examinationDao.countAll();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#delete(long)
+	 */
+	public boolean delete(long examinationId) {
+		return examinationDao.delete(examinationId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#getByPatient(int)
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<ExaminationData> getByPatient(long patientId) {
+		return (List) examinationDao.getByPatient(patientId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#getByIllness(int)
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<ExaminationData> getByIllness(long illnessId) {
+		return (List) examinationDao.getByIllness(illnessId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#getByPatientAndIllness(int, int)
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<ExaminationData> getByPatientAndIllness(long patientId, long illnessId) {
+		return (List) examinationDao.getByPatientAndIllness(patientId, illnessId);
+	}
+}
