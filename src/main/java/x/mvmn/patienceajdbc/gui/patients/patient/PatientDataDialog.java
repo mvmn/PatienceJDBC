@@ -39,7 +39,7 @@ import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.ExtendedTitledBorder;
 import x.mvmn.gui.generic.swing.JExtendedTabPane;
 import x.mvmn.gui.generic.swing.JExtendedTable;
-import x.mvmn.patienceajdbc.gui.GeneralisedTableModel;
+import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.IllnessSpecificPanel;
 import x.mvmn.patienceajdbc.gui.Titled;
 import x.mvmn.patienceajdbc.gui.examinations.ExaminationDataDialog;
@@ -122,7 +122,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	protected final JExtendedTabPane<IllnessSpecificPanel> illnessTabs;
 	protected final ConcurrentHashMap<Long, IllnessSpecificPanel> illnessIdToIllnessTab = new ConcurrentHashMap<Long, IllnessSpecificPanel>();
 
-	protected final Map<Illness, JExtendedTable<GeneralisedTableModel<Medication, String>>> medicationsTables = new ConcurrentHashMap<Illness, JExtendedTable<GeneralisedTableModel<Medication, String>>>();
+	protected final Map<Illness, JExtendedTable<GeneralisedMutableTableModel<Medication, String>>> medicationsTables = new ConcurrentHashMap<Illness, JExtendedTable<GeneralisedMutableTableModel<Medication, String>>>();
 	protected final MedicationChooserDialog medChooserDialog;
 	protected final ExaminationDataDialog examinationDataDialog;
 	protected final PatientsListWindow patientsListWindow;
@@ -331,13 +331,13 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 				} else {
 					patientsMedicationsForCurrentIllness = Collections.emptyList();
 				}
-				JExtendedTable<GeneralisedTableModel<Medication, String>> medicationsPerIllness = new JExtendedTable<GeneralisedTableModel<Medication, String>>(
-						new GeneralisedTableModel<Medication, String>(patientsMedicationsForCurrentIllness, new MedicationTableCellValueAdaptor()));
+				JExtendedTable<GeneralisedMutableTableModel<Medication, String>> medicationsPerIllness = new JExtendedTable<GeneralisedMutableTableModel<Medication, String>>(
+						new GeneralisedMutableTableModel<Medication, String>(patientsMedicationsForCurrentIllness, new MedicationTableCellValueAdaptor()));
 				medicationsTables.put(illness, medicationsPerIllness);
 			}
 			for (final Illness illness : illnessess) {
 				JPanel medicationsPanel = new JPanel(new BorderLayout());
-				final JExtendedTable<GeneralisedTableModel<Medication, String>> table = medicationsTables.get(illness);
+				final JExtendedTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
 				medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 				JPanel buttonsPanel = new JPanel(new BorderLayout());
 				JButton addMedication = new JButton("+"); // FIXME: localize

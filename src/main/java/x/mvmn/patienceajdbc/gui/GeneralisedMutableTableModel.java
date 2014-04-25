@@ -5,13 +5,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
-public class GeneralisedTableModel<T, A> extends AbstractTableModel {
+public class GeneralisedMutableTableModel<T, A> extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1769140544667339258L;
 	protected final CopyOnWriteArrayList<T> rows;
 	protected final TableCellValueAdaptor<T, A> adaptor;
 
-	public GeneralisedTableModel(final List<T> rows, TableCellValueAdaptor<T, A> adaptor) {
+	public GeneralisedMutableTableModel(final List<T> rows, TableCellValueAdaptor<T, A> adaptor) {
 		this.rows = new CopyOnWriteArrayList<T>(rows);
 		this.adaptor = adaptor;
 	}
