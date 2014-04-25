@@ -5,7 +5,12 @@ import x.mvmn.patienceajdbc.model.Medication;
 
 public class MedicationTableCellValueAdaptor implements TableCellValueAdaptor<Medication, String> {
 
+	public static final MedicationTableCellValueAdaptor INSTANCE = new MedicationTableCellValueAdaptor();
+
 	private static final String COLUMN_NAMES[] = { "ID", "Medication" };
+
+	private MedicationTableCellValueAdaptor() {
+	};
 
 	@Override
 	public String getColumnName(int columnIndex) {

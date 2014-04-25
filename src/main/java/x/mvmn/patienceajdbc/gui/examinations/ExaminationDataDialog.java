@@ -26,7 +26,7 @@ import javax.swing.border.TitledBorder;
 import org.springframework.context.MessageSource;
 
 import x.mvmn.gui.generic.swing.JExtendedTabPane;
-import x.mvmn.gui.generic.swing.JExtendedTable;
+import x.mvmn.gui.generic.swing.GeneralisedJTable;
 import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.IllnessSpecificPanel;
 import x.mvmn.patienceajdbc.gui.Titled;
@@ -90,7 +90,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 	protected final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	protected final Map<Illness, JExtendedTable<GeneralisedMutableTableModel<Medication, String>>> medicationsTables = new ConcurrentHashMap<Illness, JExtendedTable<GeneralisedMutableTableModel<Medication, String>>>();
+	protected final Map<Illness, GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>>> medicationsTables = new ConcurrentHashMap<Illness, GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>>>();
 	protected final MedicationChooserDialog medChooserDialog;
 
 	protected final PatientsService patientsService;
@@ -230,14 +230,14 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 					patientsMedicationsForCurrentIllness = CollectionsHelper.createFilteredList(allMedications, new MedicationIllnessFilter(illness));
 				}
 			}
-			JExtendedTable<GeneralisedMutableTableModel<Medication, String>> medicationsPerIllness = new JExtendedTable<GeneralisedMutableTableModel<Medication, String>>(
-					new GeneralisedMutableTableModel<Medication, String>(patientsMedicationsForCurrentIllness, new MedicationTableCellValueAdaptor()));
+			GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> medicationsPerIllness = new GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>>(
+					new GeneralisedMutableTableModel<Medication, String>(patientsMedicationsForCurrentIllness, MedicationTableCellValueAdaptor.INSTANCE));
 			medicationsTables.put(illness, medicationsPerIllness);
 		}
 		if (currentData != null) {
 			for (final Illness illness : illnessess) {
 				IllnessSpecificPanel medicationsPanel = new IllnessSpecificPanel(illness, new BorderLayout());
-				final JExtendedTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
+				final GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
 				medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 				JPanel buttonsPanel = new JPanel(new BorderLayout());
 				JButton addMedication = new JButton("+"); // FIXME: localize

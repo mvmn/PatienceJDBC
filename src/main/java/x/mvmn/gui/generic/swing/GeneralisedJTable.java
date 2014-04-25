@@ -7,33 +7,33 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-public class JExtendedTable<T extends TableModel> extends JTable {
+public class GeneralisedJTable<T extends TableModel> extends JTable {
 
-	public JExtendedTable() {
+	public GeneralisedJTable() {
 		super();
 	}
 
-	public JExtendedTable(int numRows, int numColumns) {
+	public GeneralisedJTable(int numRows, int numColumns) {
 		super(numRows, numColumns);
 	}
 
-	public JExtendedTable(Object[][] rowData, Object[] columnNames) {
+	public GeneralisedJTable(Object[][] rowData, Object[] columnNames) {
 		super(rowData, columnNames);
 	}
 
-	public JExtendedTable(T dm, TableColumnModel cm, ListSelectionModel sm) {
+	public GeneralisedJTable(T dm, TableColumnModel cm, ListSelectionModel sm) {
 		super(dm, cm, sm);
 	}
 
-	public JExtendedTable(T dm, TableColumnModel cm) {
+	public GeneralisedJTable(T dm, TableColumnModel cm) {
 		super(dm, cm);
 	}
 
-	public JExtendedTable(T dm) {
+	public GeneralisedJTable(T dm) {
 		super(dm);
 	}
 
-	public JExtendedTable(Vector<?> rowData, Vector<?> columnNames) {
+	public GeneralisedJTable(Vector<?> rowData, Vector<?> columnNames) {
 		super(rowData, columnNames);
 	}
 

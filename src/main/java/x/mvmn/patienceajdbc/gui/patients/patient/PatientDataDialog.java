@@ -38,10 +38,11 @@ import org.springframework.context.MessageSource;
 import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.ExtendedTitledBorder;
 import x.mvmn.gui.generic.swing.JExtendedTabPane;
-import x.mvmn.gui.generic.swing.JExtendedTable;
+import x.mvmn.gui.generic.swing.GeneralisedJTable;
 import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.IllnessSpecificPanel;
 import x.mvmn.patienceajdbc.gui.Titled;
+import x.mvmn.patienceajdbc.gui.examinations.ExaminationCellValueAdaptor;
 import x.mvmn.patienceajdbc.gui.examinations.ExaminationDataDialog;
 import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeAware;
 import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeNotifier;
@@ -122,7 +123,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	protected final JExtendedTabPane<IllnessSpecificPanel> illnessTabs;
 	protected final ConcurrentHashMap<Long, IllnessSpecificPanel> illnessIdToIllnessTab = new ConcurrentHashMap<Long, IllnessSpecificPanel>();
 
-	protected final Map<Illness, JExtendedTable<GeneralisedMutableTableModel<Medication, String>>> medicationsTables = new ConcurrentHashMap<Illness, JExtendedTable<GeneralisedMutableTableModel<Medication, String>>>();
+	protected final Map<Illness, GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>>> medicationsTables = new ConcurrentHashMap<Illness, GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>>>();
 	protected final MedicationChooserDialog medChooserDialog;
 	protected final ExaminationDataDialog examinationDataDialog;
 	protected final PatientsListWindow patientsListWindow;
@@ -331,13 +332,13 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 				} else {
 					patientsMedicationsForCurrentIllness = Collections.emptyList();
 				}
-				JExtendedTable<GeneralisedMutableTableModel<Medication, String>> medicationsPerIllness = new JExtendedTable<GeneralisedMutableTableModel<Medication, String>>(
-						new GeneralisedMutableTableModel<Medication, String>(patientsMedicationsForCurrentIllness, new MedicationTableCellValueAdaptor()));
+				GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> medicationsPerIllness = new GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>>(
+						new GeneralisedMutableTableModel<Medication, String>(patientsMedicationsForCurrentIllness, MedicationTableCellValueAdaptor.INSTANCE));
 				medicationsTables.put(illness, medicationsPerIllness);
 			}
 			for (final Illness illness : illnessess) {
 				JPanel medicationsPanel = new JPanel(new BorderLayout());
-				final JExtendedTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
+				final GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
 				medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 				JPanel buttonsPanel = new JPanel(new BorderLayout());
 				JButton addMedication = new JButton("+"); // FIXME: localize
@@ -388,46 +389,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 				// "mielogramm",
 				// "treatmentDescription", "comments", new Date(), IllnessPhase.CHRONIC, "typeName", "nomenclaturalDescription", "examinationComments");
 				final List<ExaminationData> examinations = examinationsService.getByPatientAndIllness(this.currentPatientId, illness.getId());
-				final JTable examinationsTable = new JTable(new AbstractTableModel() {
-
-					private static final long serialVersionUID = -824123649739620125L;
-
-					@Override
-					public Object getValueAt(int rowIndex, int columnIndex) {
-						ExaminationData examData = examinations.get(rowIndex);
-						String value = "";
-						switch (columnIndex) {
-							case 0:
-								value = examData.getExaminationDate() != null ? dateFormat.format(examData.getExaminationDate()) : "--";
-							break;
-							case 1:
-								value = String.valueOf(examData.getNumber());
-							break;
-							case 2:
-								value = examData.getComments() != null ? examData.getComments() : "";
-							break;
-						}
-
-						return value;
-					}
-
-					@Override
-					public int getRowCount() {
-						return examinations.size();
-					}
-
-					@Override
-					public int getColumnCount() {
-						return 3;
-					}
-
-					// TODO: localize
-					private final String[] COLUMN_NAMES = { "Date", "Number", "Comment" };
-
-					public String getColumnName(int col) {
-						return COLUMN_NAMES[col];
-					}
-				});
+				final GeneralisedJTable<GeneralisedMutableTableModel<ExaminationData, String>> examinationsTable = new GeneralisedJTable<GeneralisedMutableTableModel<ExaminationData, String>>(
+						new GeneralisedMutableTableModel<ExaminationData, String>(examinations, ExaminationCellValueAdaptor.INSTANCE));
 				examinationsTable.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent mouseEvent) {
 						if (mouseEvent.getClickCount() == 2) {
