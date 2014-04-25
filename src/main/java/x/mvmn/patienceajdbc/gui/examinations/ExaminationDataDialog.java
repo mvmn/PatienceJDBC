@@ -27,12 +27,13 @@ import org.springframework.context.MessageSource;
 
 import x.mvmn.gui.generic.swing.JExtendedTabPane;
 import x.mvmn.gui.generic.swing.JExtendedTable;
+import x.mvmn.patienceajdbc.gui.GeneralisedTableModel;
 import x.mvmn.patienceajdbc.gui.IllnessSpecificPanel;
 import x.mvmn.patienceajdbc.gui.Titled;
 import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeAware;
 import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeNotifier;
 import x.mvmn.patienceajdbc.gui.medication.MedicationChooserDialog;
-import x.mvmn.patienceajdbc.gui.medication.MedicationListTableModel;
+import x.mvmn.patienceajdbc.gui.medication.MedicationTableCellValueAdaptor;
 import x.mvmn.patienceajdbc.gui.patients.patient.PatientDataDialog;
 import x.mvmn.patienceajdbc.model.ExaminationData;
 import x.mvmn.patienceajdbc.model.Illness;
@@ -89,7 +90,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 	protected final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	protected final Map<Illness, JExtendedTable<MedicationListTableModel>> medicationsTables = new ConcurrentHashMap<Illness, JExtendedTable<MedicationListTableModel>>();
+	protected final Map<Illness, JExtendedTable<GeneralisedTableModel<Medication, String>>> medicationsTables = new ConcurrentHashMap<Illness, JExtendedTable<GeneralisedTableModel<Medication, String>>>();
 	protected final MedicationChooserDialog medChooserDialog;
 
 	protected final PatientsService patientsService;
@@ -229,14 +230,14 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 					patientsMedicationsForCurrentIllness = CollectionsHelper.createFilteredList(allMedications, new MedicationIllnessFilter(illness));
 				}
 			}
-			JExtendedTable<MedicationListTableModel> medicationsPerIllness = new JExtendedTable<MedicationListTableModel>(new MedicationListTableModel(
-					patientsMedicationsForCurrentIllness));
+			JExtendedTable<GeneralisedTableModel<Medication, String>> medicationsPerIllness = new JExtendedTable<GeneralisedTableModel<Medication, String>>(
+					new GeneralisedTableModel<Medication, String>(patientsMedicationsForCurrentIllness, new MedicationTableCellValueAdaptor()));
 			medicationsTables.put(illness, medicationsPerIllness);
 		}
 		if (currentData != null) {
 			for (final Illness illness : illnessess) {
 				IllnessSpecificPanel medicationsPanel = new IllnessSpecificPanel(illness, new BorderLayout());
-				final JExtendedTable<MedicationListTableModel> table = medicationsTables.get(illness);
+				final JExtendedTable<GeneralisedTableModel<Medication, String>> table = medicationsTables.get(illness);
 				medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 				JPanel buttonsPanel = new JPanel(new BorderLayout());
 				JButton addMedication = new JButton("+"); // FIXME: localize
@@ -251,7 +252,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 								if (!medications.contains(med)) {
 									medications.add(med);
 									patientsService.update(patientData, true);
-									table.getTableModel().addMedication(med);
+									table.getTableModel().add(med);
 									ExaminationDataDialog.this.patientDataDialog.recreateIllnessTabs(patientData);
 									ExaminationDataDialog.this.patientDataDialog.switchIllnessTab(med.getIllnessId());
 								}
@@ -267,7 +268,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 							int[] selectedIndicies = table.getSelectedRows();
 							for (int i = selectedIndicies.length - 1; i >= 0; i--) {
 								int selectedIndex = selectedIndicies[i];
-								Medication med = table.getTableModel().removeMedication(selectedIndex);
+								Medication med = table.getTableModel().remove(selectedIndex);
 								PatientData patientData = patientsService.get(currentData.getPatientId(), true);
 								if (patientData != null) {
 									List<Medication> medications = patientData.getPreviousTreatments();
