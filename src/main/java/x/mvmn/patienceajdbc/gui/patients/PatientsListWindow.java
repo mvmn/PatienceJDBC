@@ -394,6 +394,9 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 			patientData = patientsService.get(patientId, true);
 		}
 		patientDataDialog.setData(patientData);
+		if (illnessTabs.getSelectedComponent().getIllnessToFilterBy() != null) {
+			patientDataDialog.switchIllnessTab(illnessTabs.getSelectedComponent().getIllnessToFilterBy().getId());
+		}
 		patientDataDialog.pack();
 		SwingHelper.moveToScreenCenter(patientDataDialog);
 		patientDataDialog.setVisible(true);

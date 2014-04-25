@@ -105,7 +105,8 @@ public final class ExaminationDataImpl implements ExaminationData {
 	}
 
 	public IllnessPhase getPhase() {
-		return phase;
+		IllnessPhase currentPhase = phase;
+		return currentPhase != null ? currentPhase : IllnessPhase.UNSET;
 	}
 
 	public void setPhase(IllnessPhase phase) {

@@ -44,7 +44,7 @@ public class ExaminationDaoImpl implements ExaminationDao {
 			String treatmentDescription = rs.getString(8);
 			String comments = rs.getString(9);
 			Date examinationDate = rs.getDate(10);
-			IllnessPhase illnessPhase = IllnessPhase.valueOf(rs.getString(11));
+			IllnessPhase illnessPhase = rs.getString(11) != null ? IllnessPhase.valueOf(rs.getString(11)) : IllnessPhase.UNSET;
 			String typeName = rs.getString(12);
 
 			long cariotypeId = rs.getLong(13);
