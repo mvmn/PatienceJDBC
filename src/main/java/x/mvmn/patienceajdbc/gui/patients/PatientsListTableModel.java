@@ -33,38 +33,14 @@ public class PatientsListTableModel extends AbstractTableModel {
 		// Index out of bounds? You deserve it!
 	}
 
+	private static final String[] COLUMN_NAMES = { "ID", "Name", "Date of Birth", "Address", "First Examination", "Visits" };
+
 	public String getColumnName(int columnIndex) {
-		String result = "";
-		// FIXME: Localize
-		switch (columnIndex) {
-			case 0:
-				result = "ID";
-			break;
-			case 1:
-				result = "Name";
-			break;
-			case 2:
-				result = "Date of Birth";
-			break;
-			case 3:
-				result = "Address";
-			break;
-			case 4:
-				result = "First Examination";
-			break;
-			case 5:
-				result = "Visits";
-			break;
-		}
-		return result;
+		return columnIndex < COLUMN_NAMES.length ? COLUMN_NAMES[columnIndex] : "";
 	}
 
 	public PatientStatsData getValue(int rowIndex) {
-		if (rowIndex < patientsStatData.size()) {
-			return patientsStatData.get(rowIndex);
-		} else {
-			throw new IndexOutOfBoundsException("Index " + rowIndex + " not in bounds " + patientsStatData.size());
-		}
+		return patientsStatData.get(rowIndex);
 	}
 
 	public Object getValueAt(int row, int column) {

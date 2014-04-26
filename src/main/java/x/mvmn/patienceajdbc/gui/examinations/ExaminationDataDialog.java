@@ -247,7 +247,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		{
 			medicationsPanel.add(new JScrollPane(medicationsTable), BorderLayout.CENTER);
 			JPanel medButtonsPanel = new JPanel(new BorderLayout());
-			JButton addMedication = new JButton("+"); // FIXME: localize
+			JButton addMedication = new JButton("+"); // TODO: localize
 			addMedication.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -261,7 +261,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 					}
 				}
 			});
-			JButton removeMedication = new JButton("-"); // FIXME: localize
+			JButton removeMedication = new JButton("-"); // TODO: localize
 			removeMedication.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {

@@ -339,7 +339,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 					final GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
 					medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 					JPanel buttonsPanel = new JPanel(new BorderLayout());
-					JButton addMedication = new JButton("+"); // FIXME: localize
+					JButton addMedication = new JButton("+"); // TODO: localize
 					addMedication.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -357,7 +357,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 							}
 						}
 					});
-					JButton removeMedication = new JButton("-"); // FIXME: localize
+					JButton removeMedication = new JButton("-"); // TODO: localize
 					removeMedication.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -410,8 +410,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 
 					examinationsPanel.add(new JScrollPane(examinationsTable), BorderLayout.CENTER);
 					JPanel buttonsPanel = new JPanel(new BorderLayout());
-					JButton addExamination = new JButton("+"); // FIXME: localize
-					JButton removeExamination = new JButton("-"); // FIXME: localize
+					JButton addExamination = new JButton("+"); // TODO: localize
+					JButton removeExamination = new JButton("-"); // TODO: localize
 
 					addExamination.addActionListener(new ActionListener() {
 						@Override
