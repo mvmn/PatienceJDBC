@@ -98,4 +98,9 @@ public class ExaminationsServiceImpl implements ExaminationsService {
 	public void update(ExaminationData examData, boolean updateMedications) {
 		examinationDao.update(examData, updateMedications);
 	}
+
+	@Override
+	public long getLastExaminationNumber() {
+		return examinationDao.getLastExaminationNumber();
+	}
 }

@@ -33,4 +33,6 @@ public interface ExaminationDao {
 	@Transactional
 	public void update(ExaminationData examData, boolean updateMedications);
 
+	public long getLastExaminationNumber();
+
 }

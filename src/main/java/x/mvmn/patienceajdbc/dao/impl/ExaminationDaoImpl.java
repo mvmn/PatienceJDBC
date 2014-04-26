@@ -370,4 +370,9 @@ public class ExaminationDaoImpl implements ExaminationDao {
 		}
 	}
 
+	@Override
+	public long getLastExaminationNumber() {
+		return jdbcTemplate.queryForLong("select max(number) from ExaminationResults");
+	}
+
 }

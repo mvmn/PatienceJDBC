@@ -317,7 +317,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		this.currentIllnessId = illnessId;
 
 		this.tfDate.setText(data != null && data.getExaminationDate() != null ? dateFormat.format(data.getExaminationDate()) : "");
-		this.tfNumber.setText(data != null ? String.valueOf(data.getNumber()) : "");
+		this.tfNumber.setText(data != null ? String.valueOf(data.getNumber()) : String.valueOf(examinationsService.getLastExaminationNumber() + 1));
 		this.tfMatherial.setText(data != null ? data.getMatherial() : "");
 		this.tfBlood.setText(data != null ? data.getBlood() : "");
 		this.tfMielogramm.setText(data != null ? data.getMielogramm() : "");
