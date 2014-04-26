@@ -27,18 +27,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.AbstractTableModel;
 
 import org.springframework.context.MessageSource;
 
 import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.ExtendedTitledBorder;
-import x.mvmn.gui.generic.swing.JExtendedTabPane;
 import x.mvmn.gui.generic.swing.GeneralisedJTable;
+import x.mvmn.gui.generic.swing.JExtendedTabPane;
 import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.IllnessSpecificPanel;
 import x.mvmn.patienceajdbc.gui.Titled;
@@ -337,75 +335,104 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 				medicationsTables.put(illness, medicationsPerIllness);
 			}
 			for (final Illness illness : illnessess) {
-				JPanel medicationsPanel = new JPanel(new BorderLayout());
-				final GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
-				medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-				JPanel buttonsPanel = new JPanel(new BorderLayout());
-				JButton addMedication = new JButton("+"); // FIXME: localize
-				addMedication.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Medication med = medChooserDialog.chooseMedications(illness);
-						if (med != null) {
-							PatientData patientData = patientsService.get(currentPatientId, true);
-							if (patientData != null) {
-								List<Medication> medications = patientData.getPreviousTreatments();
-								if (!medications.contains(med)) {
-									medications.add(med);
-									patientsService.update(patientData, true);
-									table.getTableModel().add(med);
-								}
-							}
-						}
-					}
-				});
-				JButton removeMedication = new JButton("-"); // FIXME: localize
-				removeMedication.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if (table.getSelectedColumns() != null) {
-							int[] selectedIndicies = table.getSelectedRows();
-							for (int i = selectedIndicies.length - 1; i >= 0; i--) {
-								int selectedIndex = selectedIndicies[i];
-								Medication med = table.getTableModel().remove(selectedIndex);
+				IllnessSpecificPanel tabContent = new IllnessSpecificPanel(illness, new GridLayout(2, 1));
+				{
+					JPanel medicationsPanel = new JPanel(new BorderLayout());
+					final GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
+					medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+					JPanel buttonsPanel = new JPanel(new BorderLayout());
+					JButton addMedication = new JButton("+"); // FIXME: localize
+					addMedication.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							Medication med = medChooserDialog.chooseMedications(illness);
+							if (med != null) {
 								PatientData patientData = patientsService.get(currentPatientId, true);
 								if (patientData != null) {
 									List<Medication> medications = patientData.getPreviousTreatments();
-									medications.remove(med);
-									patientsService.update(patientData, true);
+									if (!medications.contains(med)) {
+										medications.add(med);
+										patientsService.update(patientData, true);
+										table.getTableModel().add(med);
+									}
 								}
 							}
 						}
-					}
-				});
-				buttonsPanel.add(removeMedication, BorderLayout.WEST);
-				buttonsPanel.add(addMedication, BorderLayout.EAST);
-				medicationsPanel.add(buttonsPanel, BorderLayout.SOUTH);
-
-				IllnessSpecificPanel tabContent = new IllnessSpecificPanel(illness, new GridLayout(2, 1));
-				tabContent.add(medicationsPanel);
-
-				// examinationsService.create(this.currentPatientId, illness.getId(), (int) examinationsService.countAll() + 1, "Matherial", "blood",
-				// "mielogramm",
-				// "treatmentDescription", "comments", new Date(), IllnessPhase.CHRONIC, "typeName", "nomenclaturalDescription", "examinationComments");
-				final List<ExaminationData> examinations = examinationsService.getByPatientAndIllness(this.currentPatientId, illness.getId());
-				final GeneralisedJTable<GeneralisedMutableTableModel<ExaminationData, String>> examinationsTable = new GeneralisedJTable<GeneralisedMutableTableModel<ExaminationData, String>>(
-						new GeneralisedMutableTableModel<ExaminationData, String>(examinations, ExaminationCellValueAdaptor.INSTANCE));
-				examinationsTable.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent mouseEvent) {
-						if (mouseEvent.getClickCount() == 2) {
-							int selectedRow = examinationsTable.getSelectedRow();
-							if (selectedRow >= 0 && selectedRow < examinations.size()) {
-								ExaminationData examinationData = examinations.get(examinationsTable.getSelectedRow());
-								if (examinationsTable != null) {
-									PatientDataDialog.this.openExaminationDataDetails(examinationData);
+					});
+					JButton removeMedication = new JButton("-"); // FIXME: localize
+					removeMedication.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							if (table.getSelectedColumns() != null) {
+								int[] selectedIndicies = table.getSelectedRows();
+								for (int i = selectedIndicies.length - 1; i >= 0; i--) {
+									int selectedIndex = selectedIndicies[i];
+									Medication med = table.getTableModel().remove(selectedIndex);
+									PatientData patientData = patientsService.get(currentPatientId, true);
+									if (patientData != null) {
+										List<Medication> medications = patientData.getPreviousTreatments();
+										medications.remove(med);
+										patientsService.update(patientData, true);
+									}
 								}
 							}
 						}
-					}
-				});
+					});
+					buttonsPanel.add(removeMedication, BorderLayout.WEST);
+					buttonsPanel.add(addMedication, BorderLayout.EAST);
+					medicationsPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
-				tabContent.add(new JScrollPane(examinationsTable));
+					tabContent.add(medicationsPanel);
+				}
+
+				{
+					JPanel examinationsPanel = new JPanel(new BorderLayout());
+					final List<ExaminationData> examinations = examinationsService.getByPatientAndIllness(this.currentPatientId, illness.getId());
+					final GeneralisedJTable<GeneralisedMutableTableModel<ExaminationData, String>> examinationsTable = new GeneralisedJTable<GeneralisedMutableTableModel<ExaminationData, String>>(
+							new GeneralisedMutableTableModel<ExaminationData, String>(examinations, ExaminationCellValueAdaptor.INSTANCE));
+					examinationsTable.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent mouseEvent) {
+							if (mouseEvent.getClickCount() == 2) {
+								int selectedRow = examinationsTable.getSelectedRow();
+								if (selectedRow >= 0 && selectedRow < examinations.size()) {
+									ExaminationData examinationData = examinations.get(examinationsTable.getSelectedRow());
+									if (examinationsTable != null) {
+										PatientDataDialog.this.openExaminationDataDetails(examinationData);
+									}
+								}
+							}
+						}
+					});
+
+					examinationsPanel.add(new JScrollPane(examinationsTable), BorderLayout.CENTER);
+					JPanel buttonsPanel = new JPanel(new BorderLayout());
+					JButton addExamination = new JButton("+"); // FIXME: localize
+					JButton removeExamination = new JButton("-"); // FIXME: localize
+
+					addExamination.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent actEvent) {
+							PatientDataDialog.this.openExaminationDataDetails(null);
+						}
+					});
+					removeExamination.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							int[] selectedIndicies = examinationsTable.getSelectedRows();
+							for (int i = selectedIndicies.length - 1; i >= 0; i--) {
+								int selectedIndex = selectedIndicies[i];
+								ExaminationData examinationData = examinationsTable.getTableModel().remove(selectedIndex);
+								examinationsService.delete(examinationData.getId());
+							}
+						}
+					});
+
+					buttonsPanel.add(removeExamination, BorderLayout.WEST);
+					buttonsPanel.add(addExamination, BorderLayout.EAST);
+					examinationsPanel.add(buttonsPanel, BorderLayout.SOUTH);
+
+					tabContent.add(examinationsPanel);
+				}
 				illnessTabs.addTab(illness.getName(), tabContent);
 				illnessIdToIllnessTab.put(illness.getId(), tabContent);
 			}
@@ -426,7 +453,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		if (illnessTabs.getSelectedComponent() != null && illnessTabs.getSelectedComponent().getIllness() != null) {
 			illnessId = illnessTabs.getSelectedComponent().getIllness().getId();
 		}
-		examinationDataDialog.viewData(examinationData, illnessId);
+		examinationDataDialog.viewData(currentPatientId, examinationData, illnessId);
 	}
 
 	protected void resetDataAndClose() {

@@ -99,6 +99,8 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 	protected final PatientDataDialog patientDataDialog;
 
+	protected long currentPatientId;
+
 	public ExaminationDataDialog(final PatientDataDialog patientDataDialog, final PatientsService patientsService, final IllnessesService illnessesService,
 			final ExaminationsService examinationsService, final MedicationChooserDialog medChooserDialog, final MessageSource messageSource) {
 		this.patientsService = patientsService;
@@ -152,25 +154,30 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 			taCommentsScrollPane.setBorder(lbComments);
 			firstFieldsSubPanel.add(taCommentsScrollPane);
 		}
-		JPanel secondFieldsSubPanel = new JPanel(new GridLayout(2, 2));
+		JPanel secondFieldsSubPanel = new JPanel(new GridLayout(1, 2));
 		secondFieldsSubPanel.add(tfCariotypeDesc);
 		secondFieldsSubPanel.add(tfFishDesc);
+
+		JPanel thirdFieldsSubPanel = new JPanel(new GridLayout(1, 2));
 		{
 			JScrollPane taCariotypeCommentsScrollPane = new JScrollPane(taCariotypeComments);
 			taCariotypeCommentsScrollPane.setPreferredSize(taCariotypeCommentsScrollPane.getMinimumSize());
 			taCariotypeCommentsScrollPane.setBorder(lbCariotypeComments);
-			secondFieldsSubPanel.add(taCariotypeCommentsScrollPane);
+			thirdFieldsSubPanel.add(taCariotypeCommentsScrollPane);
 		}
 		{
 			JScrollPane taFishCommentsScrollPane = new JScrollPane(taFishComments);
 			taFishCommentsScrollPane.setPreferredSize(taFishCommentsScrollPane.getMinimumSize());
 			taFishCommentsScrollPane.setBorder(lbFishComments);
-			secondFieldsSubPanel.add(taFishCommentsScrollPane);
+			thirdFieldsSubPanel.add(taFishCommentsScrollPane);
 		}
 
 		JPanel fieldsPanel = new JPanel(new GridLayout(2, 1));
 		fieldsPanel.add(firstFieldsSubPanel);
-		fieldsPanel.add(secondFieldsSubPanel);
+		JPanel lastFieldsSubPanel = new JPanel(new BorderLayout());
+		lastFieldsSubPanel.add(secondFieldsSubPanel, BorderLayout.NORTH);
+		lastFieldsSubPanel.add(thirdFieldsSubPanel, BorderLayout.CENTER);
+		fieldsPanel.add(lastFieldsSubPanel);
 
 		JPanel buttonsPanel = new JPanel();
 		this.getContentPane().setLayout(new BorderLayout());
@@ -186,8 +193,9 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		setLocale(localeChangeNotifier.getLastSetLocale());
 	}
 
-	public void setData(ExaminationData data) {
+	public void setData(long patientId, ExaminationData data) {
 		this.currentData = data;
+		this.currentPatientId = patientId;
 
 		this.tfDate.setText(data != null ? dateFormat.format(data.getExaminationDate()) : "");
 		this.tfNumber.setText(data != null ? String.valueOf(data.getNumber()) : "");
@@ -223,71 +231,69 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		Collection<Illness> illnessess = illnessesService.getAllIllnesses();
 		for (Illness illness : illnessess) {
 			List<Medication> patientsMedicationsForCurrentIllness = Collections.emptyList();
-			if (currentData != null) {
-				PatientData patientData = patientsService.get(currentData.getPatientId(), true);
-				if (patientData != null) {
-					List<Medication> allMedications = patientData.getPreviousTreatments();
-					patientsMedicationsForCurrentIllness = CollectionsHelper.createFilteredList(allMedications, new MedicationIllnessFilter(illness));
-				}
+			PatientData patientData = patientsService.get(currentPatientId, true);
+			if (patientData != null) {
+				List<Medication> allMedications = patientData.getPreviousTreatments();
+				patientsMedicationsForCurrentIllness = CollectionsHelper.createFilteredList(allMedications, new MedicationIllnessFilter(illness));
 			}
 			GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> medicationsPerIllness = new GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>>(
 					new GeneralisedMutableTableModel<Medication, String>(patientsMedicationsForCurrentIllness, MedicationTableCellValueAdaptor.INSTANCE));
 			medicationsTables.put(illness, medicationsPerIllness);
 		}
-		if (currentData != null) {
-			for (final Illness illness : illnessess) {
-				IllnessSpecificPanel medicationsPanel = new IllnessSpecificPanel(illness, new BorderLayout());
-				final GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
-				medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-				JPanel buttonsPanel = new JPanel(new BorderLayout());
-				JButton addMedication = new JButton("+"); // FIXME: localize
-				addMedication.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Medication med = medChooserDialog.chooseMedications(illness);
-						if (med != null) {
-							PatientData patientData = patientsService.get(currentData.getPatientId(), true);
+
+		for (final Illness illness : illnessess) {
+			IllnessSpecificPanel medicationsPanel = new IllnessSpecificPanel(illness, new BorderLayout());
+			final GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> table = medicationsTables.get(illness);
+			medicationsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+			JPanel buttonsPanel = new JPanel(new BorderLayout());
+			JButton addMedication = new JButton("+"); // FIXME: localize
+			addMedication.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Medication med = medChooserDialog.chooseMedications(illness);
+					if (med != null) {
+						PatientData patientData = patientsService.get(currentPatientId, true);
+						if (patientData != null) {
+							List<Medication> medications = patientData.getPreviousTreatments();
+							if (!medications.contains(med)) {
+								medications.add(med);
+								patientsService.update(patientData, true);
+								table.getTableModel().add(med);
+								ExaminationDataDialog.this.patientDataDialog.recreateIllnessTabs(patientData);
+								ExaminationDataDialog.this.patientDataDialog.switchIllnessTab(med.getIllnessId());
+							}
+						}
+					}
+				}
+			});
+			JButton removeMedication = new JButton("-"); // FIXME: localize
+			removeMedication.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (table.getSelectedColumns() != null) {
+						int[] selectedIndicies = table.getSelectedRows();
+						for (int i = selectedIndicies.length - 1; i >= 0; i--) {
+							int selectedIndex = selectedIndicies[i];
+							Medication med = table.getTableModel().remove(selectedIndex);
+							PatientData patientData = patientsService.get(currentPatientId, true);
 							if (patientData != null) {
 								List<Medication> medications = patientData.getPreviousTreatments();
-								if (!medications.contains(med)) {
-									medications.add(med);
-									patientsService.update(patientData, true);
-									table.getTableModel().add(med);
-									ExaminationDataDialog.this.patientDataDialog.recreateIllnessTabs(patientData);
-									ExaminationDataDialog.this.patientDataDialog.switchIllnessTab(med.getIllnessId());
-								}
+								medications.remove(med);
+								patientsService.update(patientData, true);
+								ExaminationDataDialog.this.patientDataDialog.recreateIllnessTabs(patientData);
+								ExaminationDataDialog.this.patientDataDialog.switchIllnessTab(med.getIllnessId());
 							}
 						}
 					}
-				});
-				JButton removeMedication = new JButton("-"); // FIXME: localize
-				removeMedication.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if (table.getSelectedColumns() != null) {
-							int[] selectedIndicies = table.getSelectedRows();
-							for (int i = selectedIndicies.length - 1; i >= 0; i--) {
-								int selectedIndex = selectedIndicies[i];
-								Medication med = table.getTableModel().remove(selectedIndex);
-								PatientData patientData = patientsService.get(currentData.getPatientId(), true);
-								if (patientData != null) {
-									List<Medication> medications = patientData.getPreviousTreatments();
-									medications.remove(med);
-									patientsService.update(patientData, true);
-									ExaminationDataDialog.this.patientDataDialog.recreateIllnessTabs(patientData);
-									ExaminationDataDialog.this.patientDataDialog.switchIllnessTab(med.getIllnessId());
-								}
-							}
-						}
-					}
-				});
-				buttonsPanel.add(removeMedication, BorderLayout.WEST);
-				buttonsPanel.add(addMedication, BorderLayout.EAST);
-				medicationsPanel.add(buttonsPanel, BorderLayout.SOUTH);
+				}
+			});
+			buttonsPanel.add(removeMedication, BorderLayout.WEST);
+			buttonsPanel.add(addMedication, BorderLayout.EAST);
+			medicationsPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
-				illnessTabs.addTab(illness.getName(), medicationsPanel);
-				illnessIdToIllnessTab.put(illness.getId(), medicationsPanel);
-			}
+			illnessTabs.addTab(illness.getName(), medicationsPanel);
+			illnessIdToIllnessTab.put(illness.getId(), medicationsPanel);
+
 		}
 	}
 
@@ -306,8 +312,8 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		}
 	}
 
-	public void viewData(ExaminationData examinationData, Long selectedIllnessId) {
-		setData(examinationData);
+	public void viewData(long patientId, ExaminationData examinationData, Long selectedIllnessId) {
+		setData(patientId, examinationData);
 		if (selectedIllnessId != null) {
 			switchIllnessTab(selectedIllnessId.longValue());
 		}
