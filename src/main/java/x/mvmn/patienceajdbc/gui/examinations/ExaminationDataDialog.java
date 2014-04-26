@@ -48,39 +48,56 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 	private static final long serialVersionUID = 6500734325958188610L;
 
 	private final MessageSource messageSource;
-	private volatile Locale currentLocale = Locale.US;
+	private volatile Locale currentLocale = Locale.ENGLISH;
 
+	private static final String LOCALIZATION_KEY_FIELD_DATE = "examination_dialog.field.date";
+	private static final String LOCALIZATION_KEY_FIELD_NUMBER = "examination_dialog.field.number";
+	private static final String LOCALIZATION_KEY_FIELD_MATHERIAL = "examination_dialog.field.matherial";
 	private static final String LOCALIZATION_KEY_FIELD_BLOOD_ANALYSIS = "examination_dialog.field.blood_analysis";
+	private static final String LOCALIZATION_KEY_FIELD_MIELOGRAMM = "examination_dialog.field.mielogramm";
+	private static final String LOCALIZATION_KEY_FIELD_TREATMENT_DESCRIPTION = "examination_dialog.field.treatment_desc";
+	private static final String LOCALIZATION_KEY_FIELD_TREATMENT = "examination_dialog.field.treatment";
+	private static final String LOCALIZATION_KEY_FIELD_COMMENTS = "examination_dialog.field.comments";
+	private static final String LOCALIZATION_KEY_FIELD_PHASE = "examination_dialog.field.phase";
+
+	private static final String LOCALIZATION_KEY_AREA_CARIOTYPE = "examination_dialog.area.cariotype";
+	private static final String LOCALIZATION_KEY_AREA_FISH = "examination_dialog.area.fish";
+
+	private static final String LOCALIZATION_KEY_CARIOTYPE_DESCRIPTION = "examination_dialog.cariotype.description";
+	private static final String LOCALIZATION_KEY_FISH_DESCRIPTION = "examination_dialog.fish.description";
+	private static final String LOCALIZATION_KEY_CARIOTYPE_COMMENTS = "examination_dialog.cariotype.comments";
+	private static final String LOCALIZATION_KEY_FISH_COMMENTS = "examination_dialog.fish.comments";
+
 	private static final String LOCALIZATION_KEY_BUTTON_SAVE = "examination_details_window.button.save";
 	private static final String LOCALIZATION_KEY_BUTTON_CANCEL = "examination_details_window.button.cancel";
 
 	// FIXME: localize
-	protected final TitledBorder lbDate = new TitledBorder("Date");
+	protected final TitledBorder lbDate = new TitledBorder("");
 	protected final JTextField tfDate = new JTextField();
-	protected final TitledBorder lbNumber = new TitledBorder("Number");
+	protected final TitledBorder lbNumber = new TitledBorder("");
 	protected final JTextField tfNumber = new JTextField();
-	protected final TitledBorder lbMatherial = new TitledBorder("Matherial");
+	protected final TitledBorder lbMatherial = new TitledBorder("");
 	protected final JTextField tfMatherial = new JTextField();
 	protected final TitledBorder lbBlood = new TitledBorder("");
 	protected final JTextField tfBlood = new JTextField();
-	protected final TitledBorder lbMielogramm = new TitledBorder("Mielogramm");
+	protected final TitledBorder lbMielogramm = new TitledBorder("");
 	protected final JTextField tfMielogramm = new JTextField();
-	protected final TitledBorder lbTreatment = new TitledBorder("Treatment");
-	protected final JTextArea taTreatment = new JTextArea();
-	protected final TitledBorder lbComments = new TitledBorder("Comments");
+	protected final TitledBorder lbTreatmentDescription = new TitledBorder("");
+	protected final JTextArea taTreatmentDescription = new JTextArea();
+	protected final TitledBorder lbComments = new TitledBorder("");
 	protected final JTextArea taComments = new JTextArea();
 
-	protected final TitledBorder lbIllnessPhase = new TitledBorder("Phase");
+	protected final TitledBorder lbIllnessPhase = new TitledBorder("");
 	protected final JComboBox<IllnessPhase> cbIllenssPhase;
 
-	protected final TitledBorder lbCariotypeDesc = new TitledBorder("Cariotype: description");
+	protected final TitledBorder lbCariotypeDesc = new TitledBorder("");
 	protected final JTextField tfCariotypeDesc = new JTextField();
-	protected final TitledBorder lbCariotypeComments = new TitledBorder("Cariotype: comments");
+	protected final TitledBorder lbCariotypeComments = new TitledBorder("");
 	protected final JTextArea taCariotypeComments = new JTextArea();
 
-	protected final TitledBorder lbFishDesc = new TitledBorder("FISH: description");
+	protected final TitledBorder lbFishDesc = new TitledBorder("");
 	protected final JTextField tfFishDesc = new JTextField();
-	protected final TitledBorder lbFishComments = new TitledBorder("FISH: comments");
+	protected final TitledBorder lbFishComments = new TitledBorder("");
 	protected final JTextArea taFishComments = new JTextArea();
 
 	protected final JButton btnSave = new JButton();
@@ -88,6 +105,10 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 	protected final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+	protected final TitledBorder lbCariotype = new TitledBorder("");
+	protected final TitledBorder lbFish = new TitledBorder("");
+
+	protected final TitledBorder lbTreatment = new TitledBorder("");
 	protected final GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>> medicationsTable = new GeneralisedJTable<GeneralisedMutableTableModel<Medication, String>>();
 	protected final MedicationChooserDialog medChooserDialog;
 
@@ -144,9 +165,9 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 			firstFieldsSubPanel.add(secondaryFieldsPanel);
 		}
 		{
-			JScrollPane taTreatmentTextScrollPane = new JScrollPane(taTreatment);
+			JScrollPane taTreatmentTextScrollPane = new JScrollPane(taTreatmentDescription);
 			taTreatmentTextScrollPane.setPreferredSize(taTreatmentTextScrollPane.getMinimumSize());
-			taTreatmentTextScrollPane.setBorder(lbTreatment);
+			taTreatmentTextScrollPane.setBorder(lbTreatmentDescription);
 			firstFieldsSubPanel.add(taTreatmentTextScrollPane);
 
 		}
@@ -156,29 +177,34 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 			taCommentsScrollPane.setBorder(lbComments);
 			firstFieldsSubPanel.add(taCommentsScrollPane);
 		}
-		JPanel secondFieldsSubPanel = new JPanel(new GridLayout(1, 2));
-		secondFieldsSubPanel.add(tfCariotypeDesc);
-		secondFieldsSubPanel.add(tfFishDesc);
+		// JPanel secondFieldsSubPanel = new JPanel(new GridLayout(1, 2));
+		// secondFieldsSubPanel.add(tfCariotypeDesc);
+		// secondFieldsSubPanel.add(tfFishDesc);
 
-		JPanel thirdFieldsSubPanel = new JPanel(new GridLayout(1, 2));
+		JPanel cariotypeSubPanel = new JPanel(new BorderLayout());
+		cariotypeSubPanel.setBorder(lbCariotype);
+		cariotypeSubPanel.add(tfCariotypeDesc, BorderLayout.NORTH);
 		{
 			JScrollPane taCariotypeCommentsScrollPane = new JScrollPane(taCariotypeComments);
 			taCariotypeCommentsScrollPane.setPreferredSize(taCariotypeCommentsScrollPane.getMinimumSize());
 			taCariotypeCommentsScrollPane.setBorder(lbCariotypeComments);
-			thirdFieldsSubPanel.add(taCariotypeCommentsScrollPane);
+			cariotypeSubPanel.add(taCariotypeCommentsScrollPane, BorderLayout.CENTER);
 		}
+		JPanel fishSubPanel = new JPanel(new BorderLayout());
+		fishSubPanel.setBorder(lbFish);
+		fishSubPanel.add(tfFishDesc, BorderLayout.NORTH);
 		{
 			JScrollPane taFishCommentsScrollPane = new JScrollPane(taFishComments);
 			taFishCommentsScrollPane.setPreferredSize(taFishCommentsScrollPane.getMinimumSize());
 			taFishCommentsScrollPane.setBorder(lbFishComments);
-			thirdFieldsSubPanel.add(taFishCommentsScrollPane);
+			fishSubPanel.add(taFishCommentsScrollPane, BorderLayout.CENTER);
 		}
 
 		JPanel fieldsPanel = new JPanel(new GridLayout(2, 1));
 		fieldsPanel.add(firstFieldsSubPanel);
-		JPanel lastFieldsSubPanel = new JPanel(new BorderLayout());
-		lastFieldsSubPanel.add(secondFieldsSubPanel, BorderLayout.NORTH);
-		lastFieldsSubPanel.add(thirdFieldsSubPanel, BorderLayout.CENTER);
+		JPanel lastFieldsSubPanel = new JPanel(new GridLayout(1, 2));
+		lastFieldsSubPanel.add(cariotypeSubPanel);
+		lastFieldsSubPanel.add(fishSubPanel);
 		fieldsPanel.add(lastFieldsSubPanel);
 
 		JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
@@ -203,15 +229,15 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 						}
 						if (examData == null) {
 							examData = examinationsService.create(currentPatientId, currentIllnessId, number, tfMatherial.getText(), tfBlood.getText(),
-									tfMielogramm.getText(), taTreatment.getText(), taComments.getText(), date,
-									cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
+									tfMielogramm.getText(), taTreatmentDescription.getText(), taComments.getText(), date, cbIllenssPhase.getModel()
+											.getElementAt(cbIllenssPhase.getSelectedIndex()));
 							ExaminationDataDialog.this.currentData = examData;
 						} else {
 							examData.setNumber(number);
 							examData.setMatherial(tfMatherial.getText());
 							examData.setBlood(tfBlood.getText());
 							examData.setMielogramm(tfMielogramm.getText());
-							examData.setTreatmentDescription(taTreatment.getText());
+							examData.setTreatmentDescription(taTreatmentDescription.getText());
 							examData.setComments(taComments.getText());
 							examData.setExaminationDate(date);
 							examData.setPhase(cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
@@ -246,6 +272,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 		JPanel medicationsPanel = new JPanel(new BorderLayout());
 		{
+			medicationsPanel.setBorder(lbTreatment);
 			medicationsPanel.add(new JScrollPane(medicationsTable), BorderLayout.CENTER);
 			JPanel medButtonsPanel = new JPanel(new BorderLayout());
 			JButton addMedication = new JButton("+"); // TODO: localize
@@ -284,7 +311,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		this.getContentPane().setLayout(new BorderLayout());
 		fieldsPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		this.getContentPane().add(fieldsPanel, BorderLayout.NORTH);
-		medicationsPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		// medicationsPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		this.getContentPane().add(medicationsPanel, BorderLayout.CENTER);
 		buttonsPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		this.getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
@@ -322,7 +349,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		this.tfMatherial.setText(data != null ? data.getMatherial() : "");
 		this.tfBlood.setText(data != null ? data.getBlood() : "");
 		this.tfMielogramm.setText(data != null ? data.getMielogramm() : "");
-		this.taTreatment.setText(data != null ? data.getTreatmentDescription() : "");
+		this.taTreatmentDescription.setText(data != null ? data.getTreatmentDescription() : "");
 		this.taComments.setText(data != null ? data.getComments() : "");
 
 		this.cbIllenssPhase.setSelectedItem(data != null ? data.getPhase() : IllnessPhase.UNSET);
@@ -357,7 +384,23 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		super.setLocale(locale);
 		this.currentLocale = locale;
 		if (messageSource != null && locale != null) {
+			lbDate.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_DATE, null, locale));
+			lbNumber.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_NUMBER, null, locale));
+			lbMatherial.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_MATHERIAL, null, locale));
 			lbBlood.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_BLOOD_ANALYSIS, null, locale));
+			lbMielogramm.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_MIELOGRAMM, null, locale));
+			lbTreatmentDescription.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_TREATMENT_DESCRIPTION, null, locale));
+			lbComments.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_COMMENTS, null, locale));
+			lbIllnessPhase.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_PHASE, null, locale));
+			lbTreatment.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_TREATMENT, null, locale));
+
+			lbCariotype.setTitle(messageSource.getMessage(LOCALIZATION_KEY_AREA_CARIOTYPE, null, locale));
+			lbFish.setTitle(messageSource.getMessage(LOCALIZATION_KEY_AREA_FISH, null, locale));
+
+			lbCariotypeDesc.setTitle(messageSource.getMessage(LOCALIZATION_KEY_CARIOTYPE_DESCRIPTION, null, locale));
+			lbCariotypeComments.setTitle(messageSource.getMessage(LOCALIZATION_KEY_CARIOTYPE_COMMENTS, null, locale));
+			lbFishDesc.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FISH_DESCRIPTION, null, locale));
+			lbFishComments.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FISH_COMMENTS, null, locale));
 
 			btnSave.setText(messageSource.getMessage(LOCALIZATION_KEY_BUTTON_SAVE, null, locale));
 			btnCancel.setText(messageSource.getMessage(LOCALIZATION_KEY_BUTTON_CANCEL, null, locale));
