@@ -2,17 +2,26 @@ package x.mvmn.patienceajdbc.gui.patients;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.springframework.context.MessageSource;
+
+import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeAware;
+import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeNotifier;
 import x.mvmn.patienceajdbc.model.PatientStatsData;
 
-public class PatientsListTableModel extends AbstractTableModel {
+public class PatientsListTableModel extends AbstractTableModel implements LocaleChangeAware {
 	private static final long serialVersionUID = -1702487989268809882L;
 
 	private final List<PatientStatsData> patientsStatData;
+	private final MessageSource messageSource;
 
-	public PatientsListTableModel(final List<PatientStatsData> patientsData) {
+	private Locale locale = Locale.ENGLISH;
+
+	public PatientsListTableModel(final List<PatientStatsData> patientsData, final MessageSource messageSource) {
+		this.messageSource = messageSource;
 		if (patientsData != null) {
 			this.patientsStatData = patientsData;
 		} else {
@@ -33,10 +42,12 @@ public class PatientsListTableModel extends AbstractTableModel {
 		// Index out of bounds? You deserve it!
 	}
 
-	private static final String[] COLUMN_NAMES = { "ID", "Name", "Date of Birth", "Address", "First Examination", "Visits" };
+	private static final String[] COLUMN_NAMES = { "patients_per_illness_list.column.id", "patients_per_illness_list.column.name",
+			"patients_per_illness_list.column.date_of_birth", "patients_per_illness_list.column.address", "patients_per_illness_list.column.first_examination",
+			"patients_per_illness_list.column.visits" };
 
 	public String getColumnName(int columnIndex) {
-		return columnIndex < COLUMN_NAMES.length ? COLUMN_NAMES[columnIndex] : "";
+		return columnIndex < COLUMN_NAMES.length ? messageSource.getMessage(COLUMN_NAMES[columnIndex], null, locale) : "";
 	}
 
 	public PatientStatsData getValue(int rowIndex) {
@@ -71,6 +82,19 @@ public class PatientsListTableModel extends AbstractTableModel {
 		}
 
 		return result;
+	}
+
+	@Override
+	public void setLocale(Locale locale) {
+		if (locale != null) {
+			this.locale = locale;
+			this.fireTableStructureChanged();
+		}
+	}
+
+	@Override
+	public void setSelfAsLocaleChangeListener(LocaleChangeNotifier notifier) {
+		notifier.registerLocaleChangeListener(this);
 	}
 
 }

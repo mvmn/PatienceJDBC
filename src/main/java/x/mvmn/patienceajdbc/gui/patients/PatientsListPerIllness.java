@@ -15,12 +15,14 @@ import org.springframework.context.MessageSource;
 
 import x.mvmn.lang.Identifiable;
 import x.mvmn.patienceajdbc.gui.Titled;
+import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeAware;
+import x.mvmn.patienceajdbc.gui.l10n.LocaleChangeNotifier;
 import x.mvmn.patienceajdbc.gui.l10n.Localizable;
 import x.mvmn.patienceajdbc.model.Illness;
 import x.mvmn.patienceajdbc.model.PatientStatsData;
 import x.mvmn.patienceajdbc.service.PatientsService;
 
-public class PatientsListPerIllness extends JPanel implements Localizable, Titled, Identifiable<Long> {
+public class PatientsListPerIllness extends JPanel implements LocaleChangeAware, Titled, Identifiable<Long> {
 
 	private static final long serialVersionUID = 7130221932695416110L;
 	private static final String LOCALIZATION_KEY_ILLNESS_TAB_NAME_ALL = "patients_per_illness_list_component.tabs.all.title";
@@ -32,10 +34,12 @@ public class PatientsListPerIllness extends JPanel implements Localizable, Title
 	protected final PatientsService patientsService;
 	protected final Illness illnessToFilterBy;
 	protected final JTable tblPatientsList;
-	protected final PatientsListTableModel patientsListTableModel;
+	protected PatientsListTableModel patientsListTableModel;
 
 	protected final MessageSource messageSource;
 	protected volatile Locale locale = Locale.US;
+
+	private volatile LocaleChangeNotifier lcNotifier;
 
 	public PatientsListPerIllness(final PatientsListWindow patientsListWindow, final MessageSource messageSource, final PatientsService patientsService,
 			final Illness illnessToFilterBy) {
@@ -50,7 +54,7 @@ public class PatientsListPerIllness extends JPanel implements Localizable, Title
 		}
 
 		List<PatientStatsData> patientsStatsData = loadData(illnessToFilterBy);
-		patientsListTableModel = new PatientsListTableModel(patientsStatsData);
+		patientsListTableModel = new PatientsListTableModel(patientsStatsData, messageSource);
 		tblPatientsList = new JTable(patientsListTableModel);
 		tblPatientsList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -84,7 +88,12 @@ public class PatientsListPerIllness extends JPanel implements Localizable, Title
 
 	public void reloadData() {
 		List<PatientStatsData> patientsStatsData = loadData(illnessToFilterBy);
-		tblPatientsList.setModel(new PatientsListTableModel(patientsStatsData));
+		patientsListTableModel = new PatientsListTableModel(patientsStatsData, messageSource);
+		if (lcNotifier != null) {
+			patientsListTableModel.setSelfAsLocaleChangeListener(lcNotifier);
+			patientsListTableModel.setLocale(lcNotifier.getLastSetLocale());
+		}
+		tblPatientsList.setModel(patientsListTableModel);
 		// revalidate and repaint are already called by javax.swing.JTable
 		// inside setModel method
 	}
@@ -102,6 +111,9 @@ public class PatientsListPerIllness extends JPanel implements Localizable, Title
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 		super.setLocale(locale);
+		if (this.tblPatientsList.getModel() instanceof Localizable) {
+
+		}
 	}
 
 	public void setTitle(String title) {
@@ -125,5 +137,12 @@ public class PatientsListPerIllness extends JPanel implements Localizable, Title
 
 	public JTable getTblPatientsList() {
 		return tblPatientsList;
+	}
+
+	@Override
+	public void setSelfAsLocaleChangeListener(LocaleChangeNotifier notifier) {
+		lcNotifier = notifier;
+		patientsListTableModel.setSelfAsLocaleChangeListener(notifier);
+		patientsListTableModel.setLocale(notifier.getLastSetLocale());
 	}
 }

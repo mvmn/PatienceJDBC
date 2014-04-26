@@ -319,6 +319,10 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 
 	protected void addPerIllnessPatientsListTab(Illness illnessToFilterBy) {
 		PatientsListPerIllness patientsListComponent = new PatientsListPerIllness(this, messageSource, patientsService, illnessToFilterBy);
+		if (localeChangeNotifier != null) {
+			patientsListComponent.setSelfAsLocaleChangeListener(localeChangeNotifier);
+			patientsListComponent.setLocale(localeChangeNotifier.getLastSetLocale());
+		}
 		illnessTabs.addTab(patientsListComponent.getTitle(), patientsListComponent);
 		patientsListsPerIllnessById.put(patientsListComponent.getId(), patientsListComponent);
 	}
@@ -337,6 +341,9 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 	public void setSelfAsLocaleChangeListener(final LocaleChangeNotifier localeChangeNotifier) {
 		this.illnessTabs.setSelfAsLocaleChangeListener(localeChangeNotifier);
 		this.patientDataDialog.setSelfAsLocaleChangeListener(localeChangeNotifier);
+		for (PatientsListPerIllness patientsList : this.patientsListsPerIllnessById.values()) {
+			patientsList.setSelfAsLocaleChangeListener(localeChangeNotifier);
+		}
 
 		this.localeChangeNotifier = localeChangeNotifier;
 		localeChangeNotifier.registerLocaleChangeListener(this);
