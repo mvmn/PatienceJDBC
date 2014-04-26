@@ -232,7 +232,7 @@ public class ExaminationDaoImpl implements ExaminationDao {
 		final long examinationDataDbId = key.longValue();
 
 		// if (subtypeTable != null) {
-		Map<String, AbstractExaminationResultsImpl> examinationResultsMap = new HashMap<>();
+		Map<String, AbstractExaminationResultsImpl> examinationResultsMap = new HashMap<String, AbstractExaminationResultsImpl>();
 		examinationResultsMap.put("CariotypeExamResults", cariotypeExaminationResultsImpl);
 		examinationResultsMap.put("FishExamResults", fishExaminationResultsImpl);
 		for (Map.Entry<String, AbstractExaminationResultsImpl> entry : examinationResultsMap.entrySet()) {
