@@ -22,8 +22,8 @@ public class ExaminationsServiceImpl implements ExaminationsService {
 	 * 
 	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#get(long)
 	 */
-	public ExaminationDataImpl get(long id) {
-		return examinationDao.get(id);
+	public ExaminationDataImpl get(long id, boolean fetchMedications) {
+		return examinationDao.get(id, fetchMedications);
 	}
 
 	/*
@@ -31,8 +31,8 @@ public class ExaminationsServiceImpl implements ExaminationsService {
 	 * 
 	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#getByNumber(int)
 	 */
-	public ExaminationDataImpl getByNumber(int number) {
-		return examinationDao.getByNumber(number);
+	public ExaminationDataImpl getByNumber(int number, boolean fetchMedications) {
+		return examinationDao.getByNumber(number, fetchMedications);
 	}
 
 	/*
@@ -42,10 +42,8 @@ public class ExaminationsServiceImpl implements ExaminationsService {
 	 * java.lang.String, java.lang.String, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public ExaminationDataImpl create(long patientId, long illnessId, int number, String matherial, String blood, String mielogramm,
-			String treatmentDescription, String comments, Date examinationDate, IllnessPhase illnessPhase, String typeName, String nomenclaturalDescription,
-			String examinationComments) {
-		return examinationDao.create(patientId, illnessId, number, matherial, blood, mielogramm, treatmentDescription, comments, examinationDate, illnessPhase,
-				typeName, nomenclaturalDescription, examinationComments);
+			String treatmentDescription, String comments, Date examinationDate, IllnessPhase illnessPhase) {
+		return examinationDao.create(patientId, illnessId, number, matherial, blood, mielogramm, treatmentDescription, comments, examinationDate, illnessPhase);
 	}
 
 	/*
@@ -72,8 +70,8 @@ public class ExaminationsServiceImpl implements ExaminationsService {
 	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#getByPatient(int)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<ExaminationData> getByPatient(long patientId) {
-		return (List) examinationDao.getByPatient(patientId);
+	public List<ExaminationData> getByPatient(long patientId, boolean fetchMedications) {
+		return (List) examinationDao.getByPatient(patientId, fetchMedications);
 	}
 
 	/*
@@ -82,8 +80,8 @@ public class ExaminationsServiceImpl implements ExaminationsService {
 	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#getByIllness(int)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<ExaminationData> getByIllness(long illnessId) {
-		return (List) examinationDao.getByIllness(illnessId);
+	public List<ExaminationData> getByIllness(long illnessId, boolean fetchMedications) {
+		return (List) examinationDao.getByIllness(illnessId, fetchMedications);
 	}
 
 	/*
@@ -92,7 +90,12 @@ public class ExaminationsServiceImpl implements ExaminationsService {
 	 * @see x.mvmn.patienceajdbc.service.impl.ExaminationsService#getByPatientAndIllness(int, int)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<ExaminationData> getByPatientAndIllness(long patientId, long illnessId) {
-		return (List) examinationDao.getByPatientAndIllness(patientId, illnessId);
+	public List<ExaminationData> getByPatientAndIllness(long patientId, long illnessId, boolean fetchMedications) {
+		return (List) examinationDao.getByPatientAndIllness(patientId, illnessId, fetchMedications);
+	}
+
+	@Override
+	public void update(ExaminationData examData, boolean updateMedications) {
+		examinationDao.update(examData, updateMedications);
 	}
 }

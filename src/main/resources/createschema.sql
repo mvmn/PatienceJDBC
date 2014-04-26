@@ -4,6 +4,7 @@ drop table if exists Medication;
 drop table if exists PatientData;
 drop table if exists MedicationToPatient;
 drop table if exists ExaminationResults;
+drop table if exists MedicationToExaminationResults;
 drop table if exists ExaminationResultsToTag;
 drop table if exists FishExamResults;
 drop table if exists CariotypeExamResults;
@@ -80,6 +81,16 @@ create table ExaminationResults (
   index ix_examinationresults_date(examinationDate),
   index ix_examinationresults_illnessphase(illnessPhase),
   index ix_examinationresults_typename(typeName)
+);
+
+create table MedicationToExaminationResults (
+  id int not null primary key auto_increment,
+  examinationId int,
+  medicationId int,
+  
+  index ix_medicationtoexamination_medicationid(medicationId),
+  index ix_medicationtoexamination_examinationid(examinationId),
+  unique index ix_medicationtoexaminationtopatient_medicationexaminationid(medicationId, examinationId)
 );
 
 create table ExaminationResultsToTag (

@@ -5,6 +5,7 @@ import java.util.List;
 
 import x.mvmn.patienceajdbc.model.ExaminationData;
 import x.mvmn.patienceajdbc.model.IllnessPhase;
+import x.mvmn.patienceajdbc.model.Medication;
 
 public final class ExaminationDataImpl implements ExaminationData {
 
@@ -15,7 +16,7 @@ public final class ExaminationDataImpl implements ExaminationData {
 	private String matherial;
 	private String blood;
 	private String mielogramm;
-	private List<MedicationImpl> treatment;
+	private List<Medication> treatment;
 	private String treatmentDescription;
 	private String comments;
 	private Date examinationDate;
@@ -72,11 +73,11 @@ public final class ExaminationDataImpl implements ExaminationData {
 		this.mielogramm = mielogramm;
 	}
 
-	public List<MedicationImpl> getTreatment() {
+	public List<Medication> getTreatment() {
 		return treatment;
 	}
 
-	public void setTreatment(List<MedicationImpl> treatment) {
+	public void setTreatment(List<Medication> treatment) {
 		this.treatment = treatment;
 	}
 

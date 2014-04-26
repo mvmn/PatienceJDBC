@@ -112,7 +112,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	protected final JButton btnSave = new JButton();
 	protected final JButton btnCancel = new JButton();
 
-	protected volatile long currentPatientId = -1;
+	protected volatile PatientData currentPatientData;
 
 	protected final PatientsService patientsService;
 	protected final IllnessesService illnessesService;
@@ -220,9 +220,10 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		}
 
 		JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
+		buttonsPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		{
-			buttonsPanel.add(btnSave);
 			buttonsPanel.add(btnCancel);
+			buttonsPanel.add(btnSave);
 
 			btnCancel.addActionListener(new ActionListener() {
 				@Override
@@ -236,9 +237,6 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 				public void actionPerformed(ActionEvent e) {
 					// TODO: move off event dispatching thread
 					try {
-						long currentPatientId = PatientDataDialog.this.currentPatientId;
-						PatientData patientData;
-
 						String firstName = tfFirstName.getText();
 						String lastName = tfLastName.getText();
 						String patronymicName = tfPatronymicName.getText();
@@ -261,7 +259,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 							}
 						}
 						Date deathDate = null;
-						if (tfDeathDate.getText().trim().length() > 0) {
+						if (cbDead.isSelected() && tfDeathDate.getText().trim().length() > 0) {
 							try {
 								deathDate = dateFormat.parse(tfDeathDate.getText());
 							} catch (ParseException e1) {
@@ -273,8 +271,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 						String address = taAddressText.getText();
 						String anamnesis = taAnamnesis.getText();
 
-						if (currentPatientId >= 0) {
-							patientData = patientsService.get(currentPatientId, false);
+						PatientData patientData = currentPatientData;
+						if (patientData != null && patientData.getId() >= 0) {
 							patientData.setLastName(lastName);
 							patientData.setFirstName(firstName);
 							patientData.setPatronymicName(patronymicName);
@@ -316,16 +314,16 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		this.getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
 	}
 
-	public void recreateIllnessTabs(PatientData patientData) {
+	public void recreateIllnessTabs() {
 		illnessTabs.removeAll();
 		medicationsTables.clear();
 		illnessIdToIllnessTab.clear();
-		if (patientData != null) {
+		if (currentPatientData != null) {
 			Collection<Illness> illnessess = illnessesService.getAllIllnesses();
 			for (Illness illness : illnessess) {
 				List<Medication> patientsMedicationsForCurrentIllness;
-				if (patientData != null) {
-					List<Medication> allMedications = patientData.getPreviousTreatments();
+				if (currentPatientData != null) {
+					List<Medication> allMedications = currentPatientData.getPreviousTreatments();
 					patientsMedicationsForCurrentIllness = CollectionsHelper.createFilteredList(allMedications, new MedicationIllnessFilter(illness));
 				} else {
 					patientsMedicationsForCurrentIllness = Collections.emptyList();
@@ -346,8 +344,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							Medication med = medChooserDialog.chooseMedications(illness);
-							if (med != null) {
-								PatientData patientData = patientsService.get(currentPatientId, true);
+							if (med != null && currentPatientData != null) {
+								PatientData patientData = patientsService.get(currentPatientData.getId(), true);
 								if (patientData != null) {
 									List<Medication> medications = patientData.getPreviousTreatments();
 									if (!medications.contains(med)) {
@@ -368,11 +366,13 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 								for (int i = selectedIndicies.length - 1; i >= 0; i--) {
 									int selectedIndex = selectedIndicies[i];
 									Medication med = table.getTableModel().remove(selectedIndex);
-									PatientData patientData = patientsService.get(currentPatientId, true);
-									if (patientData != null) {
-										List<Medication> medications = patientData.getPreviousTreatments();
-										medications.remove(med);
-										patientsService.update(patientData, true);
+									if (currentPatientData != null) {
+										PatientData patientData = patientsService.get(currentPatientData.getId(), true);
+										if (patientData != null) {
+											List<Medication> medications = patientData.getPreviousTreatments();
+											medications.remove(med);
+											patientsService.update(patientData, true);
+										}
 									}
 								}
 							}
@@ -387,7 +387,11 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 
 				{
 					JPanel examinationsPanel = new JPanel(new BorderLayout());
-					final List<ExaminationData> examinations = examinationsService.getByPatientAndIllness(this.currentPatientId, illness.getId());
+					long patientId = -1;
+					if (currentPatientData != null) {
+						patientId = currentPatientData.getId();
+					}
+					final List<ExaminationData> examinations = examinationsService.getByPatientAndIllness(patientId, illness.getId(), false);
 					final GeneralisedJTable<GeneralisedMutableTableModel<ExaminationData, String>> examinationsTable = new GeneralisedJTable<GeneralisedMutableTableModel<ExaminationData, String>>(
 							new GeneralisedMutableTableModel<ExaminationData, String>(examinations, ExaminationCellValueAdaptor.INSTANCE));
 					examinationsTable.addMouseListener(new MouseAdapter() {
@@ -449,11 +453,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	}
 
 	protected void openExaminationDataDetails(ExaminationData examinationData) {
-		Long illnessId = null;
-		if (illnessTabs.getSelectedComponent() != null && illnessTabs.getSelectedComponent().getIllness() != null) {
-			illnessId = illnessTabs.getSelectedComponent().getIllness().getId();
-		}
-		examinationDataDialog.viewData(currentPatientId, examinationData, illnessId);
+		long illnessId = illnessTabs.getSelectedComponent().getIllness().getId();
+		examinationDataDialog.viewData(currentPatientData.getId(), illnessId, examinationData);
 	}
 
 	protected void resetDataAndClose() {
@@ -472,7 +473,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	protected void updateTitle(Locale locale) {
 		String titlePrefix = messageSource.getMessage(LOCALIZATION_KEY_WINDOW_TITLE, null, locale);
 		String newPatientMessage = messageSource.getMessage(LOCALIZATION_KEY_NEW_PATIENT, null, locale);
-		this.setTitle(titlePrefix + ": " + (currentPatientId >= 0 ? String.valueOf(currentPatientId) : newPatientMessage));
+		this.setTitle(titlePrefix + ": "
+				+ (currentPatientData != null && currentPatientData.getId() >= 0 ? String.valueOf(currentPatientData.getId()) : newPatientMessage));
 	}
 
 	public void setLocale(Locale locale) {
@@ -508,6 +510,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	 *            if null, default (empty) values will be set
 	 */
 	public void setData(PatientData patientData) {
+		this.currentPatientData = patientData;
 		String firstName = "";
 		String lastName = "";
 		String patronymicName = "";
@@ -517,7 +520,6 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		boolean dead = false;
 		String address = "";
 		String anamnesis = "";
-		currentPatientId = -1;
 
 		if (patientData != null) {
 			firstName = patientData.getFirstName();
@@ -535,10 +537,9 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 			dead = patientData.isDead();
 			address = patientData.getAddress();
 			anamnesis = patientData.getAnamnesis();
-			currentPatientId = patientData.getId();
 		}
 
-		recreateIllnessTabs(patientData);
+		recreateIllnessTabs();
 
 		tfFirstName.setText(firstName);
 		tfLastName.setText(lastName);
