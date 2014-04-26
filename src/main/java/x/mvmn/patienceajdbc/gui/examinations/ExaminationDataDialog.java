@@ -54,32 +54,33 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 	private static final String LOCALIZATION_KEY_BUTTON_SAVE = "examination_details_window.button.save";
 	private static final String LOCALIZATION_KEY_BUTTON_CANCEL = "examination_details_window.button.cancel";
 
-	protected final TitledBorder lbDate = new TitledBorder("");
+	// FIXME: localize
+	protected final TitledBorder lbDate = new TitledBorder("Date");
 	protected final JTextField tfDate = new JTextField();
-	protected final TitledBorder lbNumber = new TitledBorder("");
+	protected final TitledBorder lbNumber = new TitledBorder("Number");
 	protected final JTextField tfNumber = new JTextField();
-	protected final TitledBorder lbMatherial = new TitledBorder("");
+	protected final TitledBorder lbMatherial = new TitledBorder("Matherial");
 	protected final JTextField tfMatherial = new JTextField();
 	protected final TitledBorder lbBlood = new TitledBorder("");
 	protected final JTextField tfBlood = new JTextField();
-	protected final TitledBorder lbMielogramm = new TitledBorder("");
+	protected final TitledBorder lbMielogramm = new TitledBorder("Mielogramm");
 	protected final JTextField tfMielogramm = new JTextField();
-	protected final TitledBorder lbTreatment = new TitledBorder("");
+	protected final TitledBorder lbTreatment = new TitledBorder("Treatment");
 	protected final JTextArea taTreatment = new JTextArea();
-	protected final TitledBorder lbComments = new TitledBorder("");
+	protected final TitledBorder lbComments = new TitledBorder("Comments");
 	protected final JTextArea taComments = new JTextArea();
 
-	protected final TitledBorder lbIllnessPhase = new TitledBorder("");
+	protected final TitledBorder lbIllnessPhase = new TitledBorder("Phase");
 	protected final JComboBox<IllnessPhase> cbIllenssPhase;
 
-	protected final TitledBorder lbCariotypeDesc = new TitledBorder("");
+	protected final TitledBorder lbCariotypeDesc = new TitledBorder("Cariotype: description");
 	protected final JTextField tfCariotypeDesc = new JTextField();
-	protected final TitledBorder lbCariotypeComments = new TitledBorder("");
+	protected final TitledBorder lbCariotypeComments = new TitledBorder("Cariotype: comments");
 	protected final JTextArea taCariotypeComments = new JTextArea();
 
-	protected final TitledBorder lbFishDesc = new TitledBorder("");
+	protected final TitledBorder lbFishDesc = new TitledBorder("FISH: description");
 	protected final JTextField tfFishDesc = new JTextField();
-	protected final TitledBorder lbFishComments = new TitledBorder("");
+	protected final TitledBorder lbFishComments = new TitledBorder("FISH: comments");
 	protected final JTextArea taFishComments = new JTextArea();
 
 	protected final JButton btnSave = new JButton();
