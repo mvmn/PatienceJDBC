@@ -48,7 +48,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 	private static final long serialVersionUID = 6500734325958188610L;
 
 	private final MessageSource messageSource;
-	private volatile Locale currentLocale = Locale.ENGLISH;
+	// private volatile Locale currentLocale = Locale.ENGLISH;
 
 	private static final String LOCALIZATION_KEY_FIELD_DATE = "examination_dialog.field.date";
 	private static final String LOCALIZATION_KEY_FIELD_NUMBER = "examination_dialog.field.number";
@@ -382,7 +382,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 	public void setLocale(Locale locale) {
 		super.setLocale(locale);
-		this.currentLocale = locale;
+		// this.currentLocale = locale;
 		if (messageSource != null && locale != null) {
 			lbDate.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_DATE, null, locale));
 			lbNumber.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_NUMBER, null, locale));
