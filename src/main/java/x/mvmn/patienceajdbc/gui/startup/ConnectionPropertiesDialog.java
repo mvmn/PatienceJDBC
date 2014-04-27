@@ -118,7 +118,7 @@ public class ConnectionPropertiesDialog extends JDialog implements LocaleChangeA
 
 		this.getRootPane().setDefaultButton(btnDoConnect);
 
-		setLocale(Locale.US);
+		setLocale(new Locale("UA", "ua"));
 	}
 
 	public void setLocale(Locale locale) {

@@ -7,7 +7,7 @@ public class MedicationTableCellValueAdaptor implements TableCellValueAdaptor<Me
 
 	public static final MedicationTableCellValueAdaptor INSTANCE = new MedicationTableCellValueAdaptor();
 
-	private static final String COLUMN_NAMES[] = { "ID", "Medication" };
+	private static final String COLUMN_NAMES[] = { "Medication" };
 
 	private MedicationTableCellValueAdaptor() {
 	};
@@ -20,16 +20,7 @@ public class MedicationTableCellValueAdaptor implements TableCellValueAdaptor<Me
 
 	@Override
 	public String getValueAt(Medication medication, int columnIndex) {
-		String result = "";
-		switch (columnIndex) {
-			case 0:
-				result = String.valueOf(medication.getId());
-			break;
-			case 1:
-				result = medication.getName();
-			break;
-		}
-		return result;
+		return medication.getName();
 	}
 
 	@Override
@@ -39,6 +30,6 @@ public class MedicationTableCellValueAdaptor implements TableCellValueAdaptor<Me
 
 	@Override
 	public int getColumnsCount() {
-		return 2;
+		return 1;
 	}
 }

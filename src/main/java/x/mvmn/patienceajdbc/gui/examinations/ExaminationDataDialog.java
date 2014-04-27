@@ -358,14 +358,14 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		this.taCariotypeComments.setText("");
 		if (data != null && data.getCariotypeExaminationResults() != null) {
 			this.tfCariotypeDesc.setText(data.getCariotypeExaminationResults().getNomenclaturalDescription());
-			this.taCariotypeComments.setText(data.getCariotypeExaminationResults().getNomenclaturalDescription());
+			this.taCariotypeComments.setText(data.getCariotypeExaminationResults().getComments());
 		}
 
 		this.tfFishDesc.setText("");
 		this.taFishComments.setText("");
 		if (data != null && data.getFishExaminationResults() != null) {
 			this.tfFishDesc.setText(data.getFishExaminationResults().getNomenclaturalDescription());
-			this.taFishComments.setText(data.getFishExaminationResults().getNomenclaturalDescription());
+			this.taFishComments.setText(data.getFishExaminationResults().getComments());
 		}
 
 		populateMedicationsTable();

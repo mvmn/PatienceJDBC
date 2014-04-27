@@ -2,7 +2,7 @@ package x.mvmn.patienceajdbc.model;
 
 public enum IllnessPhase {
 
-	UNSET(""), CHRONIC("Chronic"), ACCELERATION("Acceleration"), BLAST_CRISIS("Blast Crisis");
+	UNSET(""), CHRONIC("Хронічна"), ACCELERATION("Акселерація"), BLAST_CRISIS("Бластна криза");
 
 	private String name;
 

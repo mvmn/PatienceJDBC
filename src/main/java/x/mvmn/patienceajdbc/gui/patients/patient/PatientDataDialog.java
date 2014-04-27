@@ -151,8 +151,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 				tfFirstName.setBorder(lblFirstName);
 				tfLastName.setBorder(lblLastName);
 				tfPatronymicName.setBorder(lblPatronymicName);
-				shortFieldsPanel.add(tfFirstName);
 				shortFieldsPanel.add(tfLastName);
+				shortFieldsPanel.add(tfFirstName);
 				shortFieldsPanel.add(tfPatronymicName);
 				fieldsPanel.add(shortFieldsPanel);
 			}
@@ -271,6 +271,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 						String address = taAddressText.getText();
 						String anamnesis = taAnamnesis.getText();
 
+						boolean newlyCreated = false;
+
 						PatientData patientData = currentPatientData;
 						if (patientData != null && patientData.getId() >= 0) {
 							patientData.setLastName(lastName);
@@ -284,13 +286,19 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 							patientData.setDead(dead);
 							patientsService.update(patientData, false);
 						} else {
+							newlyCreated = true;
 							patientData = patientsService.create(lastName, firstName, patronymicName, address, birthDate, diagnoseDate, deathDate, dead,
 									anamnesis);
+							PatientDataDialog.this.setData(patientData);
 						}
 
 						// TODO: Signalize successfull save
 						patientsListWindow.recreatePerIllnessListsTabs();
-						resetDataAndClose();
+						if (!newlyCreated) {
+							resetDataAndClose();
+						} else {
+							PatientDataDialog.this.pack();
+						}
 					} catch (Exception saveError) {
 						// TODO: localize
 						saveError.printStackTrace();

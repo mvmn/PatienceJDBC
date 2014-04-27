@@ -30,7 +30,7 @@ public class PatientsListTableModel extends AbstractTableModel implements Locale
 	}
 
 	public int getColumnCount() {
-		return 5;
+		return 4;
 	}
 
 	public int getRowCount() {
@@ -42,9 +42,8 @@ public class PatientsListTableModel extends AbstractTableModel implements Locale
 		// Index out of bounds? You deserve it!
 	}
 
-	private static final String[] COLUMN_NAMES = { "patients_per_illness_list.column.id", "patients_per_illness_list.column.name",
-			"patients_per_illness_list.column.date_of_birth", "patients_per_illness_list.column.address", "patients_per_illness_list.column.first_examination",
-			"patients_per_illness_list.column.visits" };
+	private static final String[] COLUMN_NAMES = { "patients_per_illness_list.column.name", "patients_per_illness_list.column.date_of_birth",
+			"patients_per_illness_list.column.address", "patients_per_illness_list.column.first_examination", "patients_per_illness_list.column.visits" };
 
 	public String getColumnName(int columnIndex) {
 		return columnIndex < COLUMN_NAMES.length ? messageSource.getMessage(COLUMN_NAMES[columnIndex], null, locale) : "";
@@ -60,22 +59,22 @@ public class PatientsListTableModel extends AbstractTableModel implements Locale
 			PatientStatsData rowModel = patientsStatData.get(row);
 
 			switch (column) {
+			// case 0:
+			// result = rowModel.getPatientId();
+			// break;
 				case 0:
-					result = rowModel.getPatientId();
-				break;
-				case 1:
 					result = rowModel.getFullName();
 				break;
-				case 2:
+				case 1:
 					result = rowModel.getDateOfBirth();
 				break;
-				case 3:
+				case 2:
 					result = rowModel.getAddress();
 				break;
-				case 4:
+				case 3:
 					result = rowModel.getDateOfFirstExamination();
 				break;
-				case 5:
+				case 4:
 					result = rowModel.getVisitsCount();
 				break;
 			}
