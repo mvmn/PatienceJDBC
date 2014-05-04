@@ -10,6 +10,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -131,7 +132,7 @@ public class TestDAOs {
 	@Test
 	public void testIllnessCrud() {
 		IllnessDao illnessDao = daoContext.getBean("illnessDao", IllnessDao.class);
-		assert (illnessDao.countAll() == 0);
+		Assert.assertTrue(illnessDao.countAll() == 0);
 		for (int i = 0; i < 2; i++) {
 			for (Illness illness : illnessDao.listAll()) {
 				illnessDao.delete(illness);
@@ -140,12 +141,21 @@ public class TestDAOs {
 			illnessDao.create("Flu");
 			illnessDao.create("Plague");
 
-			assert (illnessDao.countAll() == 2);
+			Assert.assertTrue(illnessDao.countAll() == 2);
 			Illness cyryllicNamedIllness = illnessDao.create("Боткина");
-			assert (illnessDao.countAll() == 3);
-			assert (illnessDao.getNameById(cyryllicNamedIllness.getId()).equals("Боткина"));
+			Assert.assertTrue(illnessDao.countAll() == 3);
+			Assert.assertTrue(illnessDao.getNameById(cyryllicNamedIllness.getId()).equals("Боткина"));
+			Assert.assertTrue(illnessDao.findByName("Боткина").getId() == cyryllicNamedIllness.getId());
 			illnessDao.delete(cyryllicNamedIllness);
-			assert (illnessDao.countAll() == 2);
+			Assert.assertTrue(illnessDao.countAll() == 2);
+
+			Exception duplicationError = null;
+			try {
+				illnessDao.create("Flu");
+			} catch (Exception e) {
+				duplicationError = e;
+			}
+			Assert.assertNotNull(duplicationError);
 		}
 	}
 
@@ -156,10 +166,10 @@ public class TestDAOs {
 		PatientDao patientDao = daoContext.getBean("patientDao", PatientDao.class);
 		TagDao tagDao = daoContext.getBean("tagDao", TagDao.class);
 
-		assert (illnessDao.countAll() == 0);
-		assert (medicationDao.countAll() == 0);
-		assert (patientDao.countAll() == 0);
-		assert (tagDao.countAll() == 0);
+		Assert.assertTrue(illnessDao.countAll() == 0);
+		Assert.assertTrue(medicationDao.countAll() == 0);
+		Assert.assertTrue(patientDao.countAll() == 0);
+		Assert.assertTrue(tagDao.countAll() == 0);
 		for (int i = 0; i < 2; i++) {
 			for (Illness illness : illnessDao.listAll()) {
 				illnessDao.delete(illness);
@@ -168,65 +178,65 @@ public class TestDAOs {
 			Illness flu = illnessDao.create("Flu");
 			Illness plague = illnessDao.create("Plague");
 
-			assert (illnessDao.countAll() == 2);
+			Assert.assertTrue(illnessDao.countAll() == 2);
 
 			for (Medication med : medicationDao.list(flu.getId())) {
 				medicationDao.delete(med);
 			}
 
-			assert (medicationDao.list(flu.getId()).size() == 0);
+			Assert.assertTrue(medicationDao.list(flu.getId()).size() == 0);
 			Medication fluAspirin = medicationDao.create(flu.getId(), "Aspirin");
 			Medication fluAflubin = medicationDao.create(flu.getId(), "Aflubin");
 			Medication plagueAflubin = medicationDao.create(plague.getId(), "Aflubin");
-			assert (medicationDao.countByIllness(flu.getId()) == 2);
-			assert (medicationDao.list(plague.getId()).size() == 1);
+			Assert.assertTrue(medicationDao.countByIllness(flu.getId()) == 2);
+			Assert.assertTrue(medicationDao.list(plague.getId()).size() == 1);
 			illnessDao.deleteByName("Plague");
-			assert (medicationDao.countByIllness(plague.getId()) == 0);
-			assert (medicationDao.findByName(flu.getId(), "Aflubin") != null);
-			assert (medicationDao.findByName(plagueAflubin.getIllnessId(), plagueAflubin.getName()) == null);
-			assert (medicationDao.list(flu.getId()).contains(fluAspirin));
-			assert (medicationDao.list(flu.getId()).contains(fluAflubin));
+			Assert.assertTrue(medicationDao.countByIllness(plague.getId()) == 0);
+			Assert.assertTrue(medicationDao.findByName(flu.getId(), "Aflubin") != null);
+			Assert.assertTrue(medicationDao.findByName(plagueAflubin.getIllnessId(), plagueAflubin.getName()) == null);
+			Assert.assertTrue(medicationDao.list(flu.getId()).contains(fluAspirin));
+			Assert.assertTrue(medicationDao.list(flu.getId()).contains(fluAflubin));
 
 			for (Tag tag : tagDao.listAll()) {
 				tagDao.delete(tag);
 			}
-			assert (tagDao.countAll() == 0);
-			assert (tagDao.listAll().size() == 0);
+			Assert.assertTrue(tagDao.countAll() == 0);
+			Assert.assertTrue(tagDao.listAll().size() == 0);
 			Tag tagOne = tagDao.create("tag one");
 			Tag tagTwo = tagDao.create("tag two");
-			assert (tagOne.getName().equals("tag one"));
-			assert (tagDao.listAll().get(1).getName().equals("tag two"));
-			assert (tagDao.findByName(tagTwo.getName()).getId() == tagTwo.getId());
-			assert (tagDao.getIdByName(tagOne.getName()) == tagOne.getId());
-			assert (tagDao.getNameById(tagTwo.getId()).equals("tag two"));
+			Assert.assertTrue(tagOne.getName().equals("tag one"));
+			Assert.assertTrue(tagDao.listAll().get(1).getName().equals("tag two"));
+			Assert.assertTrue(tagDao.findByName(tagTwo.getName()).getId() == tagTwo.getId());
+			Assert.assertTrue(tagDao.getIdByName(tagOne.getName()) == tagOne.getId());
+			Assert.assertTrue(tagDao.getNameById(tagTwo.getId()).equals("tag two"));
 
 			for (PatientData patient : patientDao.list(null, -1, -1, false)) {
 				patientDao.delete(patient);
 			}
-			assert (patientDao.countAll() == 0);
-			assert (patientDao.list(null, -1, -1, false).size() == 0);
+			Assert.assertTrue(patientDao.countAll() == 0);
+			Assert.assertTrue(patientDao.list(null, -1, -1, false).size() == 0);
 
 			patientDao.create("Doe", "John", null, null, 1965, 01, 01, null, null, null, 2010, 01, 01, true, "Was ill.");
 			patientDao.create("Doe", "Jane", null, null, 1970, 01, 01, null, null, null, 2012, 01, 01, true, "Was sick.");
-			assert (patientDao.countAll() == 2);
-			assert (patientDao.findCount("Doe", null, null, null, null, null, null, null, null, null, null, null, null, null, null) == 2);
-			assert (patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%sick%", false).size() == 1);
-			assert (patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%sick%", false).get(0).getFirstName()
-					.equals("Jane"));
-			assert (patientDao.find(null, null, "Petrovych", null, null, null, null, null, null, null, null, null, null, null, null, false).size() == 0);
-			assert (patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%ill%", false).size() == 1);
+			Assert.assertTrue(patientDao.countAll() == 2);
+			Assert.assertTrue(patientDao.findCount("Doe", null, null, null, null, null, null, null, null, null, null, null, null, null, null) == 2);
+			Assert.assertTrue(patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%sick%", false).size() == 1);
+			Assert.assertTrue(patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%sick%", false).get(0)
+					.getFirstName().equals("Jane"));
+			Assert.assertTrue(patientDao.find(null, null, "Petrovych", null, null, null, null, null, null, null, null, null, null, null, null, false).size() == 0);
+			Assert.assertTrue(patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%ill%", false).size() == 1);
 			PatientDataImpl john = patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%ill%", false).get(0);
-			assert (john.getFirstName().equals("John"));
+			Assert.assertTrue(john.getFirstName().equals("John"));
 			john.setPatronymicName("Petrovych");
 			patientDao.update(john, false);
-			assert (patientDao.find(null, null, "Petrovych", null, null, null, null, null, null, null, null, null, null, null, null, false).size() == 1);
+			Assert.assertTrue(patientDao.find(null, null, "Petrovych", null, null, null, null, null, null, null, null, null, null, null, null, false).size() == 1);
 			List<Medication> fluMeds = medicationDao.list(flu.getId());
-			assert (fluMeds.size() == 2);
+			Assert.assertTrue(fluMeds.size() == 2);
 			john.setPreviousTreatments(fluMeds);
 			patientDao.update(john, true);
-			assert (patientDao.get(john.getId(), true).getPreviousTreatments().size() == 2);
+			Assert.assertTrue(patientDao.get(john.getId(), true).getPreviousTreatments().size() == 2);
 			medicationDao.deleteAllByIllness(flu.getId());
-			assert (patientDao.get(john.getId(), true).getPreviousTreatments().size() == 0);
+			Assert.assertTrue(patientDao.get(john.getId(), true).getPreviousTreatments().size() == 0);
 			patientDao.create("Тест", "Василь", "Батькович", "Село", null, null, null, null, null, null, null, null, null, false, "Занедужав.");
 		}
 	}
