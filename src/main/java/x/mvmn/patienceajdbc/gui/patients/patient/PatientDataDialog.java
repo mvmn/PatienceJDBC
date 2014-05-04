@@ -511,6 +511,14 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		String address = "";
 		String anamnesis = "";
 
+		cbBirthDateDay.setSelectedIndex(0);
+		cbDiagnosisDateDay.setSelectedIndex(0);
+		cbDeathDateDay.setSelectedIndex(0);
+
+		cbBirthDateMonth.setSelectedIndex(0);
+		cbDiagnosisDateMonth.setSelectedIndex(0);
+		cbDeathDateMonth.setSelectedIndex(0);
+
 		if (patientData != null) {
 			firstName = patientData.getFirstName();
 			lastName = patientData.getLastName();
@@ -529,22 +537,22 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 				deathDateYear = patientData.getDeathDateYear().toString();
 			}
 			if (patientData.getBirthDateDay() != null) {
-				cbBirthDateDay.setSelectedItem(patientData.getBirthDateDay().intValue());
+				cbBirthDateDay.setSelectedIndex(patientData.getBirthDateDay().intValue());
 			}
 			if (patientData.getDiagnosisDateDay() != null) {
-				cbDiagnosisDateDay.setSelectedItem(patientData.getDiagnosisDateDay().intValue());
+				cbDiagnosisDateDay.setSelectedIndex(patientData.getDiagnosisDateDay().intValue());
 			}
 			if (patientData.getDeathDateDay() != null) {
-				cbDeathDateDay.setSelectedItem(patientData.getDeathDateDay().intValue());
+				cbDeathDateDay.setSelectedIndex(patientData.getDeathDateDay().intValue());
 			}
 			if (patientData.getBirthDateMonth() != null) {
-				cbBirthDateMonth.setSelectedItem(patientData.getBirthDateMonth().intValue());
+				cbBirthDateMonth.setSelectedIndex(patientData.getBirthDateMonth().intValue());
 			}
 			if (patientData.getDiagnosisDateMonth() != null) {
-				cbDiagnosisDateMonth.setSelectedItem(patientData.getDiagnosisDateMonth().intValue());
+				cbDiagnosisDateMonth.setSelectedIndex(patientData.getDiagnosisDateMonth().intValue());
 			}
 			if (patientData.getDeathDateMonth() != null) {
-				cbDeathDateMonth.setSelectedItem(patientData.getDeathDateMonth().intValue());
+				cbDeathDateMonth.setSelectedIndex(patientData.getDeathDateMonth().intValue());
 			}
 		}
 
