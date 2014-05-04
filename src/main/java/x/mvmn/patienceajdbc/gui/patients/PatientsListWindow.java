@@ -172,9 +172,9 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new BorderLayout());
-		bottomPanel.add(btnDeletePatient, BorderLayout.WEST);
+		bottomPanel.add(btnAddPatient, BorderLayout.WEST);
 		bottomPanel.add(btnEditPatient, BorderLayout.CENTER);
-		bottomPanel.add(btnAddPatient, BorderLayout.EAST);
+		bottomPanel.add(btnDeletePatient, BorderLayout.EAST);
 
 		contentPane.add(new JScrollPane(topPanel), BorderLayout.NORTH);
 		contentPane.add(centerPanel, BorderLayout.CENTER);

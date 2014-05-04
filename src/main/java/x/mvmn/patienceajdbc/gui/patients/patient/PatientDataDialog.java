@@ -224,8 +224,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
 		buttonsPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		{
-			buttonsPanel.add(btnCancel);
 			buttonsPanel.add(btnSave);
+			buttonsPanel.add(btnCancel);
 
 			btnCancel.addActionListener(new ActionListener() {
 				@Override
@@ -389,8 +389,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 							}
 						}
 					});
-					buttonsPanel.add(removeMedication, BorderLayout.WEST);
-					buttonsPanel.add(addMedication, BorderLayout.EAST);
+					buttonsPanel.add(removeMedication, BorderLayout.EAST);
+					buttonsPanel.add(addMedication, BorderLayout.WEST);
 					medicationsPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
 					tabContent.add(medicationsPanel);
@@ -442,8 +442,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 						}
 					});
 
-					buttonsPanel.add(removeExamination, BorderLayout.WEST);
-					buttonsPanel.add(addExamination, BorderLayout.EAST);
+					buttonsPanel.add(removeExamination, BorderLayout.EAST);
+					buttonsPanel.add(addExamination, BorderLayout.WEST);
 					examinationsPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
 					tabContent.add(examinationsPanel);

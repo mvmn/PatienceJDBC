@@ -209,8 +209,8 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 		JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
 		{
-			buttonsPanel.add(btnCancel);
 			buttonsPanel.add(btnSave);
+			buttonsPanel.add(btnCancel);
 			btnCancel.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -303,8 +303,8 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 					}
 				}
 			});
-			medButtonsPanel.add(removeMedication, BorderLayout.WEST);
-			medButtonsPanel.add(addMedication, BorderLayout.EAST);
+			medButtonsPanel.add(removeMedication, BorderLayout.EAST);
+			medButtonsPanel.add(addMedication, BorderLayout.WEST);
 			medicationsPanel.add(medButtonsPanel, BorderLayout.SOUTH);
 		}
 
