@@ -502,7 +502,10 @@ public class PatientDaoImpl implements PatientDao {
 	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#listStats(long, java.util.Date, java.util.Date, int)
 	 */
 	public List<PatientStatsData> listStats(final long illnessId, final Date visitDateFrom, final Date visitDateTo, int sortColumn) {
-		String query = "select PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, CONCAT(COALESCE(LPAD(PatientData.birthDateYear, 4, '00'),'????'), '-', COALESCE(LPAD(PatientData.birthDateMonth, 2, '00'),'??'), '-', COALESCE(LPAD(PatientData.birthDateDay, 2, '00'),'??')) as birthDate, max(ExaminationResults.examinationDate) as lastVisitDate, count(ExaminationResults.id) as visitsCount from PatientData left join ExaminationResults on ExaminationResults.patientId = PatientData.id where (1=1) ";
+		String query = "select PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, "
+				+ " CONCAT(COALESCE(LPAD(PatientData.birthDateYear, 4, '00'),'____'), '-', COALESCE(LPAD(PatientData.birthDateMonth, 2, '00'),'__'), '-', "
+				+ " COALESCE(LPAD(PatientData.birthDateDay, 2, '00'),'__')) as birthDate, max(ExaminationResults.examinationDate) as lastVisitDate, "
+				+ " count(ExaminationResults.id) as visitsCount from PatientData left join ExaminationResults on ExaminationResults.patientId = PatientData.id where (1=1) ";
 		List<Object> paramsList = new ArrayList<Object>(3);
 		if (illnessId >= 0) {
 			paramsList.add(illnessId);
