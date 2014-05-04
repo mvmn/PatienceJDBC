@@ -8,6 +8,8 @@ drop table if exists MedicationToExaminationResults;
 drop table if exists ExaminationResultsToTag;
 drop table if exists FishExamResults;
 drop table if exists CariotypeExamResults;
+drop table if exists PatientToTag;
+drop table if exists ExaminationResultsToTag;
 
 create table Tag (
   id int not null primary key auto_increment,
@@ -53,28 +55,16 @@ create table PatientData (
   
   index ix_patient_name(lastName),
   index ix_patient_dead(dead),
-  index ix_patient_date_birth(birthDate),
-  index ix_patient_date_death(deathDate),
-  index ix_patient_date_diagnose(diagnoseDate) 
+  index ix_patient_date_birth_y(birthDateYear),
+  index ix_patient_date_birth_m(birthDateMonth),
+  index ix_patient_date_birth_d(birthDateDay),
+  index ix_patient_date_death_y(diagnosisDateYear),
+  index ix_patient_date_death_m(diagnosisDateMonth),
+  index ix_patient_date_death_d(diagnosisDateDay),
+  index ix_patient_date_diagnose_y(deathDateYear),
+  index ix_patient_date_diagnose_m(deathDateMonth), 
+  index ix_patient_date_diagnose_d(deathDateDay) 
 );
-
-/*
-alter table PatientData drop column birthDate;
-alter table PatientData add column birthDateYear int;
-alter table PatientData add column birthDateMonth int;
-alter table PatientData add column birthDateDay int;
-
-alter table PatientData drop column diagnoseDate;
-alter table PatientData add column diagnosisDateYear int;
-alter table PatientData add column diagnosisDateMonth int;
-alter table PatientData add column diagnosisDateDay int;
-
-alter table PatientData drop column deathDate;
-alter table PatientData add column deathDateYear int;
-alter table PatientData add column deathDateMonth int;
-alter table PatientData add column deathDateDay int;
-
-*/
 
 create table MedicationToPatient (
   id int not null primary key auto_increment,
@@ -106,15 +96,12 @@ create table ExaminationResults (
   index ix_examinationresults_patientid(patientId),  
   unique index ix_examinationresults_number(number),
   index ix_examinationresults_date(examinationDate),
+  index ix_examinationresults_date_y(examinationDateYear),
+  index ix_examinationresults_date_m(examinationDateMonth),
+  index ix_examinationresults_date_d(examinationDateDay),
   index ix_examinationresults_illnessphase(illnessPhase),
   index ix_examinationresults_typename(typeName)
 );
-
-/*
-alter table ExaminationResults add column examinationDateYear int;
-alter table ExaminationResults add column examinationDateMonth int;
-alter table ExaminationResults add column examinationDateDay int;
-*/
 
 create table MedicationToExaminationResults (
   id int not null primary key auto_increment,
