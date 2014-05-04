@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
@@ -20,6 +21,7 @@ import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 
 public class DaoTests extends TestCase {
 
+	@Test
 	public void testAll() throws Exception {
 		GenericApplicationContext parentContext = new GenericApplicationContext();
 		final Properties props = new Properties();
