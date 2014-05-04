@@ -330,11 +330,24 @@ public class PatientsListWindow extends JFrame implements IllnessesService.Illne
 	public void recreatePerIllnessListsTabs() {
 		// TODO: run outside event-dispatching thread (maybe with progress
 		// indicator)
+		int selectedTabIndex = 0;
+		{
+			Object selectedTab = illnessTabs.getSelectedComponent();
+			for (int i = 0; i < illnessTabs.getTabCount(); i++) {
+				if (selectedTab == illnessTabs.getComponentAt(i)) {
+					selectedTabIndex = i;
+					break;
+				}
+			}
+		}
 		illnessTabs.removeAll();
 		addPerIllnessPatientsListTab(null);
 		Collection<Illness> illnesses = illnessesService.getAllIllnesses();
 		for (Illness illness : illnesses) {
 			addPerIllnessPatientsListTab(illness);
+		}
+		if (selectedTabIndex != 0) {
+			illnessTabs.setSelectedComponent(illnessTabs.getComponentAt(selectedTabIndex));
 		}
 	}
 
