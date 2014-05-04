@@ -15,7 +15,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
-public abstract class AbstractDAOTest<DT> {
+import x.mvmn.patienceajdbc.dao.DataAccessObject;
+
+public abstract class AbstractDAOTest<DT extends DataAccessObject> {
 
 	protected ClassPathXmlApplicationContext daoContext;
 

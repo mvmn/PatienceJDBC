@@ -9,7 +9,7 @@ import x.mvmn.patienceajdbc.model.PatientData;
 import x.mvmn.patienceajdbc.model.PatientStatsData;
 import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 
-public interface PatientDao {
+public interface PatientDao extends DataAccessObject {
 
 	public PatientDataImpl create(final String lastName, final String firstName, final String patronymicName, final String address,
 			final Integer birthDateYear, final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear,

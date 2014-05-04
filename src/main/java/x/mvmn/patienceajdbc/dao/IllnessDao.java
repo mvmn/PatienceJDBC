@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import x.mvmn.patienceajdbc.model.Illness;
 import x.mvmn.patienceajdbc.model.impl.IllnessImpl;
 
-public interface IllnessDao {
+public interface IllnessDao extends DataAccessObject {
 
 	public IllnessImpl create(String illnessName);
 

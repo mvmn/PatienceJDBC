@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import x.mvmn.patienceajdbc.model.Medication;
 
-public interface MedicationDao {
+public interface MedicationDao extends DataAccessObject {
 
 	public Medication create(long illnessId, String medicationName);
 

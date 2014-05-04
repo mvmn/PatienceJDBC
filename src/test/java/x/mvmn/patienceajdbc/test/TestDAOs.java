@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import x.mvmn.patienceajdbc.dao.DataAccessObject;
 import x.mvmn.patienceajdbc.dao.IllnessDao;
 import x.mvmn.patienceajdbc.dao.MedicationDao;
 import x.mvmn.patienceajdbc.dao.PatientDao;
@@ -15,7 +16,7 @@ import x.mvmn.patienceajdbc.model.PatientData;
 import x.mvmn.patienceajdbc.model.Tag;
 import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 
-public class TestDAOs extends AbstractDAOTest<Object> {
+public class TestDAOs extends AbstractDAOTest<DataAccessObject> {
 
 	// FIXME: Refactor into separate tests
 	@Test
@@ -101,7 +102,7 @@ public class TestDAOs extends AbstractDAOTest<Object> {
 	}
 
 	@Override
-	protected Class<Object> getDaoClass() {
+	protected Class<DataAccessObject> getDaoClass() {
 		return null;
 	}
 

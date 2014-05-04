@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import x.mvmn.patienceajdbc.model.Tag;
 import x.mvmn.patienceajdbc.model.impl.TagImpl;
 
-public interface TagDao {
+public interface TagDao extends DataAccessObject {
 
 	public TagImpl create(String tagName);
 

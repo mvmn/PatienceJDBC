@@ -8,7 +8,7 @@ import x.mvmn.patienceajdbc.model.ExaminationData;
 import x.mvmn.patienceajdbc.model.IllnessPhase;
 import x.mvmn.patienceajdbc.model.impl.ExaminationDataImpl;
 
-public interface ExaminationDao {
+public interface ExaminationDao extends DataAccessObject {
 
 	public ExaminationDataImpl get(long id, boolean fetchMedications);
 
