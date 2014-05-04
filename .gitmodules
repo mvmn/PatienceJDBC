@@ -1,0 +1,9 @@
+[submodule "MvmnJavaLangUtil"]
+	path = MvmnJavaLangUtil
+	url = https://github.com/mvmn/MvmnJavaLangUtil.git
+[submodule "SimpleEventBus"]
+	path = SimpleEventBus
+	url = https://github.com/mvmn/SimpleEventBus.git
+[submodule "SimpleEventBus-API"]
+	path = SimpleEventBus-API
+	url = https://github.com/mvmn/SimpleEventBus-API.git
