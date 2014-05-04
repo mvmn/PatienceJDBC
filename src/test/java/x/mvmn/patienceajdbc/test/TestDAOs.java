@@ -49,7 +49,7 @@ public class TestDAOs extends TestCase {
 
 			@SuppressWarnings("unused")
 			public boolean getProfileSql() {
-				return true;
+				return false;
 			}
 		});
 		parentContext.refresh();
@@ -136,7 +136,5 @@ public class TestDAOs extends TestCase {
 			assert (patientDao.get(john.getId(), true).getPreviousTreatments().size() == 0);
 			patientDao.create("Тест", "Василь", "Батькович", "Село", null, null, null, null, null, null, null, null, null, false, "Занедужав.");
 		}
-
-		System.out.println("All passed.");
 	}
 }
