@@ -28,7 +28,7 @@ import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 
 public class TestDAOs extends TestCase {
 
-	private ClassPathXmlApplicationContext context;
+	private ClassPathXmlApplicationContext daoContext;
 
 	@Before
 	public void setUp() throws Exception {
@@ -64,8 +64,8 @@ public class TestDAOs extends TestCase {
 		parentContext.refresh();
 		parentContext.getBean("dbConnectionDialog");
 
-		context = new ClassPathXmlApplicationContext(new String[] { "springioc/db.xml" }, parentContext);
-		DataSource dataSource = (DataSource) context.getBean("dbDataSource");
+		ClassPathXmlApplicationContext dbContext = new ClassPathXmlApplicationContext(new String[] { "springioc/db.xml" }, parentContext);
+		DataSource dataSource = (DataSource) dbContext.getBean("dbDataSource");
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
@@ -84,21 +84,23 @@ public class TestDAOs extends TestCase {
 					statement.execute(statemetText + ";");
 				}
 			}
+			statement.close();
 		} finally {
 			try {
 				connection.close();
 			} catch (Exception e) {
 			}
 		}
+		daoContext = new ClassPathXmlApplicationContext(new String[] { "springioc/dao.xml" }, dbContext);
 	}
 
 	@Test
 	public void testAll() throws Exception {
 
-		IllnessDao illnessDao = context.getBean("illnessDao", IllnessDao.class);
-		MedicationDao medicationDao = context.getBean("medicationDao", MedicationDao.class);
-		PatientDao patientDao = context.getBean("patientDao", PatientDao.class);
-		TagDao tagDao = context.getBean("tagDao", TagDao.class);
+		IllnessDao illnessDao = daoContext.getBean("illnessDao", IllnessDao.class);
+		MedicationDao medicationDao = daoContext.getBean("medicationDao", MedicationDao.class);
+		PatientDao patientDao = daoContext.getBean("patientDao", PatientDao.class);
+		TagDao tagDao = daoContext.getBean("tagDao", TagDao.class);
 
 		assert (illnessDao.countAll() == 0);
 		assert (medicationDao.countAll() == 0);

@@ -11,7 +11,7 @@
      http://www.springframework.org/schema/aop 
      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-	<import resource="db.xml" />
+	<import resource="dao.xml" />
 
 	<bean id="patientsListWindow" class="x.mvmn.patienceajdbc.gui.patients.PatientsListWindow"
 		scope="singleton">

@@ -14,13 +14,10 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
-# Maven generated files #
-#########################
-/target
-
 # Submodules #
 ##############
 MvmnJavaLangUtil/
 SimpleEventBus-API/
 SimpleEventBus/
 
+/target
