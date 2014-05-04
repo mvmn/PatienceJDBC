@@ -21,30 +21,6 @@ import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 public class DaoTests extends TestCase {
 
 	public void testAll() throws Exception {
-		// Driver mySqlDriver = (Driver)
-		// Class.forName("com.mysql.jdbc.Driver").newInstance();
-		// DriverManager.registerDriver(mySqlDriver);
-		// MysqlConnectionPoolDataSource dataSource = new
-		// MysqlConnectionPoolDataSource();
-		// dataSource.setUser("root");
-		// dataSource.setPassword("R6tCoD");
-		// dataSource.setServerName("localhost");
-		// dataSource.setPort(3306);
-		// dataSource.setDatabaseName("patience_test");
-		// dataSource.setCharacterEncoding("UTF-8");
-
-		// MySqlHelper.testConnection(MySqlHelper.createMySqlDbUrl("localhost",
-		// "patience"), "root", "R6tCoD");
-		// DataSource dataSource = MySqlHelper.createDataSource("localhost",
-		// 3306, "patience", "root", "R6tCoD");
-		//
-		// JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		//
-		// IllnessDao illnessDao = new IllnessDao(jdbcTemplate);
-		// MedicationDao medicationDao = new MedicationDao(jdbcTemplate);
-		// PatientDao patientDao = new PatientDao(jdbcTemplate);
-		// TagDao tagDao = new TagDao(jdbcTemplate);
-
 		GenericApplicationContext parentContext = new GenericApplicationContext();
 		final Properties props = new Properties();
 		props.load(DaoTests.class.getResourceAsStream("/db.properties"));
