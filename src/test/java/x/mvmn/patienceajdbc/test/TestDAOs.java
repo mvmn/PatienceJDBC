@@ -19,13 +19,13 @@ import x.mvmn.patienceajdbc.model.PatientData;
 import x.mvmn.patienceajdbc.model.Tag;
 import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 
-public class DaoTests extends TestCase {
+public class TestDAOs extends TestCase {
 
 	@Test
 	public void testAll() throws Exception {
 		GenericApplicationContext parentContext = new GenericApplicationContext();
 		final Properties props = new Properties();
-		props.load(DaoTests.class.getResourceAsStream("/db.properties"));
+		props.load(TestDAOs.class.getResourceAsStream("/db.properties"));
 		parentContext.getBeanFactory().registerSingleton("dbConnectionDialog", new Object() {
 			@SuppressWarnings("unused")
 			public String getDbHost() {
