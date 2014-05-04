@@ -1,12 +1,12 @@
 package x.mvmn.patienceajdbc.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,17 +49,19 @@ public class ExaminationDaoImpl implements ExaminationDao {
 					String mielogramm = rs.getString(7);
 					String treatmentDescription = rs.getString(8);
 					String comments = rs.getString(9);
-					Date examinationDate = rs.getDate(10);
-					IllnessPhase illnessPhase = rs.getString(11) != null ? IllnessPhase.valueOf(rs.getString(11)) : IllnessPhase.UNSET;
-					// String typeName = rs.getString(12);
+					Integer examinationDateYear = rs.getInt(10) != 0 ? rs.getInt(10) : null;
+					Integer examinationDateMonth = rs.getInt(11) != 0 ? rs.getInt(11) : null;
+					Integer examinationDateDay = rs.getInt(12) != 0 ? rs.getInt(12) : null;
+					IllnessPhase illnessPhase = rs.getString(13) != null ? IllnessPhase.valueOf(rs.getString(13)) : IllnessPhase.UNSET;
+					// String typeName = rs.getString(14);
 
-					long cariotypeId = rs.getLong(13);
-					String cariotypeNomenclaturalDesc = rs.getString(14);
-					String cariotypeComments = rs.getString(15);
+					long cariotypeId = rs.getLong(15);
+					String cariotypeNomenclaturalDesc = rs.getString(16);
+					String cariotypeComments = rs.getString(17);
 
-					long fishId = rs.getLong(16);
-					String fishNomenclaturalDesc = rs.getString(17);
-					String fishComments = rs.getString(18);
+					long fishId = rs.getLong(18);
+					String fishNomenclaturalDesc = rs.getString(19);
+					String fishComments = rs.getString(20);
 
 					examData.setId(dbId);
 					examData.setPatientId(patientId);
@@ -70,7 +72,9 @@ public class ExaminationDaoImpl implements ExaminationDao {
 					examData.setMielogramm(mielogramm);
 					examData.setTreatmentDescription(treatmentDescription);
 					examData.setComments(comments);
-					examData.setExaminationDate(examinationDate);
+					examData.setExaminationDateYear(examinationDateYear);
+					examData.setExaminationDateMonth(examinationDateMonth);
+					examData.setExaminationDateDay(examinationDateDay);
 					examData.setPhase(illnessPhase);
 					examData.setTreatment(new ArrayList<Medication>());
 
@@ -116,7 +120,8 @@ public class ExaminationDaoImpl implements ExaminationDao {
 
 	private static final String SELECT_STATEMENT = "select ExaminationResults.id, ExaminationResults.patientId, ExaminationResults.illnessId, "
 			+ " ExaminationResults.number, ExaminationResults.matherial, ExaminationResults.blood, ExaminationResults.mielogramm, "
-			+ "ExaminationResults.treatmentDescription, ExaminationResults.comments, ExaminationResults.examinationDate, ExaminationResults.illnessPhase, "
+			+ " ExaminationResults.treatmentDescription, ExaminationResults.comments, "
+			+ " ExaminationResults.examinationDateYear, ExaminationResults.examinationDateMonth, ExaminationResults.examinationDateDay, ExaminationResults.illnessPhase, "
 			+ " ExaminationResults.typeName, CariotypeExamResults.id, CariotypeExamResults.nomenclaturalDescription, CariotypeExamResults.comments, "
 			+ " FishExamResults.id, FishExamResults.nomenclaturalDescription, FishExamResults.comments ";
 
@@ -190,7 +195,8 @@ public class ExaminationDaoImpl implements ExaminationDao {
 	 */
 	@Transactional
 	public ExaminationDataImpl create(final long patientId, final long illnessId, final int number, final String matherial, final String blood,
-			final String mielogramm, final String treatmentDescription, final String comments, final Date examinationDate, final IllnessPhase illnessPhase) {
+			final String mielogramm, final String treatmentDescription, final String comments, final Integer examinationDateYear,
+			final Integer examinationDateMonth, final Integer examinationDateDay, final IllnessPhase illnessPhase) {
 		final ExaminationDataImpl result;
 
 		// final String subtypeTable;
@@ -208,10 +214,11 @@ public class ExaminationDaoImpl implements ExaminationDao {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
+			@SuppressWarnings("deprecation")
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement prepStatement = con
 						.prepareStatement(
-								"insert into ExaminationResults(patientId, illnessId, number, matherial, blood, mielogramm, treatmentDescription, comments, examinationDate, illnessPhase, typeName) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+								"insert into ExaminationResults(patientId, illnessId, number, matherial, blood, mielogramm, treatmentDescription, comments, examinationDateYear, examinationDateMonth, examinationDateDay, illnessPhase, typeName, examinationDate) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 								Statement.RETURN_GENERATED_KEYS);
 				prepStatement.setLong(1, patientId);
 				prepStatement.setLong(2, illnessId);
@@ -221,9 +228,17 @@ public class ExaminationDaoImpl implements ExaminationDao {
 				prepStatement.setString(6, mielogramm);
 				prepStatement.setString(7, treatmentDescription);
 				prepStatement.setString(8, comments);
-				prepStatement.setDate(9, examinationDate == null ? null : new java.sql.Date(examinationDate.getTime()));
-				prepStatement.setString(10, illnessPhase.name());
-				prepStatement.setString(11, "");
+				prepStatement.setInt(9, examinationDateYear != null ? examinationDateYear.intValue() : 0);
+				prepStatement.setInt(10, examinationDateMonth != null ? examinationDateMonth.intValue() : 0);
+				prepStatement.setInt(11, examinationDateDay != null ? examinationDateDay.intValue() : 0);
+				prepStatement.setString(12, illnessPhase.name());
+				prepStatement.setString(13, "");
+				Date examinationDate = null;
+				if (examinationDateYear != null) {
+					examinationDate = new Date(examinationDateYear.intValue() - 1900, examinationDateMonth != null ? examinationDateMonth.intValue() - 1 : 0,
+							examinationDateDay != null ? examinationDateDay.intValue() : 1);
+				}
+				prepStatement.setDate(14, examinationDate);
 				return prepStatement;
 			}
 		}, keyHolder);
@@ -264,7 +279,9 @@ public class ExaminationDaoImpl implements ExaminationDao {
 		result.setFishExaminationResults(fishExaminationResultsImpl);
 		result.setBlood(blood);
 		result.setComments(comments);
-		result.setExaminationDate(examinationDate);
+		result.setExaminationDateYear(examinationDateYear);
+		result.setExaminationDateMonth(examinationDateMonth);
+		result.setExaminationDateDay(examinationDateDay);
 		result.setIllnessId(illnessId);
 		result.setMatherial(matherial);
 		result.setMielogramm(mielogramm);
@@ -320,9 +337,10 @@ public class ExaminationDaoImpl implements ExaminationDao {
 		examData.getCariotypeExaminationResults().getId();
 
 		jdbcTemplate.update(new PreparedStatementCreator() {
+			@SuppressWarnings("deprecation")
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement prepStatement = con
-						.prepareStatement("update ExaminationResults set patientId=?, illnessId=?, number=?, matherial=?, blood=?, mielogramm=?, treatmentDescription=?, comments=?, examinationDate=?, illnessPhase=?, typeName=? where id = ?");
+						.prepareStatement("update ExaminationResults set patientId=?, illnessId=?, number=?, matherial=?, blood=?, mielogramm=?, treatmentDescription=?, comments=?, examinationDateYear=?, examinationDateMonth=?, examinationDateDay=?, illnessPhase=?, typeName=?, examinationDate=? where id = ?");
 				prepStatement.setLong(1, examData.getPatientId());
 				prepStatement.setLong(2, examData.getIllnessId());
 				prepStatement.setInt(3, examData.getNumber());
@@ -331,10 +349,20 @@ public class ExaminationDaoImpl implements ExaminationDao {
 				prepStatement.setString(6, examData.getMielogramm());
 				prepStatement.setString(7, examData.getTreatmentDescription());
 				prepStatement.setString(8, examData.getComments());
-				prepStatement.setDate(9, examData.getExaminationDate() == null ? null : new java.sql.Date(examData.getExaminationDate().getTime()));
-				prepStatement.setString(10, examData.getPhase().name());
-				prepStatement.setString(11, "");
-				prepStatement.setLong(12, examData.getId());
+				prepStatement.setInt(9, examData.getExaminationDateYear() != null ? examData.getExaminationDateYear().intValue() : 0);
+				prepStatement.setInt(10, examData.getExaminationDateMonth() != null ? examData.getExaminationDateMonth().intValue() : 0);
+				prepStatement.setInt(11, examData.getExaminationDateDay() != null ? examData.getExaminationDateDay().intValue() : 0);
+
+				prepStatement.setString(12, examData.getPhase().name());
+				prepStatement.setString(13, "");
+				Date examinationDate = null;
+				if (examData.getExaminationDateYear() != null) {
+					examinationDate = new Date(examData.getExaminationDateYear().intValue() - 1900, examData.getExaminationDateMonth() != null ? examData
+							.getExaminationDateMonth().intValue() - 1 : 0, examData.getExaminationDateDay() != null ? examData.getExaminationDateDay()
+							.intValue() : 1);
+				}
+				prepStatement.setDate(14, examinationDate);
+				prepStatement.setLong(15, examData.getId());
 				return prepStatement;
 			}
 		});

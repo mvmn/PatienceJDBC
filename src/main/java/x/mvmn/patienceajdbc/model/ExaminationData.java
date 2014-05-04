@@ -1,6 +1,5 @@
 package x.mvmn.patienceajdbc.model;
 
-import java.util.Date;
 import java.util.List;
 
 import x.mvmn.patienceajdbc.model.impl.TagImpl;
@@ -25,7 +24,11 @@ public interface ExaminationData extends PersistentEntity {
 
 	public String getComments();
 
-	public Date getExaminationDate();
+	public Integer getExaminationDateYear();
+
+	public Integer getExaminationDateMonth();
+
+	public Integer getExaminationDateDay();
 
 	public IllnessPhase getPhase();
 
@@ -49,7 +52,11 @@ public interface ExaminationData extends PersistentEntity {
 
 	public void setComments(String comments);
 
-	public void setExaminationDate(Date examinationDate);
+	public void setExaminationDateYear(Integer examinationDateYear);
+
+	public void setExaminationDateMonth(Integer examinationDateMonth);
+
+	public void setExaminationDateDay(Integer examinationDateDay);
 
 	public void setPhase(IllnessPhase phase);
 

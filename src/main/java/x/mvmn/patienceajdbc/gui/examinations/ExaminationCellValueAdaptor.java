@@ -20,7 +20,9 @@ public class ExaminationCellValueAdaptor implements TableCellValueAdaptor<Examin
 		String value = "";
 		switch (columnIndex) {
 			case 0:
-				value = examData.getExaminationDate() != null ? dateFormat.format(examData.getExaminationDate()) : "--";
+				value = String.format("%s-%s-%s", examData.getExaminationDateYear() != null ? examData.getExaminationDateYear() : "????", examData
+						.getExaminationDateMonth() != null ? examData.getExaminationDateMonth() : "??",
+						examData.getExaminationDateDay() != null ? examData.getExaminationDateDay() : "??");
 			break;
 			case 1:
 				value = String.valueOf(examData.getNumber());

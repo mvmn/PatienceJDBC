@@ -1,6 +1,5 @@
 package x.mvmn.patienceajdbc.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import x.mvmn.patienceajdbc.dao.ExaminationDao;
@@ -42,8 +41,10 @@ public class ExaminationsServiceImpl implements ExaminationsService {
 	 * java.lang.String, java.lang.String, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public ExaminationDataImpl create(long patientId, long illnessId, int number, String matherial, String blood, String mielogramm,
-			String treatmentDescription, String comments, Date examinationDate, IllnessPhase illnessPhase) {
-		return examinationDao.create(patientId, illnessId, number, matherial, blood, mielogramm, treatmentDescription, comments, examinationDate, illnessPhase);
+			String treatmentDescription, String comments, Integer examinationDateYear, Integer examinationDateMonth, Integer examinationDateDay,
+			IllnessPhase illnessPhase) {
+		return examinationDao.create(patientId, illnessId, number, matherial, blood, mielogramm, treatmentDescription, comments, examinationDateYear,
+				examinationDateMonth, examinationDateDay, illnessPhase);
 	}
 
 	/*

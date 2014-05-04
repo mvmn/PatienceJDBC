@@ -1,6 +1,5 @@
 package x.mvmn.patienceajdbc.service;
 
-import java.util.Date;
 import java.util.List;
 
 import x.mvmn.patienceajdbc.model.ExaminationData;
@@ -13,7 +12,7 @@ public interface ExaminationsService {
 	public ExaminationData getByNumber(int number, boolean fetchMedications);
 
 	public ExaminationData create(long patientId, long illnessId, int number, String matherial, String blood, String mielogramm, String treatmentDescription,
-			String comments, Date examinationDate, IllnessPhase illnessPhase);
+			String comments, Integer examinationDateYear, Integer examinationDateMonth, Integer examinationDateDay, IllnessPhase illnessPhase);
 
 	public int countAll();
 

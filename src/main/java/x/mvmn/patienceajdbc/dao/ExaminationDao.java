@@ -1,6 +1,5 @@
 package x.mvmn.patienceajdbc.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,8 @@ public interface ExaminationDao {
 
 	@Transactional
 	public ExaminationDataImpl create(long patientId, long illnessId, int number, String matherial, String blood, String mielogramm,
-			String treatmentDescription, String comments, Date examinationDate, IllnessPhase illnessPhase);
+			String treatmentDescription, String comments, Integer examinationDateYear, Integer examinationDateMonth, Integer examinationDateDay,
+			IllnessPhase illnessPhase);
 
 	public int countAll();
 

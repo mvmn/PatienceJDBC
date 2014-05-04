@@ -1,6 +1,5 @@
 package x.mvmn.patienceajdbc.model.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import x.mvmn.patienceajdbc.model.ExaminationData;
@@ -19,7 +18,10 @@ public final class ExaminationDataImpl implements ExaminationData {
 	private List<Medication> treatment;
 	private String treatmentDescription;
 	private String comments;
-	private Date examinationDate;
+	// private Date examinationDate;
+	private Integer examinationDateYear;
+	private Integer examinationDateMonth;
+	private Integer examinationDateDay;
 	private IllnessPhase phase = IllnessPhase.UNSET;
 	private FishExaminationResultsImpl fishExaminationResults;
 	private CariotypeExaminationResultsImpl cariotypeExaminationResults;
@@ -97,14 +99,6 @@ public final class ExaminationDataImpl implements ExaminationData {
 		this.comments = comments;
 	}
 
-	public Date getExaminationDate() {
-		return examinationDate;
-	}
-
-	public void setExaminationDate(Date examinationDate) {
-		this.examinationDate = examinationDate;
-	}
-
 	public IllnessPhase getPhase() {
 		IllnessPhase currentPhase = phase;
 		return currentPhase != null ? currentPhase : IllnessPhase.UNSET;
@@ -144,5 +138,29 @@ public final class ExaminationDataImpl implements ExaminationData {
 
 	public void setIllnessId(long illnessId) {
 		this.illnessId = illnessId;
+	}
+
+	public Integer getExaminationDateYear() {
+		return examinationDateYear;
+	}
+
+	public void setExaminationDateYear(Integer examinationDateYear) {
+		this.examinationDateYear = examinationDateYear;
+	}
+
+	public Integer getExaminationDateMonth() {
+		return examinationDateMonth;
+	}
+
+	public void setExaminationDateMonth(Integer examinationDateMonth) {
+		this.examinationDateMonth = examinationDateMonth;
+	}
+
+	public Integer getExaminationDateDay() {
+		return examinationDateDay;
+	}
+
+	public void setExaminationDateDay(Integer examinationDateDay) {
+		this.examinationDateDay = examinationDateDay;
 	}
 }

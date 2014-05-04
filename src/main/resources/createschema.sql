@@ -73,6 +73,9 @@ create table ExaminationResults (
   treatmentDescription longtext,
   comments longtext,
   examinationDate date,
+  examinationDateYear int,
+  examinationDateMonth int,
+  examinationDateDay int,
   illnessPhase nvarchar(255),
   typeName nvarchar(255) not null,
 
@@ -82,6 +85,13 @@ create table ExaminationResults (
   index ix_examinationresults_illnessphase(illnessPhase),
   index ix_examinationresults_typename(typeName)
 );
+
+/*
+alter table ExaminationResults add column examinationDateYear int;
+alter table ExaminationResults add column examinationDateMonth int;
+alter table ExaminationResults add column examinationDateDay int;
+alter table ExaminationResults add column examinationDate date;
+*/
 
 create table MedicationToExaminationResults (
   id int not null primary key auto_increment,

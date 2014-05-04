@@ -8,7 +8,6 @@ import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -73,7 +72,10 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 	// FIXME: localize
 	protected final TitledBorder lbDate = new TitledBorder("");
-	protected final JTextField tfDate = new JTextField();
+	protected final JTextField tfDateYear = new JTextField();
+	protected final JComboBox<String> cbDateMonth = new JComboBox<String>(new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" });
+	protected final JComboBox<String> cbDateDay = new JComboBox<String>(new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
+			"14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" });
 	protected final TitledBorder lbNumber = new TitledBorder("");
 	protected final JTextField tfNumber = new JTextField();
 	protected final TitledBorder lbMatherial = new TitledBorder("");
@@ -135,7 +137,11 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 		this.setModal(true);
 
-		tfDate.setBorder(lbDate);
+		JPanel datePanel = new JPanel(new GridLayout(1, 3));
+		datePanel.setBorder(lbDate);
+		datePanel.add(tfDateYear);
+		datePanel.add(cbDateMonth);
+		datePanel.add(cbDateDay);
 		tfNumber.setBorder(lbNumber);
 		tfMatherial.setBorder(lbMatherial);
 		tfBlood.setBorder(lbBlood);
@@ -152,7 +158,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		firstFieldsSubPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		{
 			JPanel generalFieldsPanel = new JPanel(new GridLayout(3, 1));
-			generalFieldsPanel.add(tfDate);
+			generalFieldsPanel.add(datePanel);
 			generalFieldsPanel.add(tfNumber);
 			generalFieldsPanel.add(tfMatherial);
 			firstFieldsSubPanel.add(generalFieldsPanel);
@@ -223,14 +229,22 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 					try {
 						ExaminationData examData = ExaminationDataDialog.this.currentData;
 						int number = Integer.parseInt(tfNumber.getText().trim());
-						Date date = null;
-						if (tfDate.getText().trim().length() > 0) {
-							date = dateFormat.parse(tfDate.getText().trim());
+						Integer examinationDateYear = null;
+						Integer examinationDateMonth = null;
+						Integer examinationDateDay = null;
+						if (tfDateYear.getText().trim().length() > 0) {
+							examinationDateYear = Integer.parseInt(tfDateYear.getText().trim());
+						}
+						if (cbDateMonth.getSelectedIndex() > 0) {
+							examinationDateMonth = cbDateMonth.getSelectedIndex();
+						}
+						if (cbDateDay.getSelectedIndex() > 0) {
+							examinationDateDay = cbDateDay.getSelectedIndex();
 						}
 						if (examData == null) {
 							examData = examinationsService.create(currentPatientId, currentIllnessId, number, tfMatherial.getText(), tfBlood.getText(),
-									tfMielogramm.getText(), taTreatmentDescription.getText(), taComments.getText(), date, cbIllenssPhase.getModel()
-											.getElementAt(cbIllenssPhase.getSelectedIndex()));
+									tfMielogramm.getText(), taTreatmentDescription.getText(), taComments.getText(), examinationDateYear, examinationDateMonth,
+									examinationDateDay, cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
 							ExaminationDataDialog.this.currentData = examData;
 						} else {
 							examData.setNumber(number);
@@ -239,7 +253,9 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 							examData.setMielogramm(tfMielogramm.getText());
 							examData.setTreatmentDescription(taTreatmentDescription.getText());
 							examData.setComments(taComments.getText());
-							examData.setExaminationDate(date);
+							examData.setExaminationDateYear(examinationDateYear);
+							examData.setExaminationDateMonth(examinationDateMonth);
+							examData.setExaminationDateDay(examinationDateDay);
 							examData.setPhase(cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
 						}
 						examData.setTreatment(treatment);
@@ -344,7 +360,17 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		this.currentPatientId = patientId;
 		this.currentIllnessId = illnessId;
 
-		this.tfDate.setText(data != null && data.getExaminationDate() != null ? dateFormat.format(data.getExaminationDate()) : "");
+		this.tfDateYear.setText(data != null && data.getExaminationDateYear() != null ? data.getExaminationDateYear().toString() : "");
+		this.cbDateMonth.setSelectedIndex(0);
+		this.cbDateDay.setSelectedIndex(0);
+		if (data != null) {
+			if (data.getExaminationDateMonth() != null) {
+				this.cbDateMonth.setSelectedIndex(data.getExaminationDateMonth().intValue());
+			}
+			if (data.getExaminationDateDay() != null) {
+				this.cbDateDay.setSelectedIndex(data.getExaminationDateDay().intValue());
+			}
+		}
 		this.tfNumber.setText(data != null ? String.valueOf(data.getNumber()) : String.valueOf(examinationsService.getLastExaminationNumber() + 1));
 		this.tfMatherial.setText(data != null ? data.getMatherial() : "");
 		this.tfBlood.setText(data != null ? data.getBlood() : "");
