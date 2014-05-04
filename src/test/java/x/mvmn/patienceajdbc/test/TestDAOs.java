@@ -9,10 +9,11 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
@@ -26,50 +27,60 @@ import x.mvmn.patienceajdbc.model.PatientData;
 import x.mvmn.patienceajdbc.model.Tag;
 import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 
-public class TestDAOs extends TestCase {
+public class TestDAOs {
 
 	private ClassPathXmlApplicationContext daoContext;
 
-	@Before
-	public void setUp() throws Exception {
-		GenericApplicationContext parentContext = new GenericApplicationContext();
-		final Properties props = new Properties();
-		props.load(TestDAOs.class.getResourceAsStream("/db.properties"));
-		parentContext.getBeanFactory().registerSingleton("dbConnectionDialog", new Object() {
-			@SuppressWarnings("unused")
-			public String getDbHost() {
-				return props.getProperty("host");
-			}
+	private static GenericApplicationContext PARENT_MOCK_CONTEXT;
+	private static final Object MOCK_DB_CONNECTION_INPUT = new Object() {
 
-			@SuppressWarnings("unused")
-			public String getDbName() {
-				return props.getProperty("db");
+		final Properties props;
+		{
+			props = new Properties();
+			try {
+				props.load(TestDAOs.class.getResourceAsStream("/db.properties"));
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
+		}
 
-			@SuppressWarnings("unused")
-			public String getDbUser() {
-				return props.getProperty("user");
-			}
+		@SuppressWarnings("unused")
+		public String getDbHost() {
+			return props.getProperty("host");
+		}
 
-			@SuppressWarnings("unused")
-			public char[] getDbPassword() {
-				return props.getProperty("password").toCharArray();
-			}
+		@SuppressWarnings("unused")
+		public String getDbName() {
+			return props.getProperty("db");
+		}
 
-			@SuppressWarnings("unused")
-			public boolean getProfileSql() {
-				return false;
-			}
-		});
-		parentContext.refresh();
-		parentContext.getBean("dbConnectionDialog");
+		@SuppressWarnings("unused")
+		public String getDbUser() {
+			return props.getProperty("user");
+		}
 
-		ClassPathXmlApplicationContext dbContext = new ClassPathXmlApplicationContext(new String[] { "springioc/db.xml" }, parentContext);
-		DataSource dataSource = (DataSource) dbContext.getBean("dbDataSource");
-		Connection connection = null;
-		try {
-			connection = dataSource.getConnection();
-			Statement statement = connection.createStatement();
+		@SuppressWarnings("unused")
+		public char[] getDbPassword() {
+			return props.getProperty("password").toCharArray();
+		}
+
+		@SuppressWarnings("unused")
+		public boolean getProfileSql() {
+			return false;
+		}
+	};
+
+	private static String SQL_SCRIPT_RECREATE_DB;
+
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		{
+			GenericApplicationContext parentContext = new GenericApplicationContext();
+			parentContext.getBeanFactory().registerSingleton("dbConnectionDialog", MOCK_DB_CONNECTION_INPUT);
+			parentContext.refresh();
+			PARENT_MOCK_CONTEXT = parentContext;
+		}
+		{
 			BufferedReader buffReader = new BufferedReader(new InputStreamReader(TestDAOs.class.getResourceAsStream("/createschema.sql"), "UTF-8"));
 			StringBuilder createSchemaSqlFileContentBuilder = new StringBuilder();
 			String line;
@@ -79,7 +90,18 @@ public class TestDAOs extends TestCase {
 					createSchemaSqlFileContentBuilder.append(line).append("\n");
 				}
 			} while (line != null);
-			for (String statemetText : createSchemaSqlFileContentBuilder.toString().split(";")) {
+
+			SQL_SCRIPT_RECREATE_DB = createSchemaSqlFileContentBuilder.toString();
+		}
+	}
+
+	public static void resetDb(ApplicationContext dbContext) throws Exception {
+		DataSource dataSource = (DataSource) dbContext.getBean("dbDataSource");
+		Connection connection = null;
+		try {
+			connection = dataSource.getConnection();
+			Statement statement = connection.createStatement();
+			for (String statemetText : SQL_SCRIPT_RECREATE_DB.toString().split(";")) {
 				if (statemetText.trim().length() > 0) {
 					statement.execute(statemetText + ";");
 				}
@@ -91,12 +113,44 @@ public class TestDAOs extends TestCase {
 			} catch (Exception e) {
 			}
 		}
+	}
+
+	@Before
+	public void before() throws Exception {
+		ApplicationContext dbContext = new ClassPathXmlApplicationContext(new String[] { "springioc/db.xml" }, PARENT_MOCK_CONTEXT);
+		resetDb(dbContext);
 		daoContext = new ClassPathXmlApplicationContext(new String[] { "springioc/dao.xml" }, dbContext);
+	}
+
+	@After
+	public void after() {
+		daoContext.destroy();
+		daoContext = null;
+	}
+
+	@Test
+	public void testIllnessCrud() {
+		IllnessDao illnessDao = daoContext.getBean("illnessDao", IllnessDao.class);
+		assert (illnessDao.countAll() == 0);
+		for (int i = 0; i < 2; i++) {
+			for (Illness illness : illnessDao.listAll()) {
+				illnessDao.delete(illness);
+			}
+
+			illnessDao.create("Flu");
+			illnessDao.create("Plague");
+
+			assert (illnessDao.countAll() == 2);
+			Illness cyryllicNamedIllness = illnessDao.create("Боткина");
+			assert (illnessDao.countAll() == 3);
+			assert (illnessDao.getNameById(cyryllicNamedIllness.getId()).equals("Боткина"));
+			illnessDao.delete(cyryllicNamedIllness);
+			assert (illnessDao.countAll() == 2);
+		}
 	}
 
 	@Test
 	public void testAll() throws Exception {
-
 		IllnessDao illnessDao = daoContext.getBean("illnessDao", IllnessDao.class);
 		MedicationDao medicationDao = daoContext.getBean("medicationDao", MedicationDao.class);
 		PatientDao patientDao = daoContext.getBean("patientDao", PatientDao.class);
@@ -114,11 +168,6 @@ public class TestDAOs extends TestCase {
 			Illness flu = illnessDao.create("Flu");
 			Illness plague = illnessDao.create("Plague");
 
-			assert (illnessDao.countAll() == 2);
-			Illness parkinson = illnessDao.create("Боткина");
-			assert (illnessDao.countAll() == 3);
-			assert (illnessDao.getNameById(parkinson.getId()).equals("Боткина"));
-			illnessDao.delete(parkinson);
 			assert (illnessDao.countAll() == 2);
 
 			for (Medication med : medicationDao.list(flu.getId())) {
