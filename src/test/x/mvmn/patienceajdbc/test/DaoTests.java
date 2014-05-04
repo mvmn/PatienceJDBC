@@ -3,6 +3,8 @@ package x.mvmn.patienceajdbc.test;
 import java.util.List;
 import java.util.Properties;
 
+import junit.framework.TestCase;
+
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
@@ -16,9 +18,9 @@ import x.mvmn.patienceajdbc.model.PatientData;
 import x.mvmn.patienceajdbc.model.Tag;
 import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 
-public class DaoTests {
+public class DaoTests extends TestCase {
 
-	public static void main(String args[]) throws Exception {
+	public void testAll() throws Exception {
 		// Driver mySqlDriver = (Driver)
 		// Class.forName("com.mysql.jdbc.Driver").newInstance();
 		// DriverManager.registerDriver(mySqlDriver);
