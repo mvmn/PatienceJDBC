@@ -126,6 +126,8 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	protected final ExaminationDataDialog examinationDataDialog;
 	protected final PatientsListWindow patientsListWindow;
 
+	private long lastSelectedIllnessId = 0;
+
 	public PatientDataDialog(final PatientsService patientsService, final IllnessesService illnessesService, final MedicationService medicationService,
 			final ExaminationsService examinationsService, final PatientsListWindow patientsListWindow, final MessageSource messageSource) {
 		this.patientsService = patientsService;
@@ -298,6 +300,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 							resetDataAndClose();
 						} else {
 							PatientDataDialog.this.pack();
+							switchIllnessTab(lastSelectedIllnessId);
 						}
 					} catch (Exception saveError) {
 						// TODO: localize
@@ -568,6 +571,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	}
 
 	public void switchIllnessTab(long illnessId) {
+		this.lastSelectedIllnessId = illnessId;
 		IllnessSpecificPanel tab = illnessIdToIllnessTab.get(illnessId);
 		if (tab != null) {
 			this.illnessTabs.setSelectedComponent(tab);
