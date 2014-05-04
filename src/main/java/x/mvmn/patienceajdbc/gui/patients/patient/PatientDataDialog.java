@@ -9,11 +9,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -22,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,6 +36,7 @@ import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.ExtendedTitledBorder;
 import x.mvmn.gui.generic.swing.GeneralisedJTable;
 import x.mvmn.gui.generic.swing.JExtendedTabPane;
+import x.mvmn.patienceajdbc.gui.DatePanelHelper;
 import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.IllnessSpecificPanel;
 import x.mvmn.patienceajdbc.gui.Titled;
@@ -91,13 +91,25 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 	protected final TitledBorder lblLastName = new TitledBorder("");
 	protected final TitledBorder lblPatronymicName = new TitledBorder("");
 
-	protected final JTextField tfBirthDate = new JTextField();
-	protected final JTextField tfDiagnoseDate = new JTextField();
-	protected final JTextField tfDeathDate = new JTextField();
+	protected final JTextField tfBirthDateYear = new JTextField();
+	protected final JComboBox<String> cbBirthDateMonth = new JComboBox<String>(
+			new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" });
+	protected final JComboBox<String> cbBirthDateDay = new JComboBox<String>(new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+			"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" });
+	protected final JTextField tfDiagnosisDateYear = new JTextField();
+	protected final JComboBox<String> cbDiagnosisDateMonth = new JComboBox<String>(new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11",
+			"12" });
+	protected final JComboBox<String> cbDiagnosisDateDay = new JComboBox<String>(new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11",
+			"12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" });
+	protected final JTextField tfDeathDateYear = new JTextField();
+	protected final JComboBox<String> cbDeathDateMonth = new JComboBox<String>(
+			new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" });
+	protected final JComboBox<String> cbDeathDateDay = new JComboBox<String>(new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+			"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" });
 	protected final JCheckBox cbDead = new JCheckBox();
 
 	protected final TitledBorder lblBirthDate = new TitledBorder("");
-	protected final TitledBorder lblDiagnoseDate = new TitledBorder("");
+	protected final TitledBorder lblDiagnosisDate = new TitledBorder("");
 	protected final JLabel lblDeathDate = new JLabel();
 	protected final TitledBorder lblDead = new TitledBorder("");
 
@@ -160,33 +172,12 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 			}
 
 			JPanel dateFieldsPanel = new JPanel(new GridLayout(3, 1));
-			{
-				// tfBirthDate.setBorder(lblBirthDate);
-				JPanel pnlBirthDate = new JPanel();
-				pnlBirthDate.setBorder(lblBirthDate);
-				pnlBirthDate.setLayout(new GridLayout(1, 1));
-				pnlBirthDate.add(tfBirthDate);
-				dateFieldsPanel.add(pnlBirthDate);
-			}
-			{
-				JPanel pnlDiagnoseDate = new JPanel();
-				pnlDiagnoseDate.setBorder(lblDiagnoseDate);
-				pnlDiagnoseDate.setLayout(new GridLayout(1, 1));
-				pnlDiagnoseDate.add(tfDiagnoseDate);
-				// tfDiagnoseDate.setBorder(lblDiagnoseDate);
-				dateFieldsPanel.add(pnlDiagnoseDate);
-
-			}
+			dateFieldsPanel.add(DatePanelHelper.createDatePanel(tfBirthDateYear, cbBirthDateMonth, cbBirthDateDay, lblBirthDate));
+			dateFieldsPanel.add(DatePanelHelper.createDatePanel(tfDiagnosisDateYear, cbDiagnosisDateMonth, cbDiagnosisDateDay, lblDiagnosisDate));
 
 			{
-				JPanel deathDatePanel = new JPanel();
-				// new ComponentTitledBorder(cbDead, deathDatePanel,
-				// BorderFactory.createEmptyBorder())
-				// deathDatePanel.setBorder(BorderFactory.createTitledBorder("Blah"));
+				JPanel deathDatePanel = DatePanelHelper.createDatePanel(tfDeathDateYear, cbDeathDateMonth, cbDeathDateDay, null);
 				deathDatePanel.setBorder(new ExtendedTitledBorder(cbDead, deathDatePanel));
-				deathDatePanel.setLayout(new BorderLayout());
-				deathDatePanel.add(lblDeathDate, BorderLayout.WEST);
-				deathDatePanel.add(tfDeathDate, BorderLayout.CENTER);
 				dateFieldsPanel.add(deathDatePanel);
 			}
 
@@ -194,15 +185,17 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		}
 
 		{
-			Dimension prefSize = tfDeathDate.getPreferredSize();
+			Dimension prefSize = tfDeathDateYear.getPreferredSize();
 			prefSize.setSize(100, prefSize.getHeight());
-			tfDeathDate.setPreferredSize(prefSize); // Superficial? Maybe.
+			tfDeathDateYear.setPreferredSize(prefSize); // Superficial? Maybe.
 		}
 
 		cbDead.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent actEvent) {
-				tfDeathDate.setEnabled(cbDead.isSelected());
+				tfDeathDateYear.setEnabled(cbDead.isSelected());
+				cbDeathDateMonth.setEnabled(cbDead.isSelected());
+				cbDeathDateDay.setEnabled(cbDead.isSelected());
 			}
 		});
 
@@ -242,33 +235,9 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 						String firstName = tfFirstName.getText();
 						String lastName = tfLastName.getText();
 						String patronymicName = tfPatronymicName.getText();
-						Date birthDate = null;
-						if (tfBirthDate.getText().trim().length() > 0) {
-							try {
-								birthDate = dateFormat.parse(tfBirthDate.getText());
-							} catch (ParseException e1) {
-								// TODO: Signalize validation error and return
-								throw e1;
-							}
-						}
-						Date diagnoseDate = null;
-						if (tfDiagnoseDate.getText().trim().length() > 0) {
-							try {
-								diagnoseDate = dateFormat.parse(tfDiagnoseDate.getText());
-							} catch (ParseException e1) {
-								// TODO: Signalize validation error and return
-								throw e1;
-							}
-						}
-						Date deathDate = null;
-						if (cbDead.isSelected() && tfDeathDate.getText().trim().length() > 0) {
-							try {
-								deathDate = dateFormat.parse(tfDeathDate.getText());
-							} catch (ParseException e1) {
-								// TODO: Signalize validation error and return
-								throw e1;
-							}
-						}
+						Integer[] birthDate = DatePanelHelper.extractDate(tfBirthDateYear, cbBirthDateMonth, cbBirthDateDay);
+						Integer[] diagnosisDate = DatePanelHelper.extractDate(tfDiagnosisDateYear, cbDiagnosisDateMonth, cbDiagnosisDateDay);
+						Integer[] deathDate = DatePanelHelper.extractDate(tfDeathDateYear, cbDeathDateMonth, cbDeathDateDay);
 						boolean dead = cbDead.isSelected();
 						String address = taAddressText.getText();
 						String anamnesis = taAnamnesis.getText();
@@ -282,15 +251,25 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 							patientData.setPatronymicName(patronymicName);
 							patientData.setAddress(address);
 							patientData.setAnamnesis(anamnesis);
-							patientData.setDateOfBirth(birthDate);
-							patientData.setDateOfDiagnosis(diagnoseDate);
-							patientData.setDateOfDeath(deathDate);
+
+							patientData.setBirthDateYear(birthDate[0]);
+							patientData.setBirthDateMonth(birthDate[1]);
+							patientData.setBirthDateDay(birthDate[2]);
+
+							patientData.setDiagnosisDateYear(diagnosisDate[0]);
+							patientData.setDiagnosisDateMonth(diagnosisDate[1]);
+							patientData.setDiagnosisDateDay(diagnosisDate[2]);
+
+							patientData.setDeathDateYear(deathDate[0]);
+							patientData.setDeathDateMonth(deathDate[1]);
+							patientData.setDeathDateDay(deathDate[2]);
+
 							patientData.setDead(dead);
 							patientsService.update(patientData, false);
 						} else {
 							newlyCreated = true;
-							patientData = patientsService.create(lastName, firstName, patronymicName, address, birthDate, diagnoseDate, deathDate, dead,
-									anamnesis);
+							patientData = patientsService.create(lastName, firstName, patronymicName, address, birthDate[0], birthDate[1], birthDate[2],
+									diagnosisDate[0], diagnosisDate[1], diagnosisDate[2], deathDate[0], deathDate[1], deathDate[2], dead, anamnesis);
 							PatientDataDialog.this.setData(patientData);
 						}
 
@@ -499,7 +478,7 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 			lblPatronymicName.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_NAME_PATRONYMIC, null, locale));
 
 			lblBirthDate.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_BIRTHDATE, null, locale));
-			lblDiagnoseDate.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_DIAGNOSE_DATE, null, locale));
+			lblDiagnosisDate.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_DIAGNOSE_DATE, null, locale));
 			lblDeathDate.setText(messageSource.getMessage(LOCALIZATION_KEY_FIELD_DEATHDATE, null, locale));
 			lblDead.setTitle(messageSource.getMessage(LOCALIZATION_KEY_FIELD_IS_DEAD, null, locale));
 
@@ -525,9 +504,9 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		String firstName = "";
 		String lastName = "";
 		String patronymicName = "";
-		String birthDate = "";
-		String diagnoseDate = "";
-		String deathDate = "";
+		String birthDateYear = "";
+		String diagnosisDateYear = "";
+		String deathDateYear = "";
 		boolean dead = false;
 		String address = "";
 		String anamnesis = "";
@@ -536,18 +515,37 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 			firstName = patientData.getFirstName();
 			lastName = patientData.getLastName();
 			patronymicName = patientData.getPatronymicName();
-			if (patientData.getDateOfBirth() != null) {
-				birthDate = dateFormat.format(patientData.getDateOfBirth());
-			}
-			if (patientData.getDateOfDiagnosis() != null) {
-				diagnoseDate = dateFormat.format(patientData.getDateOfDiagnosis());
-			}
-			if (patientData.getDateOfDeath() != null) {
-				deathDate = dateFormat.format(patientData.getDateOfDeath());
-			}
 			dead = patientData.isDead();
 			address = patientData.getAddress();
 			anamnesis = patientData.getAnamnesis();
+
+			if (patientData.getBirthDateYear() != null) {
+				birthDateYear = patientData.getBirthDateYear().toString();
+			}
+			if (patientData.getDiagnosisDateYear() != null) {
+				diagnosisDateYear = patientData.getDiagnosisDateYear().toString();
+			}
+			if (patientData.getDeathDateYear() != null) {
+				deathDateYear = patientData.getDeathDateYear().toString();
+			}
+			if (patientData.getBirthDateDay() != null) {
+				cbBirthDateDay.setSelectedItem(patientData.getBirthDateDay().intValue());
+			}
+			if (patientData.getDiagnosisDateDay() != null) {
+				cbDiagnosisDateDay.setSelectedItem(patientData.getDiagnosisDateDay().intValue());
+			}
+			if (patientData.getDeathDateDay() != null) {
+				cbDeathDateDay.setSelectedItem(patientData.getDeathDateDay().intValue());
+			}
+			if (patientData.getBirthDateMonth() != null) {
+				cbBirthDateMonth.setSelectedItem(patientData.getBirthDateMonth().intValue());
+			}
+			if (patientData.getDiagnosisDateMonth() != null) {
+				cbDiagnosisDateMonth.setSelectedItem(patientData.getDiagnosisDateMonth().intValue());
+			}
+			if (patientData.getDeathDateMonth() != null) {
+				cbDeathDateMonth.setSelectedItem(patientData.getDeathDateMonth().intValue());
+			}
 		}
 
 		recreateIllnessTabs();
@@ -555,15 +553,13 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 		tfFirstName.setText(firstName);
 		tfLastName.setText(lastName);
 		tfPatronymicName.setText(patronymicName);
-		tfBirthDate.setText(birthDate);
-		tfDiagnoseDate.setText(diagnoseDate);
-		tfDeathDate.setText(deathDate);
+		tfBirthDateYear.setText(birthDateYear);
+		tfDiagnosisDateYear.setText(diagnosisDateYear);
+		tfDeathDateYear.setText(deathDateYear);
 		cbDead.setSelected(dead);
-		if (!dead) {
-			tfDeathDate.setEnabled(false);
-		} else {
-			tfDeathDate.setEnabled(true);
-		}
+		tfDeathDateYear.setEnabled(dead);
+		cbDeathDateMonth.setEnabled(dead);
+		cbDeathDateDay.setEnabled(dead);
 		taAddressText.setText(address);
 		taAnamnesis.setText(anamnesis);
 

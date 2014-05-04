@@ -8,7 +8,7 @@ public interface PatientStatsData {
 
 	public String getFullName();
 
-	public Date getDateOfBirth();
+	public String getDateOfBirth();
 
 	public String getAddress();
 

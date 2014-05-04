@@ -1,6 +1,5 @@
 package x.mvmn.patienceajdbc.model.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import x.mvmn.patienceajdbc.model.Medication;
@@ -12,13 +11,26 @@ public final class PatientDataImpl implements PatientData {
 	private String firstName;
 	private String lastName;
 	private String patronymicName;
-	private Date dateOfBirth;
-	private Date dateOfDiagnosis;
 	private String address;
 	private String anamnesis;
 	private List<Medication> previousTreatments;
 	private boolean dead;
-	private Date dateOfDeath;
+
+	private Integer birthDateYear;
+	private Integer birthDateMonth;
+	private Integer birthDateDay;
+
+	private Integer diagnosisDateYear;
+	private Integer diagnosisDateMonth;
+	private Integer diagnosisDateDay;
+
+	private Integer deathDateYear;
+	private Integer deathDateMonth;
+	private Integer deathDateDay;
+
+	// private Date dateOfBirth;
+	// private Date dateOfDiagnosis;
+	// private Date dateOfDeath;
 
 	public long getId() {
 		return id;
@@ -52,22 +64,6 @@ public final class PatientDataImpl implements PatientData {
 		this.patronymicName = patronymicName;
 	}
 
-	public Date getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
-
-	public Date getDateOfDiagnosis() {
-		return dateOfDiagnosis;
-	}
-
-	public void setDateOfDiagnosis(Date dateOfDiagnosis) {
-		this.dateOfDiagnosis = dateOfDiagnosis;
-	}
-
 	public String getAddress() {
 		return address;
 	}
@@ -84,14 +80,6 @@ public final class PatientDataImpl implements PatientData {
 		this.anamnesis = anamnesis;
 	}
 
-	public Date getDateOfDeath() {
-		return dateOfDeath;
-	}
-
-	public void setDateOfDeath(Date dateOfDeath) {
-		this.dateOfDeath = dateOfDeath;
-	}
-
 	public boolean isDead() {
 		return dead;
 	}
@@ -106,5 +94,77 @@ public final class PatientDataImpl implements PatientData {
 
 	public void setPreviousTreatments(List<Medication> previousTreatments) {
 		this.previousTreatments = previousTreatments;
+	}
+
+	public Integer getBirthDateYear() {
+		return birthDateYear;
+	}
+
+	public void setBirthDateYear(Integer birthDateYear) {
+		this.birthDateYear = birthDateYear;
+	}
+
+	public Integer getBirthDateMonth() {
+		return birthDateMonth;
+	}
+
+	public void setBirthDateMonth(Integer birthDateMonth) {
+		this.birthDateMonth = birthDateMonth;
+	}
+
+	public Integer getBirthDateDay() {
+		return birthDateDay;
+	}
+
+	public void setBirthDateDay(Integer birthDateDay) {
+		this.birthDateDay = birthDateDay;
+	}
+
+	public Integer getDiagnosisDateYear() {
+		return diagnosisDateYear;
+	}
+
+	public void setDiagnosisDateYear(Integer diagnosisDateYear) {
+		this.diagnosisDateYear = diagnosisDateYear;
+	}
+
+	public Integer getDiagnosisDateMonth() {
+		return diagnosisDateMonth;
+	}
+
+	public void setDiagnosisDateMonth(Integer diagnosisDateMonth) {
+		this.diagnosisDateMonth = diagnosisDateMonth;
+	}
+
+	public Integer getDiagnosisDateDay() {
+		return diagnosisDateDay;
+	}
+
+	public void setDiagnosisDateDay(Integer diagnosisDateDay) {
+		this.diagnosisDateDay = diagnosisDateDay;
+	}
+
+	public Integer getDeathDateYear() {
+		return deathDateYear;
+	}
+
+	public void setDeathDateYear(Integer deathDateYear) {
+		this.deathDateYear = deathDateYear;
+	}
+
+	public Integer getDeathDateMonth() {
+		return deathDateMonth;
+	}
+
+	public void setDeathDateMonth(Integer deathDateMonth) {
+		this.deathDateMonth = deathDateMonth;
+	}
+
+	public Integer getDeathDateDay() {
+		return deathDateDay;
+	}
+
+	public void setDeathDateDay(Integer deathDateDay) {
+		this.deathDateDay = deathDateDay;
 	}
 }

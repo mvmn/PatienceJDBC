@@ -26,6 +26,7 @@ import org.springframework.context.MessageSource;
 
 import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.GeneralisedJTable;
+import x.mvmn.patienceajdbc.gui.DatePanelHelper;
 import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.SwingHelper;
 import x.mvmn.patienceajdbc.gui.Titled;
@@ -137,11 +138,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 		this.setModal(true);
 
-		JPanel datePanel = new JPanel(new GridLayout(1, 3));
-		datePanel.setBorder(lbDate);
-		datePanel.add(tfDateYear);
-		datePanel.add(cbDateMonth);
-		datePanel.add(cbDateDay);
+		JPanel datePanel = DatePanelHelper.createDatePanel(tfDateYear, cbDateMonth, cbDateDay, lbDate);
 		tfNumber.setBorder(lbNumber);
 		tfMatherial.setBorder(lbMatherial);
 		tfBlood.setBorder(lbBlood);
@@ -229,22 +226,12 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 					try {
 						ExaminationData examData = ExaminationDataDialog.this.currentData;
 						int number = Integer.parseInt(tfNumber.getText().trim());
-						Integer examinationDateYear = null;
-						Integer examinationDateMonth = null;
-						Integer examinationDateDay = null;
-						if (tfDateYear.getText().trim().length() > 0) {
-							examinationDateYear = Integer.parseInt(tfDateYear.getText().trim());
-						}
-						if (cbDateMonth.getSelectedIndex() > 0) {
-							examinationDateMonth = cbDateMonth.getSelectedIndex();
-						}
-						if (cbDateDay.getSelectedIndex() > 0) {
-							examinationDateDay = cbDateDay.getSelectedIndex();
-						}
+						Integer[] examinationDate = DatePanelHelper.extractDate(tfDateYear, cbDateMonth, cbDateDay);
+
 						if (examData == null) {
 							examData = examinationsService.create(currentPatientId, currentIllnessId, number, tfMatherial.getText(), tfBlood.getText(),
-									tfMielogramm.getText(), taTreatmentDescription.getText(), taComments.getText(), examinationDateYear, examinationDateMonth,
-									examinationDateDay, cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
+									tfMielogramm.getText(), taTreatmentDescription.getText(), taComments.getText(), examinationDate[0], examinationDate[1],
+									examinationDate[2], cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
 							ExaminationDataDialog.this.currentData = examData;
 						} else {
 							examData.setNumber(number);
@@ -253,9 +240,9 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 							examData.setMielogramm(tfMielogramm.getText());
 							examData.setTreatmentDescription(taTreatmentDescription.getText());
 							examData.setComments(taComments.getText());
-							examData.setExaminationDateYear(examinationDateYear);
-							examData.setExaminationDateMonth(examinationDateMonth);
-							examData.setExaminationDateDay(examinationDateDay);
+							examData.setExaminationDateYear(examinationDate[0]);
+							examData.setExaminationDateMonth(examinationDate[1]);
+							examData.setExaminationDateDay(examinationDate[2]);
 							examData.setPhase(cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
 						}
 						examData.setTreatment(treatment);

@@ -39,9 +39,15 @@ create table PatientData (
   firstName nvarchar(255) null,
   patronymicName nvarchar(255) null,
   address mediumtext,
-  birthDate date,
-  diagnoseDate date,
-  deathDate date,
+  birthDateYear int,
+  birthDateMonth int,
+  birthDateDay int,
+  diagnosisDateYear int,
+  diagnosisDateMonth int,
+  diagnosisDateDay int,
+  deathDateYear int,
+  deathDateMonth int,
+  deathDateDay int,
   dead boolean,
   anamnesis longtext,
   
@@ -51,6 +57,24 @@ create table PatientData (
   index ix_patient_date_death(deathDate),
   index ix_patient_date_diagnose(diagnoseDate) 
 );
+
+/*
+alter table PatientData drop column birthDate;
+alter table PatientData add column birthDateYear int;
+alter table PatientData add column birthDateMonth int;
+alter table PatientData add column birthDateDay int;
+
+alter table PatientData drop column diagnoseDate;
+alter table PatientData add column diagnosisDateYear int;
+alter table PatientData add column diagnosisDateMonth int;
+alter table PatientData add column diagnosisDateDay int;
+
+alter table PatientData drop column deathDate;
+alter table PatientData add column deathDateYear int;
+alter table PatientData add column deathDateMonth int;
+alter table PatientData add column deathDateDay int;
+
+*/
 
 create table MedicationToPatient (
   id int not null primary key auto_increment,
@@ -90,7 +114,6 @@ create table ExaminationResults (
 alter table ExaminationResults add column examinationDateYear int;
 alter table ExaminationResults add column examinationDateMonth int;
 alter table ExaminationResults add column examinationDateDay int;
-alter table ExaminationResults add column examinationDate date;
 */
 
 create table MedicationToExaminationResults (

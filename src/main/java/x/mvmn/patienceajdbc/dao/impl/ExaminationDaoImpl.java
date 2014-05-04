@@ -97,11 +97,11 @@ public class ExaminationDaoImpl implements ExaminationDao {
 					result.add(examData);
 				}
 
-				if (rs.getMetaData().getColumnCount() > 18) {
-					long medicationId = rs.getLong(19);
+				if (rs.getMetaData().getColumnCount() > 20) {
+					long medicationId = rs.getLong(21);
 					if (medicationId > 0) {
-						String medicationName = rs.getString(20);
-						long medicationIllnessId = rs.getLong(21); // Should be same as illnessId though...
+						String medicationName = rs.getString(22);
+						long medicationIllnessId = rs.getLong(23); // Should be same as illnessId though...
 						MedicationImpl medication = new MedicationImpl(medicationId, medicationIllnessId, medicationName);
 						examData.getTreatment().add(medication);
 					}

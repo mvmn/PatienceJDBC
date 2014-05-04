@@ -1,6 +1,5 @@
 package x.mvmn.patienceajdbc.model;
 
-import java.util.Date;
 import java.util.List;
 
 public interface PatientData extends PersistentEntity {
@@ -11,10 +10,6 @@ public interface PatientData extends PersistentEntity {
 
 	public String getPatronymicName();
 
-	public Date getDateOfBirth();
-
-	public Date getDateOfDiagnosis();
-
 	public String getAddress();
 
 	public String getAnamnesis();
@@ -22,8 +17,6 @@ public interface PatientData extends PersistentEntity {
 	public List<Medication> getPreviousTreatments();
 
 	public boolean isDead();
-
-	public Date getDateOfDeath();
 
 	public long getId();
 
@@ -33,18 +26,47 @@ public interface PatientData extends PersistentEntity {
 
 	public void setPatronymicName(String patronymicName);
 
-	public void setDateOfBirth(Date dateOfBirth);
-
-	public void setDateOfDiagnosis(Date dateOfDiagnosis);
-
 	public void setAddress(String address);
 
 	public void setAnamnesis(String anamnesis);
-
-	public void setDateOfDeath(Date dateOfDeath);
 
 	public void setDead(boolean dead);
 
 	public void setPreviousTreatments(List<Medication> previousTreatments);
 
+	public Integer getBirthDateYear();
+
+	public void setBirthDateYear(Integer birthDateYear);
+
+	public Integer getBirthDateMonth();
+
+	public void setBirthDateMonth(Integer birthDateMonth);
+
+	public Integer getBirthDateDay();
+
+	public void setBirthDateDay(Integer birthDateDay);
+
+	public Integer getDiagnosisDateYear();
+
+	public void setDiagnosisDateYear(Integer diagnosisDateYear);
+
+	public Integer getDiagnosisDateMonth();
+
+	public void setDiagnosisDateMonth(Integer diagnosisDateMonth);
+
+	public Integer getDiagnosisDateDay();
+
+	public void setDiagnosisDateDay(Integer diagnosisDateDay);
+
+	public Integer getDeathDateYear();
+
+	public void setDeathDateYear(Integer deathDateYear);
+
+	public Integer getDeathDateMonth();
+
+	public void setDeathDateMonth(Integer deathDateMonth);
+
+	public Integer getDeathDateDay();
+
+	public void setDeathDateDay(Integer deathDateDay);
 }

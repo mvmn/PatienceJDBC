@@ -11,14 +11,19 @@ import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 
 public interface PatientDao {
 
-	public PatientDataImpl create(String lastName, String firstName, String patronymicName, String address, Date birthDate, Date diagnoseDate, Date deathDate,
-			boolean dead, String anamnesis);
+	public PatientDataImpl create(final String lastName, final String firstName, final String patronymicName, final String address,
+			final Integer birthDateYear, final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear,
+			final Integer diagnosisDateMonth, final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth,
+			final Integer deathDateDay, final boolean dead, final String anamnesis);
 
-	public long findCount(String lastName, String firstName, String patronymicName, String address, Date birthDate, Date diagnoseDate, Date deathDate,
-			Boolean dead, String anamnesis);
+	public long findCount(String lastName, String firstName, String patronymicName, String address, final Integer birthDateYear, final Integer birthDateMonth,
+			final Integer birthDateDay, final Integer diagnosisDateYear, final Integer diagnosisDateMonth, final Integer diagnosisDateDay,
+			final Integer deathDateYear, final Integer deathDateMonth, final Integer deathDateDay, Boolean dead, String anamnesis);
 
-	public List<PatientDataImpl> find(String lastName, String firstName, String patronymicName, String address, Date birthDate, Date diagnoseDate,
-			Date deathDate, Boolean dead, String anamnesis, boolean fetchMedications);
+	public List<PatientDataImpl> find(String lastName, String firstName, String patronymicName, String address, final Integer birthDateYear,
+			final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear, final Integer diagnosisDateMonth,
+			final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth, final Integer deathDateDay, Boolean dead,
+			String anamnesis, boolean fetchMedications);
 
 	public List<PatientDataImpl> list(String orderBy, int start, int count, boolean fetchMedications);
 

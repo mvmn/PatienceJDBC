@@ -1,7 +1,5 @@
 package x.mvmn.patienceajdbc.test;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -84,8 +82,6 @@ public class DaoTests {
 		PatientDao patientDao = context.getBean("patientDao", PatientDao.class);
 		TagDao tagDao = context.getBean("tagDao", TagDao.class);
 
-		SimpleDateFormat dateFormatYearMonthDate = new SimpleDateFormat("yyyy-MM-dd");
-
 		for (int i = 0; i < 2; i++) {
 			for (Illness illness : illnessDao.listAll()) {
 				illnessDao.delete(illness);
@@ -137,21 +133,20 @@ public class DaoTests {
 			assert (patientDao.countAll() == 0);
 			assert (patientDao.list(null, -1, -1, false).size() == 0);
 
-			patientDao.create("Doe", "John", null, null, dateFormatYearMonthDate.parse("1965-01-01"), null, dateFormatYearMonthDate.parse("2010-01-01"), true,
-					"Was ill.");
-			patientDao.create("Doe", "Jane", null, null, dateFormatYearMonthDate.parse("1970-01-01"), null, dateFormatYearMonthDate.parse("2012-01-01"), true,
-					"Was sick.");
+			patientDao.create("Doe", "John", null, null, 1965, 01, 01, null, null, null, 2010, 01, 01, true, "Was ill.");
+			patientDao.create("Doe", "Jane", null, null, 1970, 01, 01, null, null, null, 2012, 01, 01, true, "Was sick.");
 			assert (patientDao.countAll() == 2);
-			assert (patientDao.findCount("Doe", null, null, null, null, null, null, null, null) == 2);
-			assert (patientDao.find(null, null, null, null, null, null, null, null, "%sick%", false).size() == 1);
-			assert (patientDao.find(null, null, null, null, null, null, null, null, "%sick%", false).get(0).getFirstName().equals("Jane"));
-			assert (patientDao.find(null, null, "Petrovych", null, null, null, null, null, null, false).size() == 0);
-			assert (patientDao.find(null, null, null, null, null, null, null, null, "%ill%", false).size() == 1);
-			PatientDataImpl john = patientDao.find(null, null, null, null, null, null, null, null, "%ill%", false).get(0);
+			assert (patientDao.findCount("Doe", null, null, null, null, null, null, null, null, null, null, null, null, null, null) == 2);
+			assert (patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%sick%", false).size() == 1);
+			assert (patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%sick%", false).get(0).getFirstName()
+					.equals("Jane"));
+			assert (patientDao.find(null, null, "Petrovych", null, null, null, null, null, null, null, null, null, null, null, null, false).size() == 0);
+			assert (patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%ill%", false).size() == 1);
+			PatientDataImpl john = patientDao.find(null, null, null, null, null, null, null, null, null, null, null, null, null, null, "%ill%", false).get(0);
 			assert (john.getFirstName().equals("John"));
 			john.setPatronymicName("Petrovych");
 			patientDao.update(john, false);
-			assert (patientDao.find(null, null, "Petrovych", null, null, null, null, null, null, false).size() == 1);
+			assert (patientDao.find(null, null, "Petrovych", null, null, null, null, null, null, null, null, null, null, null, null, false).size() == 1);
 			List<Medication> fluMeds = medicationDao.list(flu.getId());
 			assert (fluMeds.size() == 2);
 			john.setPreviousTreatments(fluMeds);
@@ -159,7 +154,7 @@ public class DaoTests {
 			assert (patientDao.get(john.getId(), true).getPreviousTreatments().size() == 2);
 			medicationDao.deleteAllByIllness(flu.getId());
 			assert (patientDao.get(john.getId(), true).getPreviousTreatments().size() == 0);
-			patientDao.create("Тест", "Василь", "Батькович", "Село", new Date(), null, null, false, "Занедужав.");
+			patientDao.create("Тест", "Василь", "Батькович", "Село", null, null, null, null, null, null, null, null, null, false, "Занедужав.");
 		}
 
 		System.out.println("All passed.");

@@ -8,14 +8,19 @@ import x.mvmn.patienceajdbc.model.PatientStatsData;
 
 public interface PatientsService {
 
-	public PatientData create(String lastName, String firstName, String patronymicName, String address, Date birthDate, Date diagnoseDate, Date deathDate,
-			boolean dead, String anamnesis);
+	public PatientData create(final String lastName, final String firstName, final String patronymicName, final String address, final Integer birthDateYear,
+			final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear, final Integer diagnosisDateMonth,
+			final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth, final Integer deathDateDay, final boolean dead,
+			final String anamnesis);
 
-	public long findCount(final String lastName, final String firstName, final String patronymicName, final String address, final Date birthDate,
-			final Date diagnoseDate, final Date deathDate, final Boolean dead, final String anamnesis);
+	public long findCount(String lastName, String firstName, String patronymicName, String address, final Integer birthDateYear, final Integer birthDateMonth,
+			final Integer birthDateDay, final Integer diagnosisDateYear, final Integer diagnosisDateMonth, final Integer diagnosisDateDay,
+			final Integer deathDateYear, final Integer deathDateMonth, final Integer deathDateDay, Boolean dead, String anamnesis);
 
-	public List<PatientData> find(final String lastName, final String firstName, final String patronymicName, final String address, final Date birthDate,
-			final Date diagnoseDate, final Date deathDate, final Boolean dead, final String anamnesis, final boolean fetchMedications);
+	public List<PatientData> find(String lastName, String firstName, String patronymicName, String address, final Integer birthDateYear,
+			final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear, final Integer diagnosisDateMonth,
+			final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth, final Integer deathDateDay, Boolean dead,
+			String anamnesis, boolean fetchMedications);
 
 	public List<PatientData> list(final String orderBy, final int start, final int count, final boolean fetchMedications);
 

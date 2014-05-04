@@ -7,12 +7,12 @@ import x.mvmn.patienceajdbc.model.PatientStatsData;
 public class PatientStatsDataImpl implements PatientStatsData {
 	private final long patientId;
 	private final String fullName;
-	private final Date dateOfBirth;
+	private final String dateOfBirth;
 	private final String address;
 	private final Date dateOfFirstExamination;
 	private final int visitsCount;
 
-	public PatientStatsDataImpl(long patientId, String fullName, Date dateOfBirth, String address, Date dateOfFirstExamination, int visitsCount) {
+	public PatientStatsDataImpl(long patientId, String fullName, String dateOfBirth, String address, Date dateOfFirstExamination, int visitsCount) {
 		super();
 		this.patientId = patientId;
 		this.fullName = fullName;
@@ -30,7 +30,7 @@ public class PatientStatsDataImpl implements PatientStatsData {
 		return fullName;
 	}
 
-	public Date getDateOfBirth() {
+	public String getDateOfBirth() {
 		return dateOfBirth;
 	}
 

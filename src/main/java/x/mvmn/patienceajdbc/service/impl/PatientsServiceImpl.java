@@ -16,21 +16,29 @@ public class PatientsServiceImpl implements PatientsService {
 		this.patientDao = patientDao;
 	}
 
-	public PatientData create(String lastName, String firstName, String patronymicName, String address, Date birthDate, Date diagnoseDate, Date deathDate,
-			boolean dead, String anamnesis) {
-		return patientDao.create(lastName, firstName, patronymicName, address, birthDate, diagnoseDate, deathDate, dead, anamnesis);
+	public PatientData create(final String lastName, final String firstName, final String patronymicName, final String address, final Integer birthDateYear,
+			final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear, final Integer diagnosisDateMonth,
+			final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth, final Integer deathDateDay, final boolean dead,
+			final String anamnesis) {
+		return patientDao.create(lastName, firstName, patronymicName, address, birthDateYear, birthDateMonth, birthDateDay, diagnosisDateYear,
+				diagnosisDateMonth, diagnosisDateDay, deathDateYear, deathDateMonth, deathDateDay, dead, anamnesis);
 	}
 
-	public long findCount(String lastName, String firstName, String patronymicName, String address, Date birthDate, Date diagnoseDate, Date deathDate,
-			Boolean dead, String anamnesis) {
-		return patientDao.findCount(lastName, firstName, patronymicName, address, birthDate, diagnoseDate, deathDate, dead, anamnesis);
+	public long findCount(String lastName, String firstName, String patronymicName, String address, final Integer birthDateYear, final Integer birthDateMonth,
+			final Integer birthDateDay, final Integer diagnosisDateYear, final Integer diagnosisDateMonth, final Integer diagnosisDateDay,
+			final Integer deathDateYear, final Integer deathDateMonth, final Integer deathDateDay, Boolean dead, String anamnesis) {
+		return patientDao.findCount(lastName, firstName, patronymicName, address, birthDateYear, birthDateMonth, birthDateDay, diagnosisDateYear,
+				diagnosisDateMonth, diagnosisDateDay, deathDateYear, deathDateMonth, deathDateDay, dead, anamnesis);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<PatientData> find(String lastName, String firstName, String patronymicName, String address, Date birthDate, Date diagnoseDate, Date deathDate,
-			Boolean dead, String anamnesis, boolean fetchMedications) {
-		return (List<PatientData>) (List<? extends PatientData>) patientDao.find(lastName, firstName, patronymicName, address, birthDate, diagnoseDate,
-				deathDate, dead, anamnesis, fetchMedications);
+	public List<PatientData> find(String lastName, String firstName, String patronymicName, String address, final Integer birthDateYear,
+			final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear, final Integer diagnosisDateMonth,
+			final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth, final Integer deathDateDay, Boolean dead,
+			String anamnesis, boolean fetchMedications) {
+		return (List<PatientData>) (List<? extends PatientData>) patientDao.find(lastName, firstName, patronymicName, address, birthDateYear, birthDateMonth,
+				birthDateDay, diagnosisDateYear, diagnosisDateMonth, diagnosisDateDay, deathDateYear, deathDateMonth, deathDateDay, dead, anamnesis,
+				fetchMedications);
 	}
 
 	@SuppressWarnings("unchecked")

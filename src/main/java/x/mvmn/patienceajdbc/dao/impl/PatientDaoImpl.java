@@ -40,18 +40,37 @@ public class PatientDaoImpl implements PatientDao {
 					String firstName = rs.getString(3);
 					String patronymicName = rs.getString(4);
 					String address = rs.getString(5);
-					Date dateOfBirth = rs.getDate(6);
-					Date dateOfDiagnosis = rs.getDate(7);
-					Date dateOfDeath = rs.getDate(8);
-					boolean dead = rs.getBoolean(9);
-					String anamnesis = rs.getString(10);
+					boolean dead = rs.getBoolean(6);
+					String anamnesis = rs.getString(7);
+
+					Integer birthDateYear = rs.getInt(8) > 0 ? rs.getInt(8) : null;
+					Integer birthDateMonth = rs.getInt(9) > 0 ? rs.getInt(9) : null;
+					Integer birthDateDay = rs.getInt(10) > 0 ? rs.getInt(10) : null;
+
+					Integer diagnosisDateYear = rs.getInt(11) > 0 ? rs.getInt(11) : null;
+					Integer diagnosisDateMonth = rs.getInt(12) > 0 ? rs.getInt(12) : null;
+					Integer diagnosisDateDay = rs.getInt(13) > 0 ? rs.getInt(13) : null;
+
+					Integer deathDateYear = rs.getInt(14) > 0 ? rs.getInt(14) : null;
+					Integer deathDateMonth = rs.getInt(15) > 0 ? rs.getInt(15) : null;
+					Integer deathDateDay = rs.getInt(16) > 0 ? rs.getInt(16) : null;
 
 					patientDataImpl.setId(dbId);
 					patientDataImpl.setAddress(address);
 					patientDataImpl.setAnamnesis(anamnesis);
-					patientDataImpl.setDateOfBirth(dateOfBirth);
-					patientDataImpl.setDateOfDeath(dateOfDeath);
-					patientDataImpl.setDateOfDiagnosis(dateOfDiagnosis);
+
+					patientDataImpl.setBirthDateYear(birthDateYear);
+					patientDataImpl.setBirthDateMonth(birthDateMonth);
+					patientDataImpl.setBirthDateDay(birthDateDay);
+
+					patientDataImpl.setDiagnosisDateYear(diagnosisDateYear);
+					patientDataImpl.setDiagnosisDateMonth(diagnosisDateMonth);
+					patientDataImpl.setDiagnosisDateDay(diagnosisDateDay);
+
+					patientDataImpl.setDeathDateYear(deathDateYear);
+					patientDataImpl.setDeathDateMonth(deathDateMonth);
+					patientDataImpl.setDeathDateDay(deathDateDay);
+
 					patientDataImpl.setDead(dead);
 					patientDataImpl.setFirstName(firstName);
 					patientDataImpl.setLastName(lastName);
@@ -60,11 +79,11 @@ public class PatientDaoImpl implements PatientDao {
 					result.add(patientDataImpl);
 				}
 
-				if (rs.getMetaData().getColumnCount() > 10) {
-					long medicationId = rs.getLong(11);
+				if (rs.getMetaData().getColumnCount() > 16) {
+					long medicationId = rs.getLong(17);
 					if (medicationId > 0) {
-						String medicationName = rs.getString(12);
-						long illnessId = rs.getLong(13);
+						String medicationName = rs.getString(18);
+						long illnessId = rs.getLong(19);
 
 						MedicationImpl medication = new MedicationImpl(medicationId, illnessId, medicationName);
 						patientDataImpl.getPreviousTreatments().add(medication);
@@ -90,26 +109,36 @@ public class PatientDaoImpl implements PatientDao {
 	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#create(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date,
 	 * java.util.Date, java.util.Date, boolean, java.lang.String)
 	 */
-	public PatientDataImpl create(final String lastName, final String firstName, final String patronymicName, final String address, final Date birthDate,
-			final Date diagnoseDate, final Date deathDate, final boolean dead, final String anamnesis) {
+	public PatientDataImpl create(final String lastName, final String firstName, final String patronymicName, final String address,
+			final Integer birthDateYear, final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear,
+			final Integer diagnosisDateMonth, final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth,
+			final Integer deathDateDay, final boolean dead, final String anamnesis) {
 		PatientDataImpl result;
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				String statement = "insert into PatientData(lastName, firstName, patronymicName, address, birthDate, diagnoseDate, deathDate, dead, anamnesis) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				String statement = "insert into PatientData(lastName, firstName, patronymicName, address, " + " birthDateYear, birthDateMonth, birthDateDay, "
+						+ " diagnosisDateYear, diagnosisDateMonth, diagnosisDateDay, " + " deathDateYear, deathDateMonth, deathDateDay, "
+						+ " dead, anamnesis) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				PreparedStatement prepStatement = con.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
 
 				prepStatement.setString(1, lastName);
 				prepStatement.setString(2, firstName);
 				prepStatement.setString(3, patronymicName);
 				prepStatement.setString(4, address);
-				prepStatement.setDate(5, birthDate == null ? null : new java.sql.Date(birthDate.getTime()));
-				prepStatement.setDate(6, diagnoseDate == null ? null : new java.sql.Date(diagnoseDate.getTime()));
-				prepStatement.setDate(7, deathDate == null ? null : new java.sql.Date(deathDate.getTime()));
-				prepStatement.setBoolean(8, dead);
-				prepStatement.setString(9, anamnesis);
+				prepStatement.setInt(5, birthDateYear == null ? 0 : birthDateYear.intValue());
+				prepStatement.setInt(6, birthDateMonth == null ? 0 : birthDateMonth.intValue());
+				prepStatement.setInt(7, birthDateDay == null ? 0 : birthDateDay.intValue());
+				prepStatement.setInt(8, diagnosisDateYear == null ? 0 : diagnosisDateYear.intValue());
+				prepStatement.setInt(9, diagnosisDateMonth == null ? 0 : diagnosisDateMonth.intValue());
+				prepStatement.setInt(10, diagnosisDateDay == null ? 0 : diagnosisDateDay.intValue());
+				prepStatement.setInt(11, deathDateYear == null ? 0 : deathDateYear.intValue());
+				prepStatement.setInt(12, deathDateMonth == null ? 0 : deathDateMonth.intValue());
+				prepStatement.setInt(13, deathDateDay == null ? 0 : deathDateDay.intValue());
+				prepStatement.setBoolean(14, dead);
+				prepStatement.setString(15, anamnesis);
 				return prepStatement;
 			}
 		}, keyHolder);
@@ -124,7 +153,7 @@ public class PatientDaoImpl implements PatientDao {
 		// result.setAddress(address);
 		// result.setAnamnesis(anamnesis);
 		// result.setDateOfBirth(birthDate);
-		// result.setDateOfDiagnosis(diagnoseDate);
+		// result.setDateOfDiagnosis(diagnosisDate);
 		// result.setDateOfDeath(deathDate);
 		// result.setDead(dead);
 		result = this.get(dbId, false);
@@ -138,21 +167,25 @@ public class PatientDaoImpl implements PatientDao {
 	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#findCount(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date,
 	 * java.util.Date, java.util.Date, java.lang.Boolean, java.lang.String)
 	 */
-	public long findCount(final String lastName, final String firstName, final String patronymicName, final String address, final Date birthDate,
-			final Date diagnoseDate, final Date deathDate, final Boolean dead, final String anamnesis) {
-		SearchConditionWithParameters searchConditionWithParams = buildSearchCondition(lastName, firstName, patronymicName, address, birthDate, diagnoseDate,
-				deathDate, dead, anamnesis);
+	public long findCount(final String lastName, final String firstName, final String patronymicName, final String address, final Integer birthDateYear,
+			final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear, final Integer diagnosisDateMonth,
+			final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth, final Integer deathDateDay, final Boolean dead,
+			final String anamnesis) {
+		SearchConditionWithParameters searchConditionWithParams = buildSearchCondition(lastName, firstName, patronymicName, address, birthDateYear,
+				birthDateMonth, birthDateDay, diagnosisDateYear, diagnosisDateMonth, diagnosisDateDay, deathDateYear, deathDateMonth, deathDateDay, dead,
+				anamnesis);
 		return jdbcTemplate.queryForLong("SELECT count(id) FROM PatientData WHERE " + searchConditionWithParams.getCondition(),
 				searchConditionWithParams.getParameters());
 	}
 
 	protected String getSelectQueryStringPart(final boolean fetchMedications) {
-		String result;
+		String result = "SELECT PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, PatientData.dead, PatientData.anamnesis, "
+				+ " PatientData.birthDateYear, PatientData.birthDateMonth, PatientData.birthDateDay, PatientData.diagnosisDateYear, PatientData.diagnosisDateMonth, PatientData.diagnosisDateDay, PatientData.deathDateYear, PatientData.deathDateMonth, PatientData.deathDateDay ";
 		if (fetchMedications) {
-			result = "SELECT PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, PatientData.birthDate, PatientData.diagnoseDate, PatientData.deathDate, PatientData.dead, PatientData.anamnesis, Medication.id, Medication.name, Medication.illnessId"
+			result += ", Medication.id, Medication.name, Medication.illnessId"
 					+ " FROM PatientData LEFT JOIN MedicationToPatient ON MedicationToPatient.patientId = PatientData.id LEFT JOIN Medication ON Medication.id = MedicationToPatient.medicationId ";
 		} else {
-			result = "SELECT PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, PatientData.birthDate, PatientData.diagnoseDate, PatientData.deathDate, PatientData.dead, PatientData.anamnesis FROM PatientData ";
+			result += " FROM PatientData ";
 		}
 		return result;
 	}
@@ -163,10 +196,13 @@ public class PatientDaoImpl implements PatientDao {
 	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#find(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Date,
 	 * java.util.Date, java.util.Date, java.lang.Boolean, java.lang.String, boolean)
 	 */
-	public List<PatientDataImpl> find(final String lastName, final String firstName, final String patronymicName, final String address, final Date birthDate,
-			final Date diagnoseDate, final Date deathDate, final Boolean dead, final String anamnesis, final boolean fetchMedications) {
-		SearchConditionWithParameters searchConditionWithParams = buildSearchCondition(lastName, firstName, patronymicName, address, birthDate, diagnoseDate,
-				deathDate, dead, anamnesis);
+	public List<PatientDataImpl> find(final String lastName, final String firstName, final String patronymicName, final String address,
+			final Integer birthDateYear, final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear,
+			final Integer diagnosisDateMonth, final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth,
+			final Integer deathDateDay, final Boolean dead, final String anamnesis, final boolean fetchMedications) {
+		SearchConditionWithParameters searchConditionWithParams = buildSearchCondition(lastName, firstName, patronymicName, address, birthDateYear,
+				birthDateMonth, birthDateDay, diagnosisDateYear, diagnosisDateMonth, diagnosisDateDay, deathDateYear, deathDateMonth, deathDateDay, dead,
+				anamnesis);
 		List<PatientDataImpl> results = jdbcTemplate.query(getSelectQueryStringPart(fetchMedications) + "  WHERE " + searchConditionWithParams.getCondition(),
 				searchConditionWithParams.getParameters(), PATIENT_DATA_RESULT_SET_EXTRACTOR);
 		return results;
@@ -194,7 +230,9 @@ public class PatientDaoImpl implements PatientDao {
 	}
 
 	protected SearchConditionWithParameters buildSearchCondition(final String lastName, final String firstName, final String patronymicName,
-			final String address, final Date birthDate, final Date diagnoseDate, final Date deathDate, final Boolean dead, final String anamnesis) {
+			final String address, final Integer birthDateYear, final Integer birthDateMonth, final Integer birthDateDay, final Integer diagnosisDateYear,
+			final Integer diagnosisDateMonth, final Integer diagnosisDateDay, final Integer deathDateYear, final Integer deathDateMonth,
+			final Integer deathDateDay, final Boolean dead, final String anamnesis) {
 		List<Object> params = new ArrayList<Object>(10);
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -226,28 +264,70 @@ public class PatientDaoImpl implements PatientDao {
 			params.add(address);
 		}
 
-		if (birthDate != null) {
+		if (birthDateYear != null) {
 			if (stringBuilder.length() > 0) {
 				stringBuilder.append(" AND ");
 			}
-			stringBuilder.append(" birthDate = ? ");
-			params.add(birthDate);
+			stringBuilder.append(" birthDateYear = ? ");
+			params.add(birthDateYear);
+		}
+		if (diagnosisDateYear != null) {
+			if (stringBuilder.length() > 0) {
+				stringBuilder.append(" AND ");
+			}
+			stringBuilder.append(" diagnosisDateYear = ? ");
+			params.add(diagnosisDateYear);
+		}
+		if (deathDateYear != null) {
+			if (stringBuilder.length() > 0) {
+				stringBuilder.append(" AND ");
+			}
+			stringBuilder.append(" deathDateYear = ? ");
+			params.add(deathDateYear);
 		}
 
-		if (diagnoseDate != null) {
+		if (birthDateMonth != null) {
 			if (stringBuilder.length() > 0) {
 				stringBuilder.append(" AND ");
 			}
-			stringBuilder.append(" diagnoseDate = ? ");
-			params.add(diagnoseDate);
+			stringBuilder.append(" birthDateMonth = ? ");
+			params.add(birthDateMonth);
+		}
+		if (diagnosisDateMonth != null) {
+			if (stringBuilder.length() > 0) {
+				stringBuilder.append(" AND ");
+			}
+			stringBuilder.append(" diagnosisDateMonth = ? ");
+			params.add(diagnosisDateMonth);
+		}
+		if (deathDateMonth != null) {
+			if (stringBuilder.length() > 0) {
+				stringBuilder.append(" AND ");
+			}
+			stringBuilder.append(" deathDateMonth = ? ");
+			params.add(deathDateMonth);
 		}
 
-		if (deathDate != null) {
+		if (birthDateDay != null) {
 			if (stringBuilder.length() > 0) {
 				stringBuilder.append(" AND ");
 			}
-			stringBuilder.append(" deathDate = ? ");
-			params.add(deathDate);
+			stringBuilder.append(" deathDateDay = ? ");
+			params.add(deathDateDay);
+		}
+		if (diagnosisDateDay != null) {
+			if (stringBuilder.length() > 0) {
+				stringBuilder.append(" AND ");
+			}
+			stringBuilder.append(" diagnosisDateDay = ? ");
+			params.add(diagnosisDateDay);
+		}
+		if (deathDateDay != null) {
+			if (stringBuilder.length() > 0) {
+				stringBuilder.append(" AND ");
+			}
+			stringBuilder.append(" deathDateDay = ? ");
+			params.add(deathDateDay);
 		}
 
 		if (dead != null) {
@@ -317,10 +397,11 @@ public class PatientDaoImpl implements PatientDao {
 	public boolean update(final PatientData patientData, final boolean updateMedications) {
 
 		int updatedRowsCount = jdbcTemplate
-				.update("update PatientData set lastName=?, firstName=?, patronymicName=?, address=?, birthDate=?, diagnoseDate=?, deathDate=?, dead=?, anamnesis=? where id = ?",
-						patientData.getLastName(), patientData.getFirstName(), patientData.getPatronymicName(), patientData.getAddress(),
-						patientData.getDateOfBirth(), patientData.getDateOfDiagnosis(), patientData.getDateOfDeath(), patientData.isDead(),
-						patientData.getAnamnesis(), patientData.getId());
+				.update("update PatientData set lastName=?, firstName=?, patronymicName=?, address=?, dead=?, anamnesis=?, birthDateYear=?, birthDateMonth=?, birthDateDay=?, diagnosisDateYear=?, diagnosisDateMonth=?, diagnosisDateDay=?, deathDateYear=?, deathDateMonth=?, deathDateDay=? where id = ?",
+						patientData.getLastName(), patientData.getFirstName(), patientData.getPatronymicName(), patientData.getAddress(), patientData.isDead(),
+						patientData.getAnamnesis(), patientData.getBirthDateYear(), patientData.getBirthDateMonth(), patientData.getBirthDateDay(),
+						patientData.getDiagnosisDateYear(), patientData.getDiagnosisDateMonth(), patientData.getDiagnosisDateDay(),
+						patientData.getDeathDateYear(), patientData.getDeathDateMonth(), patientData.getDeathDateDay(), patientData.getId());
 
 		if (updateMedications) {
 			jdbcTemplate.update("delete from MedicationToPatient where patientId = ?", patientData.getId());
@@ -403,7 +484,7 @@ public class PatientDaoImpl implements PatientDao {
 				}
 				String fullName = fullNameBuilder.toString().trim();
 				String address = rs.getString(5);
-				Date dateOfBirth = rs.getDate(6);
+				String dateOfBirth = rs.getString(6);
 				Date dateOfFirstExamination = rs.getDate(7);
 				int visitsCount = rs.getInt(8);
 
@@ -421,7 +502,7 @@ public class PatientDaoImpl implements PatientDao {
 	 * @see x.mvmn.patienceajdbc.dao.impl.PatientDao#listStats(long, java.util.Date, java.util.Date, int)
 	 */
 	public List<PatientStatsData> listStats(final long illnessId, final Date visitDateFrom, final Date visitDateTo, int sortColumn) {
-		String query = "select PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, PatientData.birthDate, max(ExaminationResults.examinationDate) as lastVisitDate, count(ExaminationResults.id) as visitsCount from PatientData left join ExaminationResults on ExaminationResults.patientId = PatientData.id where (1=1) ";
+		String query = "select PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, CONCAT(PatientData.birthDateYear, '-', PatientData.birthDateMonth, '-', PatientData.birthDateDay) as birthDate, max(ExaminationResults.examinationDate) as lastVisitDate, count(ExaminationResults.id) as visitsCount from PatientData left join ExaminationResults on ExaminationResults.patientId = PatientData.id where (1=1) ";
 		List<Object> paramsList = new ArrayList<Object>(3);
 		if (illnessId >= 0) {
 			paramsList.add(illnessId);
@@ -439,7 +520,7 @@ public class PatientDaoImpl implements PatientDao {
 			paramsList.add(visitDateTo);
 		}
 		Object[] params = paramsList.toArray(new Object[paramsList.size()]);
-		query += " group by PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, PatientData.birthDate ";
+		query += " group by PatientData.id, PatientData.lastName, PatientData.firstName, PatientData.patronymicName, PatientData.address, birthDate ";
 		if (sortColumn > 0) {
 			query += " order by ";
 			switch (sortColumn) {
@@ -447,7 +528,7 @@ public class PatientDaoImpl implements PatientDao {
 					query += " PatientData.lastName ";
 				break;
 				case 2:
-					query += " PatientData.birthDate ";
+					query += " birthDate ";
 				break;
 				case 3:
 					query += " PatientData.address ";
