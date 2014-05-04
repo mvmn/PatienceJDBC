@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import x.mvmn.lang.container.TupleOfTwo;
 import x.mvmn.patienceajdbc.dao.DataAccessObject;
 import x.mvmn.patienceajdbc.dao.IllnessDao;
 import x.mvmn.patienceajdbc.dao.MedicationDao;
@@ -102,13 +103,7 @@ public class TestDAOs extends AbstractDAOTest<DataAccessObject> {
 	}
 
 	@Override
-	protected Class<DataAccessObject> getDaoClass() {
+	protected TupleOfTwo<String, Class<DataAccessObject>> getDaoBeanNameAndClass() {
 		return null;
 	}
-
-	@Override
-	protected String getDaoBeanName() {
-		return null;
-	}
-
 }

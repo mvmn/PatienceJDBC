@@ -3,6 +3,7 @@ package x.mvmn.patienceajdbc.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import x.mvmn.lang.container.TupleOfTwo;
 import x.mvmn.patienceajdbc.dao.IllnessDao;
 import x.mvmn.patienceajdbc.model.Illness;
 
@@ -39,13 +40,12 @@ public class TestIllnessDAO extends AbstractDAOTest<IllnessDao> {
 		}
 	}
 
-	@Override
-	protected Class<IllnessDao> getDaoClass() {
-		return IllnessDao.class;
-	}
+	private static final TupleOfTwo<String, Class<IllnessDao>> DAO_BEAN_DEFINITION_TUPLE = new TupleOfTwo<String, Class<IllnessDao>>("illnessDao",
+			IllnessDao.class);
 
 	@Override
-	protected String getDaoBeanName() {
-		return "illnessDao";
+	protected TupleOfTwo<String, Class<IllnessDao>> getDaoBeanNameAndClass() {
+		return DAO_BEAN_DEFINITION_TUPLE;
 	}
+
 }
