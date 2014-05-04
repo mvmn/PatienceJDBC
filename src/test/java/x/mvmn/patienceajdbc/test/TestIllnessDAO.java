@@ -6,10 +6,12 @@ import org.junit.Test;
 import x.mvmn.patienceajdbc.dao.IllnessDao;
 import x.mvmn.patienceajdbc.model.Illness;
 
-public class TestIllnessDAO extends AbstractDAOTest {
+public class TestIllnessDAO extends AbstractDAOTest<IllnessDao> {
+
 	@Test
 	public void testIllnessCrud() {
-		IllnessDao illnessDao = daoContext.getBean("illnessDao", IllnessDao.class);
+		IllnessDao illnessDao = getDAO();
+
 		Assert.assertTrue(illnessDao.countAll() == 0);
 		for (int i = 0; i < 2; i++) {
 			for (Illness illness : illnessDao.listAll()) {
@@ -35,5 +37,15 @@ public class TestIllnessDAO extends AbstractDAOTest {
 			}
 			Assert.assertNotNull(duplicationError);
 		}
+	}
+
+	@Override
+	protected Class<IllnessDao> getDaoClass() {
+		return IllnessDao.class;
+	}
+
+	@Override
+	protected String getDaoBeanName() {
+		return "illnessDao";
 	}
 }

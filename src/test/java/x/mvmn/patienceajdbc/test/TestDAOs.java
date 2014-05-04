@@ -15,8 +15,9 @@ import x.mvmn.patienceajdbc.model.PatientData;
 import x.mvmn.patienceajdbc.model.Tag;
 import x.mvmn.patienceajdbc.model.impl.PatientDataImpl;
 
-public class TestDAOs extends AbstractDAOTest {
+public class TestDAOs extends AbstractDAOTest<Object> {
 
+	// FIXME: Refactor into separate tests
 	@Test
 	public void testAll() throws Exception {
 		IllnessDao illnessDao = daoContext.getBean("illnessDao", IllnessDao.class);
@@ -97,6 +98,16 @@ public class TestDAOs extends AbstractDAOTest {
 			Assert.assertTrue(patientDao.get(john.getId(), true).getPreviousTreatments().size() == 0);
 			patientDao.create("Тест", "Василь", "Батькович", "Село", null, null, null, null, null, null, null, null, null, false, "Занедужав.");
 		}
+	}
+
+	@Override
+	protected Class<Object> getDaoClass() {
+		return null;
+	}
+
+	@Override
+	protected String getDaoBeanName() {
+		return null;
 	}
 
 }

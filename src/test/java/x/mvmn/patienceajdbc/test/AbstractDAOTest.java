@@ -15,7 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
-public abstract class AbstractDAOTest {
+public abstract class AbstractDAOTest<DT> {
 
 	protected ClassPathXmlApplicationContext daoContext;
 
@@ -115,4 +115,12 @@ public abstract class AbstractDAOTest {
 		daoContext.destroy();
 		daoContext = null;
 	}
+
+	protected DT getDAO() {
+		return daoContext.getBean(getDaoBeanName(), getDaoClass());
+	}
+
+	protected abstract Class<DT> getDaoClass();
+
+	protected abstract String getDaoBeanName();
 }
