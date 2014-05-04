@@ -66,6 +66,7 @@ public class PatienceA {
 		MAIN_SPRING_CONTEXT.destroy();
 		ConnectionPropertiesDialog connectionPropertiesDialog = PARENT_SPRING_CONTEXT.getBean("dbConnectionDialog", ConnectionPropertiesDialog.class);
 		connectionPropertiesDialog.dispose();
+		System.exit(0);
 	}
 
 	public static void restart() {
