@@ -47,10 +47,34 @@ public class TestIllnessDAO extends AbstractDAOTest<IllnessDao> {
 		IllnessDao illnessDao = getDAO();
 
 		Assert.assertEquals(0, illnessDao.countAll());
+
+		{
+			Exception notFoundError = null;
+			try {
+				illnessDao.getIdByName("NOTHING");
+			} catch (Exception e) {
+				notFoundError = e;
+			}
+			Assert.assertNotNull(notFoundError);
+		}
+
+		Assert.assertNull(illnessDao.findByName("NOTHING"));
+		Assert.assertNull(illnessDao.get(123));
+		{
+			Exception notFoundError = null;
+			try {
+				illnessDao.getNameById(123);
+			} catch (Exception e) {
+				notFoundError = e;
+			}
+			Assert.assertNotNull(notFoundError);
+		}
+
 		Illness cyryllicNamedIllness = illnessDao.create("Боткина");
 		Assert.assertEquals(1, illnessDao.countAll());
 		Assert.assertEquals("Боткина", illnessDao.getNameById(cyryllicNamedIllness.getId()));
 		Assert.assertEquals(cyryllicNamedIllness.getId(), illnessDao.findByName("Боткина").getId());
+
 	}
 
 	@Test
@@ -69,8 +93,7 @@ public class TestIllnessDAO extends AbstractDAOTest<IllnessDao> {
 		Assert.assertEquals(cyryllicNamedIllness.getId(), illnessDao.findByName("Паркинсона").getId());
 	}
 
-	public static final TupleOfTwo<String, Class<IllnessDao>> DAO_BEAN_DEFINITION = new TupleOfTwo<String, Class<IllnessDao>>("illnessDao",
-			IllnessDao.class);
+	public static final TupleOfTwo<String, Class<IllnessDao>> DAO_BEAN_DEFINITION = new TupleOfTwo<String, Class<IllnessDao>>("illnessDao", IllnessDao.class);
 
 	@Override
 	protected TupleOfTwo<String, Class<IllnessDao>> getDaoBeanNameAndClass() {
