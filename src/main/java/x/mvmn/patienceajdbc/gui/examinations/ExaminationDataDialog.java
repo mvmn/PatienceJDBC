@@ -26,6 +26,7 @@ import org.springframework.context.MessageSource;
 
 import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.GeneralisedJTable;
+import x.mvmn.lang.container.TupleOfThree;
 import x.mvmn.patienceajdbc.gui.DatePanelHelper;
 import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.SwingHelper;
@@ -226,12 +227,13 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 					try {
 						ExaminationData examData = ExaminationDataDialog.this.currentData;
 						int number = Integer.parseInt(tfNumber.getText().trim());
-						Integer[] examinationDate = DatePanelHelper.extractDate(tfDateYear, cbDateMonth, cbDateDay);
+						TupleOfThree<Integer, Integer, Integer> examinationDate = DatePanelHelper.extractDate(tfDateYear, cbDateMonth, cbDateDay);
 
 						if (examData == null) {
 							examData = examinationsService.create(currentPatientId, currentIllnessId, number, tfMatherial.getText(), tfBlood.getText(),
-									tfMielogramm.getText(), taTreatmentDescription.getText(), taComments.getText(), examinationDate[0], examinationDate[1],
-									examinationDate[2], cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
+									tfMielogramm.getText(), taTreatmentDescription.getText(), taComments.getText(), examinationDate.getFirst(),
+									examinationDate.getSecond(), examinationDate.getThird(),
+									cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
 							ExaminationDataDialog.this.currentData = examData;
 						} else {
 							examData.setNumber(number);
@@ -240,9 +242,9 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 							examData.setMielogramm(tfMielogramm.getText());
 							examData.setTreatmentDescription(taTreatmentDescription.getText());
 							examData.setComments(taComments.getText());
-							examData.setExaminationDateYear(examinationDate[0]);
-							examData.setExaminationDateMonth(examinationDate[1]);
-							examData.setExaminationDateDay(examinationDate[2]);
+							examData.setExaminationDateYear(examinationDate.getFirst());
+							examData.setExaminationDateMonth(examinationDate.getSecond());
+							examData.setExaminationDateDay(examinationDate.getThird());
 							examData.setPhase(cbIllenssPhase.getModel().getElementAt(cbIllenssPhase.getSelectedIndex()));
 						}
 						examData.setTreatment(treatment);

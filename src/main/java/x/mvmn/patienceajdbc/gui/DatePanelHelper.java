@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import x.mvmn.lang.container.TupleOfThree;
+
 public class DatePanelHelper {
 
 	public static JPanel createDatePanel(JTextField tfYear, JComboBox<String> cbMonth, JComboBox<String> cbDay, TitledBorder borderLabel) {
@@ -20,7 +22,7 @@ public class DatePanelHelper {
 		return result;
 	}
 
-	public static Integer[] extractDate(JTextField tfYear, JComboBox<String> cbMonth, JComboBox<String> cbDay) {
+	public static TupleOfThree<Integer, Integer, Integer> extractDate(JTextField tfYear, JComboBox<String> cbMonth, JComboBox<String> cbDay) {
 		Integer dateYear = null;
 		Integer dateMonth = null;
 		Integer dateDay = null;
@@ -33,7 +35,7 @@ public class DatePanelHelper {
 		if (cbDay.getSelectedIndex() > 0) {
 			dateDay = cbDay.getSelectedIndex();
 		}
-		return new Integer[] { dateYear, dateMonth, dateDay };
+		return new TupleOfThree<Integer, Integer, Integer>(dateYear, dateMonth, dateDay);
 	}
 
 }

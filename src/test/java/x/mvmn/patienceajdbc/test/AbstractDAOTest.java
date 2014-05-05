@@ -121,7 +121,7 @@ public abstract class AbstractDAOTest<DT extends DataAccessObject> {
 
 	protected DT getDAO() {
 		TupleOfTwo<String, Class<DT>> daoBeanDefTuple = getDaoBeanNameAndClass();
-		return daoContext.getBean(daoBeanDefTuple.getOne(), daoBeanDefTuple.getTwo());
+		return daoContext.getBean(daoBeanDefTuple.getFirst(), daoBeanDefTuple.getSecond());
 	}
 
 	protected abstract TupleOfTwo<String, Class<DT>> getDaoBeanNameAndClass();

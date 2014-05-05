@@ -36,6 +36,7 @@ import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.ExtendedTitledBorder;
 import x.mvmn.gui.generic.swing.GeneralisedJTable;
 import x.mvmn.gui.generic.swing.JExtendedTabPane;
+import x.mvmn.lang.container.TupleOfThree;
 import x.mvmn.patienceajdbc.gui.DatePanelHelper;
 import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.IllnessSpecificPanel;
@@ -235,9 +236,10 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 						String firstName = tfFirstName.getText();
 						String lastName = tfLastName.getText();
 						String patronymicName = tfPatronymicName.getText();
-						Integer[] birthDate = DatePanelHelper.extractDate(tfBirthDateYear, cbBirthDateMonth, cbBirthDateDay);
-						Integer[] diagnosisDate = DatePanelHelper.extractDate(tfDiagnosisDateYear, cbDiagnosisDateMonth, cbDiagnosisDateDay);
-						Integer[] deathDate = DatePanelHelper.extractDate(tfDeathDateYear, cbDeathDateMonth, cbDeathDateDay);
+						TupleOfThree<Integer, Integer, Integer> birthDate = DatePanelHelper.extractDate(tfBirthDateYear, cbBirthDateMonth, cbBirthDateDay);
+						TupleOfThree<Integer, Integer, Integer> diagnosisDate = DatePanelHelper.extractDate(tfDiagnosisDateYear, cbDiagnosisDateMonth,
+								cbDiagnosisDateDay);
+						TupleOfThree<Integer, Integer, Integer> deathDate = DatePanelHelper.extractDate(tfDeathDateYear, cbDeathDateMonth, cbDeathDateDay);
 						boolean dead = cbDead.isSelected();
 						String address = taAddressText.getText();
 						String anamnesis = taAnamnesis.getText();
@@ -252,24 +254,25 @@ public class PatientDataDialog extends JDialog implements LocaleChangeAware, Tit
 							patientData.setAddress(address);
 							patientData.setAnamnesis(anamnesis);
 
-							patientData.setBirthDateYear(birthDate[0]);
-							patientData.setBirthDateMonth(birthDate[1]);
-							patientData.setBirthDateDay(birthDate[2]);
+							patientData.setBirthDateYear(birthDate.getFirst());
+							patientData.setBirthDateMonth(birthDate.getSecond());
+							patientData.setBirthDateDay(birthDate.getThird());
 
-							patientData.setDiagnosisDateYear(diagnosisDate[0]);
-							patientData.setDiagnosisDateMonth(diagnosisDate[1]);
-							patientData.setDiagnosisDateDay(diagnosisDate[2]);
+							patientData.setDiagnosisDateYear(diagnosisDate.getFirst());
+							patientData.setDiagnosisDateMonth(diagnosisDate.getSecond());
+							patientData.setDiagnosisDateDay(diagnosisDate.getThird());
 
-							patientData.setDeathDateYear(deathDate[0]);
-							patientData.setDeathDateMonth(deathDate[1]);
-							patientData.setDeathDateDay(deathDate[2]);
+							patientData.setDeathDateYear(deathDate.getFirst());
+							patientData.setDeathDateMonth(deathDate.getSecond());
+							patientData.setDeathDateDay(deathDate.getThird());
 
 							patientData.setDead(dead);
 							patientsService.update(patientData, false);
 						} else {
 							newlyCreated = true;
-							patientData = patientsService.create(lastName, firstName, patronymicName, address, birthDate[0], birthDate[1], birthDate[2],
-									diagnosisDate[0], diagnosisDate[1], diagnosisDate[2], deathDate[0], deathDate[1], deathDate[2], dead, anamnesis);
+							patientData = patientsService.create(lastName, firstName, patronymicName, address, birthDate.getFirst(), birthDate.getSecond(),
+									birthDate.getThird(), diagnosisDate.getFirst(), diagnosisDate.getSecond(), diagnosisDate.getThird(), deathDate.getFirst(),
+									deathDate.getSecond(), deathDate.getThird(), dead, anamnesis);
 							PatientDataDialog.this.setData(patientData);
 						}
 
