@@ -15,7 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
-import x.mvmn.lang.container.TupleOfTwo;
+import x.mvmn.lang.tuple.TupleOfTwo;
 import x.mvmn.patienceajdbc.dao.DataAccessObject;
 
 public abstract class AbstractDAOTest<DT extends DataAccessObject> {
@@ -119,9 +119,13 @@ public abstract class AbstractDAOTest<DT extends DataAccessObject> {
 		daoContext = null;
 	}
 
+	protected <T> T getBean(TupleOfTwo<String, Class<T>> beanDefTuple) {
+		return daoContext.getBean(beanDefTuple.getFirst(), beanDefTuple.getSecond());
+	}
+
 	protected DT getDAO() {
 		TupleOfTwo<String, Class<DT>> daoBeanDefTuple = getDaoBeanNameAndClass();
-		return daoContext.getBean(daoBeanDefTuple.getFirst(), daoBeanDefTuple.getSecond());
+		return getBean(daoBeanDefTuple);
 	}
 
 	protected abstract TupleOfTwo<String, Class<DT>> getDaoBeanNameAndClass();

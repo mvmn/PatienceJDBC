@@ -7,7 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import x.mvmn.lang.container.TupleOfThree;
+import x.mvmn.lang.tuple.TupleOfThree;
 
 public class DatePanel extends JPanel {
 

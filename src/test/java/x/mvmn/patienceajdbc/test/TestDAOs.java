@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import x.mvmn.lang.container.TupleOfTwo;
+import x.mvmn.lang.tuple.TupleOfTwo;
 import x.mvmn.patienceajdbc.dao.DataAccessObject;
 import x.mvmn.patienceajdbc.dao.IllnessDao;
 import x.mvmn.patienceajdbc.dao.MedicationDao;

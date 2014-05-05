@@ -34,7 +34,7 @@ import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.ExtendedTitledBorder;
 import x.mvmn.gui.generic.swing.GeneralisedJTable;
 import x.mvmn.gui.generic.swing.JExtendedTabPane;
-import x.mvmn.lang.container.TupleOfThree;
+import x.mvmn.lang.tuple.TupleOfThree;
 import x.mvmn.patienceajdbc.gui.DatePanel;
 import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.IllnessSpecificPanel;
