@@ -27,7 +27,7 @@ import org.springframework.context.MessageSource;
 import x.mvmn.gui.generic.awt.event.DefaultWindowListener;
 import x.mvmn.gui.generic.swing.GeneralisedJTable;
 import x.mvmn.lang.container.TupleOfThree;
-import x.mvmn.patienceajdbc.gui.DatePanelHelper;
+import x.mvmn.patienceajdbc.gui.DatePanel;
 import x.mvmn.patienceajdbc.gui.GeneralisedMutableTableModel;
 import x.mvmn.patienceajdbc.gui.SwingHelper;
 import x.mvmn.patienceajdbc.gui.Titled;
@@ -74,10 +74,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 	// FIXME: localize
 	protected final TitledBorder lbDate = new TitledBorder("");
-	protected final JTextField tfDateYear = new JTextField();
-	protected final JComboBox<String> cbDateMonth = new JComboBox<String>(new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" });
-	protected final JComboBox<String> cbDateDay = new JComboBox<String>(new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
-			"14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" });
+	protected final DatePanel datePanel = new DatePanel();
 	protected final TitledBorder lbNumber = new TitledBorder("");
 	protected final JTextField tfNumber = new JTextField();
 	protected final TitledBorder lbMatherial = new TitledBorder("");
@@ -139,7 +136,8 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 
 		this.setModal(true);
 
-		JPanel datePanel = DatePanelHelper.createDatePanel(tfDateYear, cbDateMonth, cbDateDay, lbDate);
+		datePanel.setBorder(lbDate);
+
 		tfNumber.setBorder(lbNumber);
 		tfMatherial.setBorder(lbMatherial);
 		tfBlood.setBorder(lbBlood);
@@ -227,7 +225,7 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 					try {
 						ExaminationData examData = ExaminationDataDialog.this.currentData;
 						int number = Integer.parseInt(tfNumber.getText().trim());
-						TupleOfThree<Integer, Integer, Integer> examinationDate = DatePanelHelper.extractDate(tfDateYear, cbDateMonth, cbDateDay);
+						TupleOfThree<Integer, Integer, Integer> examinationDate = datePanel.getEnteredDate();
 
 						if (examData == null) {
 							examData = examinationsService.create(currentPatientId, currentIllnessId, number, tfMatherial.getText(), tfBlood.getText(),
@@ -349,16 +347,10 @@ public class ExaminationDataDialog extends JDialog implements LocaleChangeAware,
 		this.currentPatientId = patientId;
 		this.currentIllnessId = illnessId;
 
-		this.tfDateYear.setText(data != null && data.getExaminationDateYear() != null ? data.getExaminationDateYear().toString() : "");
-		this.cbDateMonth.setSelectedIndex(0);
-		this.cbDateDay.setSelectedIndex(0);
 		if (data != null) {
-			if (data.getExaminationDateMonth() != null) {
-				this.cbDateMonth.setSelectedIndex(data.getExaminationDateMonth().intValue());
-			}
-			if (data.getExaminationDateDay() != null) {
-				this.cbDateDay.setSelectedIndex(data.getExaminationDateDay().intValue());
-			}
+			this.datePanel.setValues(data.getExaminationDateYear(), data.getExaminationDateMonth(), data.getExaminationDateDay());
+		} else {
+			this.datePanel.setValues("", 0, 0);
 		}
 		this.tfNumber.setText(data != null ? String.valueOf(data.getNumber()) : String.valueOf(examinationsService.getLastExaminationNumber() + 1));
 		this.tfMatherial.setText(data != null ? data.getMatherial() : "");
